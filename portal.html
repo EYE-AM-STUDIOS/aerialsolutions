@@ -602,7 +602,7 @@
             loginBtn.textContent = '';
             
             // Simulate authentication process
-            setTimeout(() => {
+            setTimeout(async () => {
                 // Remove loading state
                 loginBtn.classList.remove('loading');
                 loginBtn.textContent = 'Secure Login';
@@ -611,6 +611,16 @@
                 if (email.toLowerCase().includes('demo') || email.toLowerCase().includes('test')) {
                     if (password === 'demo123' || password === 'test123' || password === 'client') {
                         try {
+                            // Demo: check clients/config.json for deposit/status
+                            const res = await fetch('clients/config.json', { cache: 'no-store' });
+                            if (res.ok) {
+                                const cfg = await res.json();
+                                const client = (cfg.clients || []).find(c => c.id === 'demo-mosaic');
+                                if (!client || !client.depositReceived || client.status !== 'active') {
+                                    showMessage('Portal access will start after deposit is received and activated via HoneyBook. Please complete payment or contact support.', 'warning');
+                                    return;
+                                }
+                            }
                             // Demo client defaults for dashboard focus mode
                             localStorage.setItem('clientId', 'demo-mosaic');
                             localStorage.setItem('currentProject', 'mosaic');

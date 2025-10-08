@@ -526,6 +526,29 @@
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
+
+        /* Admin Select Styling (Booking Modal) */
+        .admin-select {
+            background: #FFFFFF !important;
+            color: var(--midnight-blue) !important;
+            border: 1px solid var(--electric-cyan) !important;
+        }
+        .admin-select:focus {
+            outline: 2px solid rgba(0,191,255,0.5);
+            outline-offset: 0;
+        }
+        .admin-select option {
+            background: #FFFFFF;
+            color: var(--midnight-blue);
+        }
+        .admin-select option:hover {
+            background: rgba(0,191,255,0.12);
+            color: var(--midnight-blue);
+        }
+        .admin-select option:checked {
+            background: rgba(0,191,255,0.2);
+            color: var(--midnight-blue);
+        }
     </style>
 </head>
 <body>
@@ -939,13 +962,10 @@
                             </div>
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 500;">Service Package *</label>
-                                <select name="package" required style="
+                                <select name="package" required class="admin-select" style="
                                     width: 100%;
                                     padding: 12px;
-                                    background: rgba(255, 255, 255, 0.1);
-                                    border: 1px solid rgba(0, 191, 255, 0.3);
                                     border-radius: 8px;
-                                    color: var(--white);
                                 ">
                                     <option value="">Select Package...</option>
                                     <option value="orthomosaic-2500">EAS | Orthomosaic Mapping - $2,500</option>
@@ -1130,6 +1150,12 @@
                             cursor: pointer;
                             font-size: 0.9rem;
                         ">📊 View Reports</button>
+                    </div>
+                    <div style="text-align:left; background: rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.2); padding:12px; border-radius:8px; margin-bottom:15px;">
+                        <div style="color: var(--electric-cyan); font-weight:600; margin-bottom:6px;">After Deposit Confirmation</div>
+                        <div style="font-size: 0.85rem; color: var(--white); margin-bottom:6px;">Activate client portal access:</div>
+                        <code style="display:block; padding:8px; background: rgba(0,0,0,0.5); border-radius:6px; color:#00ffff; font-size:0.8rem;">npm run activate:client -- --id &lt;clientId&gt; --deposit true --status active</code>
+                        <div style="font-size: 0.8rem; color: var(--gray-medium); margin-top:6px;">Example: <code>npm run activate:client -- --id demo-mosaic --deposit true --status active</code></div>
                     </div>
                     
                     <p style="color: var(--gray-medium); font-size: 0.85rem;">

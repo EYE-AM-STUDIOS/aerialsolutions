@@ -9,7 +9,9 @@
     "deploy": "vercel --prod",
     "preview": "vercel",
     "new:client": "node scripts/new-client.js",
-    "new:client:demo": "node scripts/new-client.js --id demo-mosaic --name 'Demo Mosaic Client' --email demo@test.com"
+    "new:client:demo": "node scripts/new-client.js --id demo-mosaic --name 'Demo Mosaic Client' --email demo@test.com",
+    "activate:client": "node scripts/activate-client.js",
+    "activate:demo": "node scripts/activate-client.js --id demo-mosaic --deposit true --status active"
   },
   "keywords": [
     "aerial-imaging",
