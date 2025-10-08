@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAS | TrueView Portal - Client Dashboard</title>
+    <meta name="description" content="Access your aerial imaging deliverables - interactive maps, 3D models, reports, and project data from EYE AM STUDIOS.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --jet-black: #000000;
+            --midnight-blue: #0D1B2A;
+            --electric-cyan: #00BFFF;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray-medium: #6C757D;
+            --gray-dark: #495057;
+            --success-green: #28A745;
+            --warning-orange: #FFC107;
+            --error-red: #DC3545;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--jet-black) 0%, var(--midnight-blue) 100%);
+            min-height: 100vh;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-container {
+            display: grid;
+            grid-template-areas: 
+                "header header"
+                "sidebar main";
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: 70px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .dashboard-header {
+            grid-area: header;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .portal-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--electric-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jet-black);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid var(--error-red);
+            color: var(--error-red);
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error-red);
+            color: var(--white);
+        }
+
+        /* Sidebar */
+        .dashboard-sidebar {
+            grid-area: sidebar;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(0, 191, 255, 0.2);
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 30px;
+        }
+
+        .nav-section h3 {
+            color: var(--electric-cyan);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 191, 255, 0.1);
+            color: var(--electric-cyan);
+        }
+
+        .nav-link.active {
+            background: rgba(0, 191, 255, 0.2);
+            color: var(--electric-cyan);
+            border-left: 3px solid var(--electric-cyan);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            grid-area: main;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .page-subtitle {
+            color: var(--gray-medium);
+            font-size: 1rem;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--electric-cyan), var(--midnight-blue));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--electric-cyan);
+            box-shadow: 0 15px 35px rgba(0, 191, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--electric-cyan);
+        }
+
+        .card-content {
+            margin-bottom: 20px;
+        }
+
+        .card-description {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            margin-bottom: 15px;
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-completed {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-green);
+        }
+
+        .status-processing {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning-orange);
+        }
+
+        .status-ready {
+            background: rgba(0, 191, 255, 0.2);
+            color: var(--electric-cyan);
+        }
+
+        /* Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+        }
+
+        .btn-primary:hover {
+            background: #0099CC;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--electric-cyan);
+        }
+
+        .btn-download {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
+        }
+
+        .btn-download:hover {
+            background: var(--success-green);
+            color: var(--white);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 191, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .quick-actions h3 {
+            color: var(--electric-cyan);
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-areas: 
+                    "header"
+                    "main";
+                grid-template-columns: 1fr;
+                grid-template-rows: 70px 1fr;
+            }
+
+            .dashboard-sidebar {
+                display: none;
+            }
+
+            .dashboard-main {
+                padding: 20px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 250px 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner {
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-top: 2px solid var(--electric-cyan);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="portal-logo">EAS | TrueView Portal</div>
+            <div class="header-controls">
+                <div class="user-info">
+                    <div class="user-avatar">KB</div>
+                    <span>Kemuel Burns - Demo Client</span>
+                </div>
+                <a href="portal.html" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <nav>
+                <div class="nav-section">
+                    <h3>Projects</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <span class="nav-icon">🏠</span>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="showMyProjects()">
+                                <span class="nav-icon">📁</span>
+                                My Projects
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">📊</span>
+                                Reports
+                            </a>
+                        </li>
+                    </nav>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Tools</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🗺️</span>
+                                Interactive Maps
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">🧭</span>
+                                3D Viewer
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">📱</span>
+                                360° Imaging
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Support</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">💬</span>
+                                Help & Support
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <span class="nav-icon">📞</span>
+                                Contact EAS
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div id="dashboard-content">
+                <!-- Page Header -->
+                <div class="page-header fade-in">
+                    <h1 class="page-title">Welcome to Your Project Portal</h1>
+                    <p class="page-subtitle">Access your aerial imaging deliverables, interactive maps, and project data</p>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="stats-grid fade-in stagger-1">
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Total Deliverables</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8.2GB</div>
+                        <div class="stat-label">Data Storage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30 Days</div>
+                        <div class="stat-label">Portal Access</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions fade-in stagger-2">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <a href="#" class="btn btn-primary" onclick="requestNewFlight()">
+                            ✈️ Request New Flight
+                        </a>
+                        <a href="#" class="btn btn-secondary" onclick="downloadAllReports()">
+                            📄 Download All Reports
+                        </a>
+                        <a href="#" class="btn btn-secondary">
+                            📧 Contact Project Manager
+                        </a>
+                        <a href="index.html" class="btn btn-secondary">
+                            🌐 Visit Main Site
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent Projects Grid -->
+                <div class="dashboard-grid">
+                    <!-- Project 1 -->
+                    <div class="dashboard-card fade-in stagger-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Mosaic Construction Site</h3>
+                            <span class="card-icon">🏗️</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Bartow, FL</span>
+                                <span class="project-status status-completed">Completed</span>
+                            </div>
+                            <p class="card-description">
+                                Complete orthomosaic mapping and 3D modeling for construction site documentation and planning phase analysis.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Sep 22, 2025</span>
+                                <span>Altitude: 250ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('mosaic')">
+                                🗺️ Interactive Map
+                            </a>
+                            <a href="#" class="btn btn-secondary" onclick="view3DModel('mosaic')">
+                                🧭 3D Model
+                            </a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('mosaic')">
+                                📥 Download
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="dashboard-card fade-in stagger-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Industrial Tank Inspection</h3>
+                            <span class="card-icon">🏭</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Tampa, FL</span>
+                                <span class="project-status status-ready">Ready</span>
+                            </div>
+                            <p class="card-description">
+                                High-resolution aerial inspection of storage tanks with thermal imaging and 360° documentation for compliance reporting.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 1, 2025</span>
+                                <span>Altitude: 150ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInspectionReport('tank')">
+                                📋 Inspection Report
+                            </a>
+                            <a href="#" class="btn btn-secondary" onclick="view360Imaging('tank')">
+                                📱 360° Imaging
+                            </a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('tank')">
+                                📥 Download
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="dashboard-card fade-in stagger-1">
+                        <div class="card-header">
+                            <h3 class="card-title">Residential Development Survey</h3>
+                            <span class="card-icon">🏘️</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Orlando, FL</span>
+                                <span class="project-status status-processing">Processing</span>
+                            </div>
+                            <p class="card-description">
+                                Pre-construction survey with DSM/DTM modeling and contour generation for residential development planning.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 5, 2025</span>
+                                <span>ETA: Oct 8, 2025</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-secondary loading">
+                                <div class="spinner"></div>
+                                Processing...
+                            </a>
+                            <a href="#" class="btn btn-secondary" onclick="viewFlightSummary('residential')">
+                                📄 Flight Summary
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="dashboard-card fade-in stagger-2">
+                        <div class="card-header">
+                            <h3 class="card-title">Bridge Infrastructure Audit</h3>
+                            <span class="card-icon">🌉</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Jacksonville, FL</span>
+                                <span class="project-status status-completed">Completed</span>
+                            </div>
+                            <p class="card-description">
+                                Detailed infrastructure inspection with high-resolution imagery and structural analysis documentation.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Sep 15, 2025</span>
+                                <span>Altitude: 200ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInspectionReport('bridge')">
+                                📋 Inspection Report
+                            </a>
+                            <a href="#" class="btn btn-secondary" onclick="viewInteractiveMap('bridge')">
+                                🗺️ Interactive Map
+                            </a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('bridge')">
+                                📥 Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Navigation handling
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Project interactions
+        function viewInteractiveMap(projectId) {
+            showNotification(`Opening interactive map for ${projectId} project...`, 'info');
+            // In a real implementation, this would open the interactive map viewer
+            setTimeout(() => {
+                showNotification('Interactive map viewer would open here', 'success');
+            }, 1500);
+        }
+
+        function view3DModel(projectId) {
+            showNotification(`Loading 3D model for ${projectId} project...`, 'info');
+            setTimeout(() => {
+                showNotification('3D model viewer would open here', 'success');
+            }, 1500);
+        }
+
+        function view360Imaging(projectId) {
+            showNotification(`Opening 360° imaging for ${projectId} project...`, 'info');
+            setTimeout(() => {
+                showNotification('360° imaging viewer would open here', 'success');
+            }, 1500);
+        }
+
+        function viewInspectionReport(projectId) {
+            showNotification(`Opening inspection report for ${projectId} project...`, 'info');
+            setTimeout(() => {
+                showNotification('Inspection report would open here', 'success');
+            }, 1500);
+        }
+
+        function downloadProject(projectId) {
+            showNotification(`Preparing download for ${projectId} project...`, 'info');
+            setTimeout(() => {
+                showNotification('Download would start here (ZIP file with all deliverables)', 'success');
+            }, 2000);
+        }
+
+        function viewFlightSummary(projectId) {
+            showNotification(`Opening flight summary for ${projectId} project...`, 'info');
+            setTimeout(() => {
+                showNotification('Flight summary report would open here', 'success');
+            }, 1500);
+        }
+
+        // Quick actions
+        function requestNewFlight() {
+            showNotification('Redirecting to new flight request form...', 'info');
+            setTimeout(() => {
+                showNotification('New flight request form would open here', 'success');
+            }, 1500);
+        }
+
+        function downloadAllReports() {
+            showNotification('Preparing comprehensive report package...', 'info');
+            setTimeout(() => {
+                showNotification('All reports download would start here', 'success');
+            }, 2000);
+        }
+
+        // Page navigation
+        function showMyProjects() {
+            const content = document.getElementById('dashboard-content');
+            content.innerHTML = `
+                <div class="page-header fade-in">
+                    <h1 class="page-title">My Projects</h1>
+                    <p class="page-subtitle">Complete list of all your aerial imaging projects</p>
+                </div>
+                
+                <div class="quick-actions fade-in stagger-1">
+                    <h3>Filter Projects</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">All Projects</button>
+                        <button class="btn btn-secondary">Completed</button>
+                        <button class="btn btn-secondary">In Progress</button>
+                        <button class="btn btn-secondary">Archived</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-card fade-in stagger-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Project List View</h3>
+                        <span class="card-icon">📋</span>
+                    </div>
+                    <div class="card-content">
+                        <p class="card-description">
+                            Complete project management interface would be displayed here with sorting, filtering, and detailed project information.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            setActiveNav(event.target);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 
+                             type === 'error' ? 'rgba(220, 53, 69, 0.9)' : 
+                             'rgba(0, 191, 255, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'success' ? '#28A745' : 
+                                  type === 'error' ? '#DC3545' : 
+                                  '#00BFFF'};
+                z-index: 1000;
+                font-size: 0.9rem;
+                max-width: 300px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.onclick) {
+                        e.preventDefault();
+                        setActiveNav(this);
+                    }
+                });
+            });
+
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to your EAS TrueView Portal!', 'success');
+            }, 1000);
+        });
+
+        // Handle mobile menu (future enhancement)
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.dashboard-sidebar');
+            sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>
