@@ -1,0 +1,12 @@
+{
+  "clients": [
+    {
+      "id": "demo-mosaic",
+      "name": "Demo Mosaic Client",
+      "email": "demo@test.com",
+      "currentProject": "mosaic",
+      "selectedPackage": "orthomosaic",
+      "focusMode": "dim"
+    }
+  ]
+}

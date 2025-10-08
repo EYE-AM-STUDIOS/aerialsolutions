@@ -610,6 +610,15 @@
                 // Demo login logic with password validation
                 if (email.toLowerCase().includes('demo') || email.toLowerCase().includes('test')) {
                     if (password === 'demo123' || password === 'test123' || password === 'client') {
+                        try {
+                            // Demo client defaults for dashboard focus mode
+                            localStorage.setItem('clientId', 'demo-mosaic');
+                            localStorage.setItem('currentProject', 'mosaic');
+                            localStorage.setItem('selectedPackage', 'orthomosaic');
+                            if (!localStorage.getItem('focusMode')) {
+                                localStorage.setItem('focusMode', 'dim');
+                            }
+                        } catch {}
                         showMessage('Client login successful! Redirecting to your project dashboard...', 'success');
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';

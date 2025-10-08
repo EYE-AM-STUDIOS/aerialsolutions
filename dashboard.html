@@ -234,6 +234,17 @@
             box-shadow: 0 15px 35px rgba(0, 191, 255, 0.2);
         }
 
+        /* Focus mode for current project */
+        .dashboard-card.dimmed {
+            opacity: 0.25;
+            filter: grayscale(0.6) blur(0.5px);
+            pointer-events: none;
+        }
+        .dashboard-card.highlight {
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 0 2px rgba(0,191,255,0.3), 0 20px 45px rgba(0,191,255,0.25);
+        }
+
         .card-header {
             display: flex;
             align-items: center;
@@ -506,6 +517,25 @@
             flex-wrap: wrap;
         }
 
+        .btn-outline {
+            background: transparent;
+            color: var(--electric-cyan);
+            border: 1px solid var(--electric-cyan);
+        }
+        .btn-outline:hover {
+            background: rgba(0, 191, 255, 0.15);
+        }
+
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            color: var(--white);
+            border: 1px dashed rgba(255,255,255,0.2);
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--electric-cyan);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .dashboard-container {
@@ -594,6 +624,10 @@
             padding: 20px;
             margin: 15px 0;
         }
+        .package-info.selected {
+            border-color: var(--electric-cyan);
+            box-shadow: 0 0 0 2px rgba(0,191,255,0.25);
+        }
 
         .package-title {
             color: var(--electric-cyan);
@@ -603,6 +637,16 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+        .pkg-badge {
+            background: linear-gradient(135deg, var(--electric-cyan), #0099CC);
+            color: var(--jet-black);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .deliverables-section,
@@ -989,8 +1033,8 @@
 
                 <!-- Recent Projects Grid -->
                 <div class="dashboard-grid">
-                    <!-- Project 1 -->
-                    <div class="dashboard-card fade-in stagger-3">
+                    <!-- Project 1: ID=mosaic, package=orthomosaic -->
+                    <div class="dashboard-card fade-in stagger-3" data-project-id="mosaic" data-package="orthomosaic">
                         <div class="card-header">
                             <h3 class="card-title">Mosaic Construction Site</h3>
                             <span class="card-icon">🏗️</span>
@@ -1084,8 +1128,8 @@
                         </div>
                     </div>
 
-                    <!-- Project 2 -->
-                    <div class="dashboard-card fade-in stagger-4">
+                    <!-- Project 2: ID=tank, package=inspections -->
+                    <div class="dashboard-card fade-in stagger-4" data-project-id="tank" data-package="inspections">
                         <div class="card-header">
                             <h3 class="card-title">Industrial Tank Inspection</h3>
                             <span class="card-icon">🏭</span>
@@ -1144,8 +1188,8 @@
                         </div>
                     </div>
 
-                    <!-- Project 3 -->
-                    <div class="dashboard-card fade-in stagger-1">
+                    <!-- Project 3: ID=residential, package=dsmdtm -->
+                    <div class="dashboard-card fade-in stagger-1" data-project-id="residential" data-package="dsmdtm">
                         <div class="card-header">
                             <h3 class="card-title">Residential Development Survey</h3>
                             <span class="card-icon">🏘️</span>
@@ -1235,8 +1279,8 @@
                         </div>
                     </div>
 
-                    <!-- Project 4 -->
-                    <div class="dashboard-card fade-in stagger-2">
+                    <!-- Project 4: ID=bridge, package=progress -->
+                    <div class="dashboard-card fade-in stagger-2" data-project-id="bridge" data-package="progress">
                         <div class="card-header">
                             <h3 class="card-title">Bridge Infrastructure Audit</h3>
                             <span class="card-icon">🌉</span>
@@ -1601,6 +1645,133 @@
             setTimeout(() => {
                 showNotification('Welcome to your EAS TrueView Portal!', 'success');
             }, 1000);
+
+            // Focus from config or localStorage
+            async function applyFocusFromState(state) {
+                const currentProject = state && state.currentProject;
+                const selectedPackage = state && state.selectedPackage;
+                const focusMode = (state && state.focusMode) || localStorage.getItem('focusMode') || 'dim';
+                if (!currentProject) return;
+
+                const cards = Array.from(document.querySelectorAll('.dashboard-card[data-project-id]'));
+                cards.forEach(card => {
+                    const isSelected = card.dataset.projectId === currentProject;
+                    if (isSelected) {
+                        card.classList.add('highlight');
+                        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                        const pkgInfo = card.querySelector('.package-info');
+                        if (pkgInfo) {
+                            pkgInfo.classList.add('selected');
+                            const title = pkgInfo.querySelector('.package-title');
+                            if (title && !title.querySelector('.pkg-badge')) {
+                                const badge = document.createElement('span');
+                                badge.className = 'pkg-badge';
+                                badge.textContent = 'Selected Package';
+                                title.appendChild(badge);
+                            }
+                        }
+                    } else {
+                        if (focusMode === 'hide') {
+                            card.style.display = 'none';
+                        } else {
+                            card.classList.add('dimmed');
+                        }
+                    }
+                });
+
+                const headerTitle = document.querySelector('.page-title');
+                const headerSubtitle = document.querySelector('.page-subtitle');
+                if (headerTitle) headerTitle.textContent = 'Welcome to Your Project Portal';
+                if (headerSubtitle && selectedPackage) {
+                    const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring' };
+                    const pkgLabel = pkgNames[selectedPackage] || 'Your Selected Package';
+                    headerSubtitle.textContent = `Your selected package: ${pkgLabel}`;
+                }
+
+                const qa = document.querySelector('.quick-actions .action-buttons');
+                if (qa) {
+                    const showAllBtn = document.createElement('a');
+                    showAllBtn.href = '#';
+                    showAllBtn.className = 'btn btn-outline';
+                    showAllBtn.textContent = '👁️ Show All Projects';
+                    showAllBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        try { localStorage.removeItem('currentProject'); } catch{}
+                        try { localStorage.removeItem('selectedPackage'); } catch{}
+                        try { localStorage.removeItem('focusMode'); } catch{}
+                        document.querySelectorAll('.dashboard-card').forEach(c => {
+                            c.classList.remove('dimmed', 'highlight');
+                            c.style.display = '';
+                            const pi = c.querySelector('.package-info');
+                            if (pi) pi.classList.remove('selected');
+                            const bd = c.querySelector('.pkg-badge');
+                            if (bd && bd.parentNode) bd.parentNode.removeChild(bd);
+                        });
+                        const headerSubtitle2 = document.querySelector('.page-subtitle');
+                        if (headerSubtitle2) headerSubtitle2.textContent = 'Access your aerial imaging deliverables, interactive maps, and project data';
+                        showNotification('Showing all projects', 'info');
+                    });
+                    qa.appendChild(showAllBtn);
+
+                    const toggleFocusBtn = document.createElement('a');
+                    toggleFocusBtn.href = '#';
+                    toggleFocusBtn.className = 'btn btn-ghost';
+                    const currentMode = focusMode;
+                    toggleFocusBtn.textContent = currentMode === 'hide' ? '🌗 Dim Other Projects' : '🚫 Hide Other Projects';
+                    toggleFocusBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const mode = (localStorage.getItem('focusMode') || currentMode) === 'hide' ? 'dim' : 'hide';
+                        try { localStorage.setItem('focusMode', mode); } catch{}
+                        document.querySelectorAll('.dashboard-card[data-project-id]').forEach(c => {
+                            if (!c.classList.contains('highlight')) {
+                                if (mode === 'hide') {
+                                    c.style.display = 'none';
+                                    c.classList.remove('dimmed');
+                                } else {
+                                    c.style.display = '';
+                                    c.classList.add('dimmed');
+                                }
+                            }
+                        });
+                        toggleFocusBtn.textContent = mode === 'hide' ? '🌗 Dim Other Projects' : '🚫 Hide Other Projects';
+                        showNotification(mode === 'hide' ? 'Other projects hidden' : 'Other projects dimmed', 'info');
+                    });
+                    qa.appendChild(toggleFocusBtn);
+                }
+            }
+
+            (async () => {
+                try {
+                    const clientId = localStorage.getItem('clientId');
+                    if (clientId) {
+                        const res = await fetch('clients/config.json', { cache: 'no-store' });
+                        if (res.ok) {
+                            const cfg = await res.json();
+                            const found = (cfg.clients || []).find(c => c.id === clientId);
+                            if (found) {
+                                try {
+                                    if (found.currentProject) localStorage.setItem('currentProject', found.currentProject);
+                                    if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
+                                    if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
+                                } catch {}
+                                await applyFocusFromState(found);
+                                return;
+                            }
+                        }
+                    }
+                    await applyFocusFromState({
+                        currentProject: localStorage.getItem('currentProject'),
+                        selectedPackage: localStorage.getItem('selectedPackage'),
+                        focusMode: localStorage.getItem('focusMode')
+                    });
+                } catch (e) {
+                    await applyFocusFromState({
+                        currentProject: localStorage.getItem('currentProject'),
+                        selectedPackage: localStorage.getItem('selectedPackage'),
+                        focusMode: localStorage.getItem('focusMode')
+                    });
+                }
+            })();
         });
 
         // Handle mobile menu (future enhancement)
