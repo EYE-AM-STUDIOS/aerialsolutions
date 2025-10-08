@@ -739,8 +739,8 @@
                     </div>
                     <div class="feature-item fade-in stagger-3">
                         <div class="feature-icon">📱</div>
-                        <h3>360° Tours</h3>
-                        <p>Immersive virtual walkthroughs with annotated points of interest</p>
+                        <h3>360° Imaging</h3>
+                        <p>360° imaging with annotated points of interest for comprehensive site documentation</p>
                     </div>
                     <div class="feature-item fade-in stagger-4">
                         <div class="feature-icon">📊</div>
@@ -760,7 +760,7 @@
             <h2 class="section-title fade-in">Request a Custom Aerial Imaging Quote</h2>
             <p class="section-subtitle fade-in stagger-1">Ready to elevate your project with professional aerial imaging? Get started today.</p>
             
-            <form class="contact-form fade-in stagger-2">
+            <form class="contact-form fade-in stagger-2" action="https://formspree.io/f/myzndjra" method="POST">
                 <div class="form-group">
                     <label for="name">Full Name *</label>
                     <input type="text" id="name" name="name" required>
@@ -877,12 +877,42 @@
                 return;
             }
             
-            // Here you would typically send the data to your backend
-            // For now, we'll just show a success message
-            alert('Thank you for your interest! We will contact you within 24 hours to discuss your aerial imaging project.');
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending Quote Request...';
+            submitBtn.disabled = true;
             
-            // Reset form
-            this.reset();
+            // Submit to Formspree
+            fetch('https://formspree.io/f/myzndjra', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // Success
+                    alert('Thank you for your interest! We will contact you within 24 hours to discuss your aerial imaging project.');
+                    this.reset();
+                } else {
+                    // Error
+                    response.json().then(data => {
+                        if (Object.hasOwnProperty.call(data, 'errors')) {
+                            alert('Error submitting form: ' + data["errors"].map(error => error["message"]).join(", "));
+                        } else {
+                            alert('Error submitting form. Please try again or contact us directly.');
+                        }
+                    });
+                }
+            }).catch(error => {
+                // Network error
+                alert('Network error. Please check your connection and try again.');
+            }).finally(() => {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
         });
 
         // Add intersection observer for animations
