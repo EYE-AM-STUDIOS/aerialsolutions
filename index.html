@@ -228,8 +228,8 @@
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
         }
 
         .service-card {
@@ -516,10 +516,28 @@
 
             .services-grid {
                 grid-template-columns: 1fr;
+                gap: 30px;
             }
 
             .portal-features {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1200px) and (min-width: 769px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 1400px) and (min-width: 1201px) {
+            .services-grid {
+                gap: 25px;
+            }
+            
+            .service-card {
+                padding: 35px 25px;
             }
         }
 
