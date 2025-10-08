@@ -594,8 +594,13 @@
                     showMessage('Login successful! Redirecting to your project dashboard...', 'success');
                     
                     setTimeout(() => {
-                        // In a real implementation, this would redirect to the actual dashboard
-                        showDemoDashboard();
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else if (email.toLowerCase().includes('admin') || email === 'kemuel@eyeamstudios.com' || email === 'admin@eyeamstudios.com') {
+                    showMessage('Admin login successful! Redirecting to admin dashboard...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
                     }, 2000);
                 } else {
                     showMessage('Portal access is currently being configured for your account. Please contact EYE AM STUDIOS for immediate access.', 'warning');

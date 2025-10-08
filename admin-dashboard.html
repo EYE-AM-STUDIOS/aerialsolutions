@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAS | Admin Dashboard - Portal Management</title>
+    <meta name="description" content="Administrative dashboard for managing client portals, projects, and deliverables.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --jet-black: #000000;
+            --midnight-blue: #0D1B2A;
+            --electric-cyan: #00BFFF;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray-medium: #6C757D;
+            --gray-dark: #495057;
+            --success-green: #28A745;
+            --warning-orange: #FFC107;
+            --error-red: #DC3545;
+            --admin-purple: #6F42C1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--jet-black) 0%, var(--midnight-blue) 100%);
+            min-height: 100vh;
+        }
+
+        /* Admin Dashboard Layout */
+        .admin-container {
+            display: grid;
+            grid-template-areas: 
+                "header header"
+                "sidebar main";
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: 80px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Admin Header */
+        .admin-header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--admin-purple), var(--midnight-blue));
+            border-bottom: 2px solid var(--electric-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+        }
+
+        .admin-badge {
+            background: var(--error-red);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+        }
+
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .view-switcher {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--electric-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--jet-black);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Admin Sidebar */
+        .admin-sidebar {
+            grid-area: sidebar;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 2px solid rgba(0, 191, 255, 0.3);
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+
+        .admin-nav-section {
+            margin-bottom: 35px;
+        }
+
+        .admin-nav-section h3 {
+            color: var(--electric-cyan);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .admin-nav-menu {
+            list-style: none;
+        }
+
+        .admin-nav-item {
+            margin-bottom: 8px;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .admin-nav-link:hover {
+            background: rgba(111, 66, 193, 0.2);
+            color: var(--electric-cyan);
+        }
+
+        .admin-nav-link.active {
+            background: rgba(0, 191, 255, 0.2);
+            color: var(--electric-cyan);
+            border-left: 3px solid var(--electric-cyan);
+        }
+
+        .admin-nav-icon {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        /* Main Admin Content */
+        .admin-main {
+            grid-area: main;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .admin-page-header {
+            margin-bottom: 30px;
+        }
+
+        .admin-page-title {
+            font-size: 2.2rem;
+            color: var(--white);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .admin-page-subtitle {
+            color: var(--gray-medium);
+            font-size: 1.1rem;
+        }
+
+        /* Admin Stats Grid */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .admin-stat-card {
+            background: rgba(111, 66, 193, 0.1);
+            border: 2px solid rgba(111, 66, 193, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .admin-stat-card:hover {
+            border-color: var(--admin-purple);
+            transform: translateY(-3px);
+        }
+
+        .admin-stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            margin-bottom: 8px;
+        }
+
+        .admin-stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-stat-change {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: var(--success-green);
+        }
+
+        /* Client Management Table */
+        .admin-table-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .admin-table-header {
+            background: rgba(111, 66, 193, 0.2);
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        .admin-table-title {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 15px 25px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--electric-cyan);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-table td {
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .admin-table tbody tr:hover {
+            background: rgba(0, 191, 255, 0.1);
+        }
+
+        .client-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-green);
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning-orange);
+        }
+
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--error-red);
+        }
+
+        /* Action Buttons */
+        .admin-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 8px;
+        }
+
+        .admin-btn-primary {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+        }
+
+        .admin-btn-secondary {
+            background: rgba(111, 66, 193, 0.2);
+            color: var(--admin-purple);
+            border: 1px solid var(--admin-purple);
+        }
+
+        .admin-btn-danger {
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--error-red);
+            border: 1px solid var(--error-red);
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Quick Actions Panel */
+        .admin-quick-actions {
+            background: rgba(0, 191, 255, 0.1);
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .admin-quick-actions h3 {
+            color: var(--electric-cyan);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .admin-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .admin-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--white);
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-action-btn:hover {
+            background: rgba(0, 191, 255, 0.2);
+            border-color: var(--electric-cyan);
+            transform: translateY(-3px);
+        }
+
+        .admin-action-icon {
+            font-size: 2rem;
+            color: var(--electric-cyan);
+        }
+
+        .admin-action-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-areas: 
+                    "header"
+                    "main";
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 1fr;
+            }
+
+            .admin-sidebar {
+                display: none;
+            }
+
+            .admin-main {
+                padding: 20px;
+            }
+
+            .admin-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-table-container {
+                overflow-x: auto;
+            }
+
+            .view-switcher {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div>
+                <span class="admin-logo">EAS | Admin Portal</span>
+                <span class="admin-badge">Administrator</span>
+            </div>
+            <div class="admin-controls">
+                <div class="view-switcher">
+                    <button class="view-btn active" onclick="switchView('admin')">Admin View</button>
+                    <button class="view-btn" onclick="switchView('client')">Client View</button>
+                </div>
+                <div class="admin-user">
+                    <div class="admin-avatar">KB</div>
+                    <div>
+                        <div style="font-size: 0.9rem; font-weight: 600;">Kemuel Burns</div>
+                        <div style="font-size: 0.75rem; opacity: 0.8;">Administrator</div>
+                    </div>
+                </div>
+                <a href="portal.html" class="admin-btn admin-btn-danger">Logout</a>
+            </div>
+        </header>
+
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <nav>
+                <div class="admin-nav-section">
+                    <h3>Dashboard</h3>
+                    <ul class="admin-nav-menu">
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link active" onclick="showOverview()">
+                                <span class="admin-nav-icon">📊</span>
+                                Overview
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="showAnalytics()">
+                                <span class="admin-nav-icon">📈</span>
+                                Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="admin-nav-section">
+                    <h3>Client Management</h3>
+                    <ul class="admin-nav-menu">
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="showClients()">
+                                <span class="admin-nav-icon">👥</span>
+                                All Clients
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link" onclick="showProjects()">
+                                <span class="admin-nav-icon">📁</span>
+                                Projects
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">📋</span>
+                                Deliverables
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="admin-nav-section">
+                    <h3>Portal Settings</h3>
+                    <ul class="admin-nav-menu">
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">⚙️</span>
+                                Configuration
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">🔐</span>
+                                Access Control
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">📊</span>
+                                Reports
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="admin-nav-section">
+                    <h3>System</h3>
+                    <ul class="admin-nav-menu">
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">🔧</span>
+                                System Status
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="#" class="admin-nav-link">
+                                <span class="admin-nav-icon">📝</span>
+                                Activity Logs
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Admin Content -->
+        <main class="admin-main">
+            <div id="admin-content">
+                <!-- Page Header -->
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">Portal Administration</h1>
+                    <p class="admin-page-subtitle">Manage client access, projects, and portal deliverables</p>
+                </div>
+
+                <!-- Admin Stats -->
+                <div class="admin-stats-grid fade-in stagger-1">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-number">12</div>
+                        <div class="admin-stat-label">Active Clients</div>
+                        <div class="admin-stat-change">+2 this month</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-number">34</div>
+                        <div class="admin-stat-label">Total Projects</div>
+                        <div class="admin-stat-change">+8 this month</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-number">156</div>
+                        <div class="admin-stat-label">Deliverables</div>
+                        <div class="admin-stat-change">+24 this week</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-number">98%</div>
+                        <div class="admin-stat-label">Portal Uptime</div>
+                        <div class="admin-stat-change">Excellent</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="admin-quick-actions fade-in stagger-2">
+                    <h3>Quick Actions</h3>
+                    <div class="admin-action-grid">
+                        <a href="#" class="admin-action-btn" onclick="addNewClient()">
+                            <div class="admin-action-icon">👤</div>
+                            <div class="admin-action-text">Add New Client</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="uploadDeliverables()">
+                            <div class="admin-action-icon">📤</div>
+                            <div class="admin-action-text">Upload Deliverables</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="generateReport()">
+                            <div class="admin-action-icon">📊</div>
+                            <div class="admin-action-text">Generate Report</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="systemBackup()">
+                            <div class="admin-action-icon">💾</div>
+                            <div class="admin-action-text">System Backup</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Client Management Table -->
+                <div class="admin-table-container fade-in stagger-3">
+                    <div class="admin-table-header">
+                        <h3 class="admin-table-title">Recent Client Activity</h3>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Project</th>
+                                <th>Status</th>
+                                <th>Last Access</th>
+                                <th>Deliverables</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Mosaic Construction</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.7;">contact@mosaicconstruction.com</div>
+                                </td>
+                                <td>Bartow Construction Site</td>
+                                <td><span class="client-status status-active">Active</span></td>
+                                <td>2 hours ago</td>
+                                <td>4 files</td>
+                                <td>
+                                    <button class="admin-btn admin-btn-primary" onclick="viewClientPortal('mosaic')">👁️ View Portal</button>
+                                    <button class="admin-btn admin-btn-secondary" onclick="manageAccess('mosaic')">⚙️ Manage</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Tampa Industrial</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.7;">admin@tampaindustrial.com</div>
+                                </td>
+                                <td>Tank Inspection</td>
+                                <td><span class="client-status status-active">Active</span></td>
+                                <td>1 day ago</td>
+                                <td>6 files</td>
+                                <td>
+                                    <button class="admin-btn admin-btn-primary" onclick="viewClientPortal('tampa')">👁️ View Portal</button>
+                                    <button class="admin-btn admin-btn-secondary" onclick="manageAccess('tampa')">⚙️ Manage</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">Orlando Development</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.7;">project@orlandodev.com</div>
+                                </td>
+                                <td>Residential Survey</td>
+                                <td><span class="client-status status-pending">Processing</span></td>
+                                <td>3 days ago</td>
+                                <td>2 files</td>
+                                <td>
+                                    <button class="admin-btn admin-btn-secondary" onclick="manageAccess('orlando')">⚙️ Manage</button>
+                                    <button class="admin-btn admin-btn-danger" onclick="suspendAccess('orlando')">🚫 Suspend</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // View switcher functionality
+        function switchView(view) {
+            const buttons = document.querySelectorAll('.view-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (view === 'client') {
+                // Redirect to client dashboard view
+                window.open('dashboard.html', '_blank');
+                showNotification('Opening client portal view in new tab', 'info');
+            } else {
+                showNotification('Switched to admin view', 'success');
+            }
+        }
+
+        // Navigation functions
+        function setActiveNav(element) {
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Admin functions
+        function viewClientPortal(clientId) {
+            showNotification(`Opening ${clientId} client portal view...`, 'info');
+            setTimeout(() => {
+                window.open('dashboard.html', '_blank');
+            }, 1000);
+        }
+
+        function manageAccess(clientId) {
+            showNotification(`Managing access for ${clientId}...`, 'info');
+            // This would open a client management modal
+        }
+
+        function suspendAccess(clientId) {
+            if (confirm(`Are you sure you want to suspend access for ${clientId}?`)) {
+                showNotification(`Access suspended for ${clientId}`, 'warning');
+            }
+        }
+
+        function addNewClient() {
+            showNotification('Opening new client setup wizard...', 'info');
+            // This would open a new client form
+        }
+
+        function uploadDeliverables() {
+            showNotification('Opening deliverables upload interface...', 'info');
+            // This would open a file upload modal
+        }
+
+        function generateReport() {
+            showNotification('Generating portal activity report...', 'info');
+            setTimeout(() => {
+                showNotification('Report generated and ready for download', 'success');
+            }, 2000);
+        }
+
+        function systemBackup() {
+            showNotification('Initiating system backup...', 'info');
+            setTimeout(() => {
+                showNotification('System backup completed successfully', 'success');
+            }, 3000);
+        }
+
+        // Page navigation functions
+        function showOverview() {
+            setActiveNav(event.target);
+            showNotification('Showing overview dashboard', 'info');
+        }
+
+        function showAnalytics() {
+            setActiveNav(event.target);
+            const content = document.getElementById('admin-content');
+            content.innerHTML = `
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">Portal Analytics</h1>
+                    <p class="admin-page-subtitle">Detailed usage statistics and performance metrics</p>
+                </div>
+                
+                <div class="admin-quick-actions fade-in stagger-1">
+                    <h3>Analytics Dashboard</h3>
+                    <p style="color: var(--gray-medium); margin-top: 10px;">
+                        Comprehensive analytics interface would display here including:
+                    </p>
+                    <ul style="color: var(--gray-medium); margin-top: 15px; list-style: none;">
+                        <li>📊 Client portal usage statistics</li>
+                        <li>📈 Download and interaction metrics</li>
+                        <li>⏱️ Session duration and frequency</li>
+                        <li>🗺️ Interactive map usage patterns</li>
+                        <li>📱 Mobile vs desktop access</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        function showClients() {
+            setActiveNav(event.target);
+            showNotification('Loading complete client management interface...', 'info');
+        }
+
+        function showProjects() {
+            setActiveNav(event.target);
+            showNotification('Loading project management interface...', 'info');
+        }
+
+        // Notification system (reusing from dashboard)
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 
+                             type === 'error' ? 'rgba(220, 53, 69, 0.9)' : 
+                             type === 'warning' ? 'rgba(255, 193, 7, 0.9)' :
+                             'rgba(0, 191, 255, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'success' ? '#28A745' : 
+                                  type === 'error' ? '#DC3545' : 
+                                  type === 'warning' ? '#FFC107' :
+                                  '#00BFFF'};
+                z-index: 1000;
+                font-size: 0.9rem;
+                max-width: 300px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handlers to navigation
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!this.onclick) {
+                        e.preventDefault();
+                        setActiveNav(this);
+                    }
+                });
+            });
+
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to EAS Admin Portal! Switch to Client View to see the client perspective.', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
