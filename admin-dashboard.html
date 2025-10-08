@@ -668,6 +668,11 @@
                         <div class="admin-stat-change">+24 this week</div>
                     </div>
                     <div class="admin-stat-card">
+                        <div class="admin-stat-number">2.8TB</div>
+                        <div class="admin-stat-label">Storage Used</div>
+                        <div class="admin-stat-change">78% capacity</div>
+                    </div>
+                    <div class="admin-stat-card">
                         <div class="admin-stat-number">98%</div>
                         <div class="admin-stat-label">Portal Uptime</div>
                         <div class="admin-stat-change">Excellent</div>
@@ -698,8 +703,12 @@
                             <div class="admin-action-icon">🍯</div>
                             <div class="admin-action-text">HoneyBook Sync</div>
                         </a>
-                        <a href="#" class="admin-action-btn" onclick="systemBackup()">
+                        <a href="#" class="admin-action-btn" onclick="manageStorage()">
                             <div class="admin-action-icon">💾</div>
+                            <div class="admin-action-text">Manage Storage</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="systemBackup()">
+                            <div class="admin-action-icon">�</div>
                             <div class="admin-action-text">System Backup</div>
                         </a>
                     </div>
@@ -1305,11 +1314,201 @@
             document.querySelector('[style*="backdrop-filter: blur(10px)"]').remove();
         }
 
-        function notifyClient(clientId) {
-            showNotification(`Sending progress notification to ${clientId} client...`, 'info');
+        function manageStorage() {
+            // Create storage management modal
+            const storageModal = document.createElement('div');
+            storageModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            `;
+            
+            storageModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black));
+                    border: 2px solid var(--electric-cyan);
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 800px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    position: relative;
+                ">
+                    <button onclick="this.closest('div').parentNode.remove()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background: none;
+                        border: none;
+                        color: var(--white);
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                    ">×</button>
+                    
+                    <h2 style="color: var(--electric-cyan); margin-bottom: 25px; text-align: center;">💾 Portal Storage Management</h2>
+                    
+                    <!-- Storage Overview -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: rgba(0, 191, 255, 0.1); border: 1px solid var(--electric-cyan); border-radius: 12px; padding: 20px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--electric-cyan); margin-bottom: 10px;">2.8TB</div>
+                            <div style="color: var(--white); font-size: 0.9rem;">Storage Used</div>
+                            <div style="color: var(--warning-orange); font-size: 0.8rem; margin-top: 5px;">78% Capacity</div>
+                        </div>
+                        <div style="background: rgba(40, 167, 69, 0.1); border: 1px solid var(--success-green); border-radius: 12px; padding: 20px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--success-green); margin-bottom: 10px;">12</div>
+                            <div style="color: var(--white); font-size: 0.9rem;">Active Clients</div>
+                            <div style="color: var(--success-green); font-size: 0.8rem; margin-top: 5px;">All Within Limits</div>
+                        </div>
+                        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid var(--warning-orange); border-radius: 12px; padding: 20px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--warning-orange); margin-bottom: 10px;">30</div>
+                            <div style="color: var(--white); font-size: 0.9rem;">Days Retention</div>
+                            <div style="color: var(--warning-orange); font-size: 0.8rem; margin-top: 5px;">Standard Plan</div>
+                        </div>
+                        <div style="background: rgba(111, 66, 193, 0.1); border: 1px solid var(--admin-purple); border-radius: 12px; padding: 20px; text-align: center;">
+                            <div style="font-size: 2rem; color: var(--admin-purple); margin-bottom: 10px;">156</div>
+                            <div style="color: var(--white); font-size: 0.9rem;">Total Files</div>
+                            <div style="color: var(--admin-purple); font-size: 0.8rem; margin-top: 5px;">All Formats</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Storage Plans -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: var(--electric-cyan); margin-bottom: 20px;">📋 Storage Plans & Pricing</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 20px;">
+                                <h4 style="color: var(--white); margin-bottom: 10px;">🥉 Basic Portal</h4>
+                                <div style="color: var(--electric-cyan); font-size: 1.5rem; margin-bottom: 10px;">Included</div>
+                                <ul style="color: var(--gray-medium); font-size: 0.9rem; list-style: none; padding: 0;">
+                                    <li>✓ 30-day access</li>
+                                    <li>✓ Standard deliverables</li>
+                                    <li>✓ Basic viewer access</li>
+                                    <li>✓ Download capabilities</li>
+                                </ul>
+                            </div>
+                            <div style="background: rgba(0, 191, 255, 0.1); border: 2px solid var(--electric-cyan); border-radius: 12px; padding: 20px;">
+                                <h4 style="color: var(--electric-cyan); margin-bottom: 10px;">🥈 Extended Portal</h4>
+                                <div style="color: var(--electric-cyan); font-size: 1.5rem; margin-bottom: 10px;">+$299/project</div>
+                                <ul style="color: var(--white); font-size: 0.9rem; list-style: none; padding: 0;">
+                                    <li>✓ 1-year access</li>
+                                    <li>✓ Interactive features</li>
+                                    <li>✓ 3D model viewers</li>
+                                    <li>✓ Measurement tools</li>
+                                    <li>✓ Progress tracking</li>
+                                </ul>
+                            </div>
+                            <div style="background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 12px; padding: 20px;">
+                                <h4 style="color: #FFD700; margin-bottom: 10px;">🥇 Enterprise Portal</h4>
+                                <div style="color: #FFD700; font-size: 1.5rem; margin-bottom: 10px;">+$599/project</div>
+                                <ul style="color: var(--white); font-size: 0.9rem; list-style: none; padding: 0;">
+                                    <li>✓ Unlimited access</li>
+                                    <li>✓ Multi-user accounts</li>
+                                    <li>✓ API integration</li>
+                                    <li>✓ Custom branding</li>
+                                    <li>✓ Advanced analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Client Storage Management -->
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: var(--electric-cyan); margin-bottom: 20px;">👥 Client Storage Breakdown</h3>
+                        <div style="background: rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: rgba(0, 0, 0, 0.3);">
+                                        <th style="padding: 15px; text-align: left; color: var(--electric-cyan); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Client</th>
+                                        <th style="padding: 15px; text-align: center; color: var(--electric-cyan); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Storage Used</th>
+                                        <th style="padding: 15px; text-align: center; color: var(--electric-cyan); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Plan</th>
+                                        <th style="padding: 15px; text-align: center; color: var(--electric-cyan); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Expires</th>
+                                        <th style="padding: 15px; text-align: center; color: var(--electric-cyan); border-bottom: 1px solid rgba(255, 255, 255, 0.1);">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                        <td style="padding: 12px 15px; color: var(--white);">Mosaic Construction</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--white);">485MB</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--electric-cyan);">Extended</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--white);">Sep 2026</td>
+                                        <td style="padding: 12px 15px; text-align: center;">
+                                            <button onclick="manageClientStorage('mosaic')" style="background: var(--electric-cyan); color: var(--jet-black); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Manage</button>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                        <td style="padding: 12px 15px; color: var(--white);">Tampa Industrial</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--white);">1.2GB</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: #FFD700;">Enterprise</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--white);">Unlimited</td>
+                                        <td style="padding: 12px 15px; text-align: center;">
+                                            <button onclick="manageClientStorage('tampa')" style="background: var(--electric-cyan); color: var(--jet-black); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Manage</button>
+                                        </td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                                        <td style="padding: 12px 15px; color: var(--white);">Orlando Development</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--white);">320MB</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--gray-medium);">Basic</td>
+                                        <td style="padding: 12px 15px; text-align: center; color: var(--warning-orange);">Nov 8, 2025</td>
+                                        <td style="padding: 12px 15px; text-align: center;">
+                                            <button onclick="manageClientStorage('orlando')" style="background: var(--electric-cyan); color: var(--jet-black); border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Manage</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Storage Actions -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <button onclick="archiveOldProjects()" style="background: var(--warning-orange); color: var(--white); padding: 12px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">🗄️ Archive Old Projects</button>
+                        <button onclick="upgradeStorage()" style="background: var(--electric-cyan); color: var(--jet-black); padding: 12px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">⬆️ Upgrade Storage</button>
+                        <button onclick="cleanupTempFiles()" style="background: var(--admin-purple); color: var(--white); padding: 12px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">🧹 Cleanup Temp Files</button>
+                        <button onclick="generateStorageReport()" style="background: var(--success-green); color: var(--white); padding: 12px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">📊 Storage Report</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(storageModal);
+        }
+
+        function manageClientStorage(clientId) {
+            showNotification(`Managing storage settings for ${clientId}...`, 'info');
+            // This would open detailed storage management for the specific client
+        }
+
+        function archiveOldProjects() {
+            showNotification('Archiving projects older than 30 days...', 'info');
             setTimeout(() => {
-                showNotification('Client notification sent successfully!', 'success');
+                showNotification('Archive completed. 450MB of storage freed up.', 'success');
+            }, 2000);
+        }
+
+        function upgradeStorage() {
+            showNotification('Opening storage upgrade options...', 'info');
+            // This would show cloud storage upgrade options (AWS S3, Azure, etc.)
+        }
+
+        function cleanupTempFiles() {
+            showNotification('Cleaning up temporary processing files...', 'info');
+            setTimeout(() => {
+                showNotification('Cleanup completed. 120MB of temp files removed.', 'success');
             }, 1500);
+        }
+
+        function generateStorageReport() {
+            showNotification('Generating comprehensive storage usage report...', 'info');
+            setTimeout(() => {
+                showNotification('Storage report generated and ready for download.', 'success');
+            }, 2000);
         }
 
         function uploadDeliverables() {

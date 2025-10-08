@@ -1,0 +1,29 @@
+{
+  "name": "eas-aerial-imaging-solutions",
+  "version": "1.0.0",
+  "description": "EAS | Aerial Imaging Solutions - Professional drone services with client portal system",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000 || php -S localhost:8000 || live-server",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "vercel --prod",
+    "preview": "vercel"
+  },
+  "keywords": [
+    "aerial-imaging",
+    "drone-services",
+    "orthomosaic",
+    "3d-mapping",
+    "florida",
+    "client-portal"
+  ],
+  "author": "EYE AM STUDIOS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EYE-AM-STUDIOS/aerialsolutions.git"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
