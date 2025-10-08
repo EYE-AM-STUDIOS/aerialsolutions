@@ -467,6 +467,65 @@
         .stagger-2 { animation-delay: 0.2s; }
         .stagger-3 { animation-delay: 0.3s; }
         .stagger-4 { animation-delay: 0.4s; }
+
+        /* Project Pipeline Styling */
+        .pipeline-stage {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-stage:hover {
+            border-color: var(--electric-cyan);
+            background: rgba(0, 191, 255, 0.1);
+        }
+
+        .stage-icon {
+            font-size: 2rem;
+            width: 60px;
+            text-align: center;
+        }
+
+        .stage-info {
+            flex: 1;
+            color: var(--white);
+        }
+
+        .stage-info h4 {
+            color: var(--electric-cyan);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .stage-info p {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .stage-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .stage-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -623,6 +682,10 @@
                             <div class="admin-action-icon">👤</div>
                             <div class="admin-action-text">Add New Client</div>
                         </a>
+                        <a href="#" class="admin-action-btn" onclick="bookNewProject()">
+                            <div class="admin-action-icon">📝</div>
+                            <div class="admin-action-text">Book New Project</div>
+                        </a>
                         <a href="#" class="admin-action-btn" onclick="uploadDeliverables()">
                             <div class="admin-action-icon">📤</div>
                             <div class="admin-action-text">Upload Deliverables</div>
@@ -630,6 +693,10 @@
                         <a href="#" class="admin-action-btn" onclick="generateReport()">
                             <div class="admin-action-icon">📊</div>
                             <div class="admin-action-text">Generate Report</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="manageHoneyBook()">
+                            <div class="admin-action-icon">🍯</div>
+                            <div class="admin-action-text">HoneyBook Sync</div>
                         </a>
                         <a href="#" class="admin-action-btn" onclick="systemBackup()">
                             <div class="admin-action-icon">💾</div>
@@ -667,6 +734,7 @@
                                 <td>
                                     <button class="admin-btn admin-btn-primary" onclick="viewClientPortal('mosaic')">👁️ View Portal</button>
                                     <button class="admin-btn admin-btn-secondary" onclick="manageAccess('mosaic')">⚙️ Manage</button>
+                                    <button class="admin-btn admin-btn-secondary" onclick="updateProjectStatus('mosaic')">📊 Update Status</button>
                                 </td>
                             </tr>
                             <tr>
@@ -681,6 +749,7 @@
                                 <td>
                                     <button class="admin-btn admin-btn-primary" onclick="viewClientPortal('tampa')">👁️ View Portal</button>
                                     <button class="admin-btn admin-btn-secondary" onclick="manageAccess('tampa')">⚙️ Manage</button>
+                                    <button class="admin-btn admin-btn-secondary" onclick="updateProjectStatus('tampa')">📊 Update Status</button>
                                 </td>
                             </tr>
                             <tr>
@@ -695,6 +764,7 @@
                                 <td>
                                     <button class="admin-btn admin-btn-secondary" onclick="manageAccess('orlando')">⚙️ Manage</button>
                                     <button class="admin-btn admin-btn-danger" onclick="suspendAccess('orlando')">🚫 Suspend</button>
+                                    <button class="admin-btn admin-btn-secondary" onclick="updateProjectStatus('orlando')">📊 Update Status</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -750,6 +820,496 @@
         function addNewClient() {
             showNotification('Opening new client setup wizard...', 'info');
             // This would open a new client form
+        }
+
+        function bookNewProject() {
+            // Create booking modal HTML
+            const bookingModal = document.createElement('div');
+            bookingModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            `;
+            
+            bookingModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black));
+                    border: 2px solid var(--electric-cyan);
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 600px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    position: relative;
+                ">
+                    <button onclick="this.closest('div').parentNode.remove()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background: none;
+                        border: none;
+                        color: var(--white);
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                    ">×</button>
+                    
+                    <h2 style="color: var(--electric-cyan); margin-bottom: 20px; text-align: center;">📝 Book New Aerial Imaging Project</h2>
+                    
+                    <form id="adminBookingForm" style="color: var(--white);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Client Name *</label>
+                                <input type="text" name="clientName" required style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Company</label>
+                                <input type="text" name="company" style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Email *</label>
+                                <input type="email" name="email" required style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Phone *</label>
+                                <input type="tel" name="phone" required style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Project Location *</label>
+                                <input type="text" name="location" required placeholder="City, State" style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Service Package *</label>
+                                <select name="package" required style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                    border: 1px solid rgba(0, 191, 255, 0.3);
+                                    border-radius: 8px;
+                                    color: var(--white);
+                                ">
+                                    <option value="">Select Package...</option>
+                                    <option value="orthomosaic-2500">EAS | Orthomosaic Mapping - $2,500</option>
+                                    <option value="dsm-dtm-3500">EAS | DSM/DTM Models - $3,500</option>
+                                    <option value="inspection-3850">EAS | Aerial Inspections - $3,850</option>
+                                    <option value="progress-1800">EAS | Progress Monitoring - $1,800</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Add-Ons (Optional)</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="rtk-1000"> RTK Accuracy (+$1,000)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="3d-model-1200"> 3D Model (+$1,200)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="360-imaging-500"> 360° Imaging (+$500)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="thermal-1200"> Thermal Imaging (+$1,200)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="4k-video-950"> 4K Video (+$950)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+                                    <input type="checkbox" name="addons" value="contours-850"> Contour Lines (+$850)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Project Details</label>
+                            <textarea name="details" rows="3" placeholder="Timeline, special requirements, etc..." style="
+                                width: 100%;
+                                padding: 12px;
+                                background: rgba(255, 255, 255, 0.1);
+                                border: 1px solid rgba(0, 191, 255, 0.3);
+                                border-radius: 8px;
+                                color: var(--white);
+                                resize: vertical;
+                            "></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; justify-content: center;">
+                            <button type="submit" style="
+                                background: var(--electric-cyan);
+                                color: var(--jet-black);
+                                padding: 12px 25px;
+                                border: none;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            ">📝 Create Booking & Send HoneyBook Contract</button>
+                            <button type="button" onclick="this.closest('div').parentNode.remove()" style="
+                                background: rgba(220, 53, 69, 0.2);
+                                color: var(--error-red);
+                                padding: 12px 25px;
+                                border: 1px solid var(--error-red);
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            ">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(bookingModal);
+            
+            // Handle form submission
+            document.getElementById('adminBookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processAdminBooking(new FormData(this));
+                bookingModal.remove();
+            });
+        }
+
+        function processAdminBooking(formData) {
+            const data = Object.fromEntries(formData);
+            const addons = formData.getAll('addons');
+            
+            showNotification('Creating booking and preparing HoneyBook integration...', 'info');
+            
+            // Simulate booking creation
+            setTimeout(() => {
+                showNotification(`Booking created for ${data.clientName}! Generating HoneyBook contract...`, 'success');
+                
+                // Simulate HoneyBook contract generation
+                setTimeout(() => {
+                    showNotification('HoneyBook contract sent to client. Portal access will be activated upon contract signature.', 'success');
+                    
+                    // Add to pending client list (in real implementation, this would update the database)
+                    addPendingClient(data, addons);
+                }, 2000);
+            }, 1500);
+        }
+
+        function addPendingClient(clientData, addons) {
+            // In a real implementation, this would add the client to a pending bookings table
+            // For demo purposes, we'll just show a success notification
+            const addonsList = addons.length > 0 ? ` with ${addons.length} add-ons` : '';
+            showNotification(`${clientData.clientName} added to pending bookings${addonsList}. Awaiting contract signature.`, 'info');
+        }
+
+        function manageHoneyBook() {
+            showNotification('Opening HoneyBook integration dashboard...', 'info');
+            
+            // Create HoneyBook management modal
+            const honeyBookModal = document.createElement('div');
+            honeyBookModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            `;
+            
+            honeyBookModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black));
+                    border: 2px solid #FFA500;
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 500px;
+                    width: 100%;
+                    position: relative;
+                    text-align: center;
+                ">
+                    <button onclick="this.closest('div').parentNode.remove()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background: none;
+                        border: none;
+                        color: var(--white);
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                    ">×</button>
+                    
+                    <div style="font-size: 3rem; margin-bottom: 20px;">🍯</div>
+                    <h2 style="color: #FFA500; margin-bottom: 20px;">HoneyBook Integration</h2>
+                    
+                    <div style="color: var(--white); text-align: left; margin-bottom: 25px;">
+                        <h4 style="color: var(--electric-cyan); margin-bottom: 15px;">Integration Status:</h4>
+                        <p style="margin-bottom: 10px;">✅ Contract Templates: Ready</p>
+                        <p style="margin-bottom: 10px;">✅ Invoice Generation: Active</p>
+                        <p style="margin-bottom: 10px;">✅ Payment Processing: Connected</p>
+                        <p style="margin-bottom: 10px;">✅ Client Sync: Enabled</p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                        <button onclick="syncWithHoneyBook()" style="
+                            background: var(--electric-cyan);
+                            color: var(--jet-black);
+                            padding: 12px 16px;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 0.9rem;
+                        ">🔄 Sync Clients</button>
+                        <button onclick="viewHoneyBookReports()" style="
+                            background: rgba(255, 165, 0, 0.2);
+                            color: #FFA500;
+                            padding: 12px 16px;
+                            border: 1px solid #FFA500;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            font-size: 0.9rem;
+                        ">📊 View Reports</button>
+                    </div>
+                    
+                    <p style="color: var(--gray-medium); font-size: 0.85rem;">
+                        Bookings created through the admin portal will automatically generate HoneyBook contracts and invoices.
+                    </p>
+                </div>
+            `;
+            
+            document.body.appendChild(honeyBookModal);
+        }
+
+        function syncWithHoneyBook() {
+            showNotification('Syncing client data with HoneyBook...', 'info');
+            setTimeout(() => {
+                showNotification('HoneyBook sync completed successfully!', 'success');
+            }, 2000);
+        }
+
+        function updateProjectStatus(clientId) {
+            // Create status update modal
+            const statusModal = document.createElement('div');
+            statusModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            `;
+            
+            statusModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black));
+                    border: 2px solid var(--electric-cyan);
+                    border-radius: 20px;
+                    padding: 40px;
+                    max-width: 600px;
+                    width: 100%;
+                    position: relative;
+                ">
+                    <button onclick="this.closest('div').parentNode.remove()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        background: none;
+                        border: none;
+                        color: var(--white);
+                        font-size: 1.5rem;
+                        cursor: pointer;
+                    ">×</button>
+                    
+                    <h2 style="color: var(--electric-cyan); margin-bottom: 25px; text-align: center;">📊 Update Project Status</h2>
+                    <h3 style="color: var(--white); margin-bottom: 25px; text-align: center;">${clientId.toUpperCase()} Project Pipeline</h3>
+                    
+                    <div id="statusPipeline" style="margin-bottom: 30px;">
+                        <div class="pipeline-stage" data-stage="deposit">
+                            <div class="stage-icon">💰</div>
+                            <div class="stage-info">
+                                <h4>Deposit Received</h4>
+                                <p>Client has paid deposit - Portal access activated</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('deposit', this)">✅ Complete</button>
+                        </div>
+                        
+                        <div class="pipeline-stage" data-stage="planning">
+                            <div class="stage-icon">📋</div>
+                            <div class="stage-info">
+                                <h4>Project Planning</h4>
+                                <p>Flight planning, permits, weather coordination</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('planning', this)">🔄 In Progress</button>
+                        </div>
+                        
+                        <div class="pipeline-stage" data-stage="flight">
+                            <div class="stage-icon">✈️</div>
+                            <div class="stage-info">
+                                <h4>Flight Operations</h4>
+                                <p>Aerial data capture and field operations</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('flight', this)">⏳ Pending</button>
+                        </div>
+                        
+                        <div class="pipeline-stage" data-stage="processing">
+                            <div class="stage-icon">⚙️</div>
+                            <div class="stage-info">
+                                <h4>Data Processing</h4>
+                                <p>Image processing, 3D modeling, analysis</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('processing', this)">⏳ Pending</button>
+                        </div>
+                        
+                        <div class="pipeline-stage" data-stage="review">
+                            <div class="stage-icon">🔍</div>
+                            <div class="stage-info">
+                                <h4>Quality Review</h4>
+                                <p>QA/QC, deliverable preparation, client review</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('review', this)">⏳ Pending</button>
+                        </div>
+                        
+                        <div class="pipeline-stage" data-stage="delivery">
+                            <div class="stage-icon">📦</div>
+                            <div class="stage-info">
+                                <h4>Final Delivery</h4>
+                                <p>Deliverables uploaded to portal, project complete</p>
+                            </div>
+                            <button class="stage-btn" onclick="setStageStatus('delivery', this)">⏳ Pending</button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--white); font-weight: 500;">Progress Notes (Client Visible)</label>
+                        <textarea id="progressNotes" rows="3" placeholder="Add update notes for client..." style="
+                            width: 100%;
+                            padding: 12px;
+                            background: rgba(255, 255, 255, 0.1);
+                            border: 1px solid rgba(0, 191, 255, 0.3);
+                            border-radius: 8px;
+                            color: var(--white);
+                            resize: vertical;
+                        "></textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="saveProjectStatus('${clientId}')" style="
+                            background: var(--electric-cyan);
+                            color: var(--jet-black);
+                            padding: 12px 25px;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">💾 Save Status Update</button>
+                        <button onclick="notifyClient('${clientId}')" style="
+                            background: var(--success-green);
+                            color: var(--white);
+                            padding: 12px 25px;
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            cursor: pointer;
+                        ">📧 Notify Client</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(statusModal);
+        }
+
+        function setStageStatus(stage, button) {
+            const stages = ['⏳ Pending', '🔄 In Progress', '✅ Complete'];
+            const currentIndex = stages.findIndex(s => button.textContent.includes(s.split(' ')[1]));
+            const nextIndex = (currentIndex + 1) % stages.length;
+            
+            button.textContent = stages[nextIndex];
+            
+            // Update button styling based on status
+            button.className = 'stage-btn';
+            if (stages[nextIndex].includes('Complete')) {
+                button.style.background = 'var(--success-green)';
+                button.style.color = 'var(--white)';
+            } else if (stages[nextIndex].includes('Progress')) {
+                button.style.background = 'var(--warning-orange)';
+                button.style.color = 'var(--white)';
+            } else {
+                button.style.background = 'rgba(255, 255, 255, 0.2)';
+                button.style.color = 'var(--white)';
+            }
+        }
+
+        function saveProjectStatus(clientId) {
+            const notes = document.getElementById('progressNotes').value;
+            showNotification(`Project status updated for ${clientId}. Client portal will reflect changes.`, 'success');
+            
+            // Close modal
+            document.querySelector('[style*="backdrop-filter: blur(10px)"]').remove();
+        }
+
+        function notifyClient(clientId) {
+            showNotification(`Sending progress notification to ${clientId} client...`, 'info');
+            setTimeout(() => {
+                showNotification('Client notification sent successfully!', 'success');
+            }, 1500);
         }
 
         function uploadDeliverables() {
