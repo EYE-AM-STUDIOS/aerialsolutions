@@ -7,7 +7,9 @@
     "dev": "python -m http.server 8000 || php -S localhost:8000 || live-server",
     "build": "echo 'Static site - no build needed'",
     "deploy": "vercel --prod",
-    "preview": "vercel"
+    "preview": "vercel",
+    "new:client": "node scripts/new-client.js",
+    "new:client:demo": "node scripts/new-client.js --id demo-mosaic --name 'Demo Mosaic Client' --email demo@test.com"
   },
   "keywords": [
     "aerial-imaging",

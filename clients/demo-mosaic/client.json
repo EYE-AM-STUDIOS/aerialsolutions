@@ -1,0 +1,18 @@
+{
+  "id": "demo-mosaic",
+  "name": "Demo Mosaic Client",
+  "email": "demo@test.com",
+  "createdAt": "2025-10-08T17:19:26.565Z",
+  "structure": {
+    "360": true,
+    "images": [
+      "raw",
+      "processed"
+    ],
+    "maps": true,
+    "models": true,
+    "reports": true,
+    "videos": true,
+    "exports": true
+  }
+}
