@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAS | Aerial Imaging Solutions | Nationwide Drone Mapping & Inspection</title>
+    <meta name="description" content="EYE AM STUDIOS provides high-resolution aerial imaging, mapping, and inspection solutions for construction, engineering, and industrial clients — based in Florida, serving nationwide.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --jet-black: #000000;
+            --midnight-blue: #0D1B2A;
+            --electric-cyan: #00BFFF;
+            --white: #FFFFFF;
+            --gray-light: #F8F9FA;
+            --gray-medium: #6C757D;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--jet-black);
+            background: var(--white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: var(--jet-black);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--electric-cyan);
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--electric-cyan);
+        }
+
+        .portal-btn {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .portal-btn:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--jet-black) 0%, var(--midnight-blue) 100%);
+            color: var(--white);
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2300BFFF" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--white), var(--electric-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--electric-cyan);
+            font-weight: 500;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover {
+            background: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Credentials Section */
+        .credentials {
+            background: var(--gray-light);
+            padding: 60px 0;
+        }
+
+        .credentials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .credential-item {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .credential-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .credential-icon {
+            font-size: 3rem;
+            color: var(--electric-cyan);
+            margin-bottom: 15px;
+        }
+
+        .credential-item h3 {
+            color: var(--midnight-blue);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--midnight-blue);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--gray-medium);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: var(--white);
+            border: 2px solid #E9ECEF;
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--electric-cyan), var(--midnight-blue));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-card:hover {
+            border-color: var(--electric-cyan);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.2);
+        }
+
+        .service-card h3 {
+            color: var(--midnight-blue);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--gray-medium);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            margin-bottom: 20px;
+        }
+
+        .deliverables {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .deliverables h4 {
+            color: var(--midnight-blue);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .deliverables ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .deliverables li {
+            padding: 5px 0;
+            color: var(--gray-medium);
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .deliverables li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--electric-cyan);
+            font-weight: bold;
+        }
+
+        .add-ons {
+            background: var(--gray-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .add-ons h4 {
+            color: var(--midnight-blue);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .add-ons ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .add-ons li {
+            padding: 3px 0;
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        /* TrueView Portal Section */
+        .trueview-section {
+            background: linear-gradient(135deg, var(--jet-black), var(--midnight-blue));
+            color: var(--white);
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trueview-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="%2300BFFF" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+
+        .trueview-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .trueview-section h2 {
+            color: var(--electric-cyan);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .trueview-section p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .portal-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h3 {
+            color: var(--electric-cyan);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 80px 0;
+            background: var(--gray-light);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--midnight-blue);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E9ECEF;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--electric-cyan);
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--jet-black);
+            color: var(--white);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: var(--electric-cyan);
+            margin-bottom: 15px;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+            color: var(--electric-cyan);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--midnight-blue);
+            padding-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-description {
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portal-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="#" class="logo">EYE AM STUDIOS</a>
+                <ul class="nav-links">
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#portal">TrueView Portal</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <a href="#portal" class="portal-btn">🔑 Client Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="fade-in">Professional Aerial Imaging & Mapping Solutions</h1>
+                <p class="hero-subtitle fade-in stagger-1">EAS | Aerial Imaging Solutions</p>
+                <p class="hero-description fade-in stagger-2">
+                    From Florida to the Nation — high-resolution aerial data that drives safety, precision, and progress for industries that build the future.
+                </p>
+                <a href="#contact" class="cta-btn fade-in stagger-3">Request a Custom Quote</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credentials Section -->
+    <section class="credentials">
+        <div class="container">
+            <div class="credentials-grid">
+                <div class="credential-item fade-in">
+                    <div class="credential-icon">✈️</div>
+                    <h3>FAA Part 107 Certified</h3>
+                    <p>Fully licensed and compliant drone pilot operations nationwide</p>
+                </div>
+                <div class="credential-item fade-in stagger-1">
+                    <div class="credential-icon">🛡️</div>
+                    <h3>TWIC Card Holder</h3>
+                    <p>Transportation Worker Identification Credential for secure facilities</p>
+                </div>
+                <div class="credential-item fade-in stagger-2">
+                    <div class="credential-icon">🏭</div>
+                    <h3>Decade+ Industrial Experience</h3>
+                    <p>Over 10 years of specialized industrial inspection expertise</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Professional Aerial Imaging Packages</h2>
+            <p class="section-subtitle fade-in stagger-1">Precision imaging solutions designed for construction, engineering, and industrial applications</p>
+            
+            <div class="services-grid">
+                <!-- Orthomosaic Mapping -->
+                <div class="service-card fade-in stagger-1">
+                    <h3>EAS | Orthomosaic Mapping</h3>
+                    <p>Create accurate, high-resolution maps stitched from aerial imagery — ideal for construction planning, land development, and site analysis.</p>
+                    <div class="price">Starting at $2,500</div>
+                    
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>Geo-referenced orthomosaic map (GeoTIFF + PDF)</li>
+                            <li>15–20 geotagged aerial photos (RAW + JPEG)</li>
+                            <li>Branded PDF report with flight details</li>
+                            <li>Optional: Online viewer link (Pix4D)</li>
+                        </ul>
+                    </div>
+
+                    <div class="add-ons">
+                        <h4>Add-Ons:</h4>
+                        <ul>
+                            <li>RTK Accuracy Upgrade (+$1,000)</li>
+                            <li>3D Model / Point Cloud (+$1,200)</li>
+                            <li>DSM/DTM Model (+$1,500)</li>
+                            <li>Additional Site Visit (+$1,500 each)</li>
+                            <li>Annotated PDF Map with Key Features (+$450)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- DSM/DTM Models -->
+                <div class="service-card fade-in stagger-2">
+                    <h3>EAS | DSM/DTM Models</h3>
+                    <p>Generate digital surface and terrain models for engineering, planning, and compliance documentation.</p>
+                    <div class="price">Starting at $3,500</div>
+                    
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>DSM & DTM files (GeoTIFF + contour outputs)</li>
+                            <li>Elevation data & terrain analysis</li>
+                            <li>Branded PDF with visual overlays</li>
+                            <li>Optional: RTK/GCP accuracy upgrade</li>
+                        </ul>
+                    </div>
+
+                    <div class="add-ons">
+                        <h4>Add-Ons:</h4>
+                        <ul>
+                            <li>RTK Accuracy Upgrade (+$1,000)</li>
+                            <li>Ground Control Points (Survey-Grade) (+$1,200)</li>
+                            <li>3D Point Cloud Export (+$1,200)</li>
+                            <li>Contour Line Generation (+$850)</li>
+                            <li>Volume/Stockpile Analysis (+$950)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Aerial Inspections -->
+                <div class="service-card fade-in stagger-3">
+                    <h3>EAS | Aerial Inspections</h3>
+                    <p>Capture detailed imagery for industrial assets, infrastructure, and structures with a focus on compliance, risk reduction, and safety.</p>
+                    <div class="price">Starting at $3,850</div>
+                    
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>High-resolution inspection photos (RAW + JPEG)</li>
+                            <li>4K inspection video (1–2 min overview)</li>
+                            <li>Branded inspection report with annotations</li>
+                            <li>Optional: 360° virtual walkthroughs</li>
+                        </ul>
+                    </div>
+
+                    <div class="add-ons">
+                        <h4>Add-Ons:</h4>
+                        <ul>
+                            <li>360° Imaging (+$500)</li>
+                            <li>360° Virtual Tour (+$750)</li>
+                            <li>4K Highlight Video (2–3 minutes) (+$950)</li>
+                            <li>Thermal Imaging Add-On (+$1,200)</li>
+                            <li>Additional Asset/Structure (+$1,000 each)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Progress Monitoring -->
+                <div class="service-card fade-in stagger-4">
+                    <h3>EAS | Progress Monitoring</h3>
+                    <p>Track project phases and site progress with clear aerial updates for stakeholders, contractors, and clients.</p>
+                    <div class="price">$1,800 per visit</div>
+                    
+                    <div class="deliverables">
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>High-resolution orthomosaic or photo set</li>
+                            <li>Progress photo comparison (before vs. current)</li>
+                            <li>Branded PDF progress report</li>
+                            <li>Optional: Monthly or quarterly subscription</li>
+                        </ul>
+                    </div>
+
+                    <div class="add-ons">
+                        <h4>Add-Ons:</h4>
+                        <ul>
+                            <li>Monthly Subscription (Save 10%) – 3-month minimum</li>
+                            <li>360° Imaging (+$500 per visit)</li>
+                            <li>Side-by-Side Comparison PDF (+$350)</li>
+                            <li>4K Aerial Progress Video (+$800 per visit)</li>
+                            <li>Drone-to-Ground Combined Report (+$1,200)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TrueView Portal Section -->
+    <section class="trueview-section" id="portal">
+        <div class="container">
+            <div class="trueview-content">
+                <h2 class="fade-in">EAS | TrueView Portal</h2>
+                <p class="fade-in stagger-1">Your Projects. Your Data. One Interactive Portal.</p>
+                <p class="fade-in stagger-2">Secure access to your aerial imaging reports, maps, and 3D models — anytime, anywhere.</p>
+                
+                <div class="portal-features">
+                    <div class="feature-item fade-in stagger-1">
+                        <div class="feature-icon">🗺️</div>
+                        <h3>Interactive Maps</h3>
+                        <p>Zoom, pan, and measure directly in your browser with our orthomosaic viewer</p>
+                    </div>
+                    <div class="feature-item fade-in stagger-2">
+                        <div class="feature-icon">🧭</div>
+                        <h3>3D Models</h3>
+                        <p>Explore your site in full 3D with point cloud and mesh model viewers</p>
+                    </div>
+                    <div class="feature-item fade-in stagger-3">
+                        <div class="feature-icon">📱</div>
+                        <h3>360° Tours</h3>
+                        <p>Immersive virtual walkthroughs with annotated points of interest</p>
+                    </div>
+                    <div class="feature-item fade-in stagger-4">
+                        <div class="feature-icon">📊</div>
+                        <h3>Smart Reports</h3>
+                        <p>AI-generated insights and downloadable data in multiple formats</p>
+                    </div>
+                </div>
+
+                <a href="portal.html" class="cta-btn fade-in stagger-3">🔑 Client Login | TrueView Portal</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Request a Custom Aerial Imaging Quote</h2>
+            <p class="section-subtitle fade-in stagger-1">Ready to elevate your project with professional aerial imaging? Get started today.</p>
+            
+            <form class="contact-form fade-in stagger-2">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company Name *</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Project Location *</label>
+                    <input type="text" id="location" name="location" placeholder="City, State" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="service">Service Type *</label>
+                    <select id="service" name="service" required>
+                        <option value="">Select a service...</option>
+                        <option value="orthomosaic">Orthomosaic Mapping</option>
+                        <option value="dsm-dtm">DSM/DTM Models</option>
+                        <option value="inspection">Aerial Inspections</option>
+                        <option value="progress">Progress Monitoring</option>
+                        <option value="custom">Custom Project</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="details">Project Details</label>
+                    <textarea id="details" name="details" placeholder="Tell us about your project requirements, timeline, and any specific needs..."></textarea>
+                </div>
+                
+                <button type="submit" class="cta-btn">Get My Aerial Quote</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>EYE AM STUDIOS</h3>
+                    <p>Professional aerial imaging and mapping solutions for industries that build the future.</p>
+                    <p><strong>Your Future. Our Focus.</strong></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <p><a href="#services">Orthomosaic Mapping</a></p>
+                    <p><a href="#services">DSM/DTM Models</a></p>
+                    <p><a href="#services">Aerial Inspections</a></p>
+                    <p><a href="#services">Progress Monitoring</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Coverage Area</h3>
+                    <p>Headquartered in Tampa Bay, Florida</p>
+                    <p>Serving clients nationwide</p>
+                    <p>Travel and airspace coordination available</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Credentials</h3>
+                    <p>✅ FAA Part 107 Certified</p>
+                    <p>✅ TWIC Card Holder</p>
+                    <p>✅ Fully Insured Operations</p>
+                    <p>✅ 10+ Years Industrial Experience</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 EYE AM STUDIOS, LLC | FAA Part 107 Certified | Headquartered in Tampa Bay | Serving Clients Nationwide</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission handler
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Simple validation
+            if (!data.name || !data.company || !data.email || !data.phone || !data.location || !data.service) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Here you would typically send the data to your backend
+            // For now, we'll just show a success message
+            alert('Thank you for your interest! We will contact you within 24 hours to discuss your aerial imaging project.');
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+
+        // Portal button functionality
+        document.querySelectorAll('a[href="portal.html"], a[href="#portal"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === 'portal.html') {
+                    e.preventDefault();
+                    alert('Client Portal Coming Soon!\n\nThe EAS | TrueView Portal will provide secure access to your interactive aerial deliverables including:\n\n• Interactive orthomosaic maps\n• 3D models and point clouds\n• 360° virtual tours\n• Downloadable reports and data\n\nContact us to learn more about this upcoming feature.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
