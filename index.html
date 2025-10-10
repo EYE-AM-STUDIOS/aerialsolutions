@@ -32,8 +32,8 @@
       Camera, Maximize2, MapPin, Package, Wrench, Users,
       CheckCircle, ArrowRight, Menu, X,
       LayoutDashboard, ShieldCheck, FolderOpen, Settings,
-      LogIn, ExternalLink, Building2, FileText
-    } from 'https://esm.sh/lucide-react@latest?deps=react@18&exports=Camera,Maximize2,MapPin,Package,Wrench,Users,CheckCircle,ArrowRight,Menu,X,LayoutDashboard,ShieldCheck,FolderOpen,Settings,LogIn,ExternalLink,Building2,FileText';
+      LogIn, ExternalLink, Building2, FileText, Plus, Eye, Calendar
+    } from 'https://esm.sh/lucide-react@latest?deps=react@18&exports=Camera,Maximize2,MapPin,Package,Wrench,Users,CheckCircle,ArrowRight,Menu,X,LayoutDashboard,ShieldCheck,FolderOpen,Settings,LogIn,ExternalLink,Building2,FileText,Plus,Eye,Calendar';
 
     // Minimal error reporter so production isn’t blank if a module fails
     window.addEventListener('error', (e) => {
@@ -49,6 +49,26 @@
     function EDISLandingPage(){
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [scrolled, setScrolled] = useState(false);
+      const [clients, setClients] = useState([]);
+      const [loading, setLoading] = useState(true);
+
+      // Load client data
+      useEffect(()=>{
+        async function loadClients() {
+          try {
+            const response = await fetch('./clients/config.json');
+            if (response.ok) {
+              const config = await response.json();
+              setClients(config.clients || []);
+            }
+          } catch (error) {
+            console.warn('Could not load client data:', error);
+          } finally {
+            setLoading(false);
+          }
+        }
+        loadClients();
+      }, []);
 
       useEffect(()=>{
         const onScroll = () => setScrolled(window.scrollY > 50);
@@ -184,16 +204,16 @@
 
               <!-- Quick Links bar -->
               <div className="mt-10 flex flex-wrap gap-3 justify-center">
-                <a href="#dashboards" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
-                  <${LayoutDashboard} className="w-4 h-4"/> Dashboards
+                <a href="#management" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${Settings} className="w-4 h-4"/> Management
                 </a>
                 <span className="text-slate-600">•</span>
-                <a href="#portals" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
-                  <${ShieldCheck} className="w-4 h-4"/> Portals
+                <a href="#client-access" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${ShieldCheck} className="w-4 h-4"/> Client Access
                 </a>
                 <span className="text-slate-600">•</span>
-                <a href="./docs.html" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
-                  <${FileText} className="w-4 h-4"/> Docs
+                <a href="./admin-dashboard.html" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${LayoutDashboard} className="w-4 h-4"/> Admin
                 </a>
               </div>
             </div>
@@ -258,33 +278,57 @@
             </div>
           </section>
 
-          <!-- Dashboards -->
-          <section id="dashboards" className="py-20 px-6">
+          <!-- System Overview -->
+          <section id="system" className="py-20 px-6">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-14">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">Dashboards</h2>
-                <p className="text-slate-400 text-lg">Operational visibility across projects, assets, and field ops</p>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">TrueView Portal System</h2>
+                <p className="text-slate-400 text-lg">Comprehensive client management and project delivery platform</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-8">
-                ${dashboards.map((d,i)=>html`
-                  <a key=${i} href=${d.href} className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
-                    <div className="flex items-center gap-3 mb-3">
-                      <${d.icon} className=${"w-6 h-6 "+d.color}/>
-                      <h3 className="text-xl font-semibold">${d.title}</h3>
-                    </div>
-                    <p className="text-slate-400 mb-4">${d.desc}</p>
-                    <div className="text-cyan-400 flex items-center gap-1">
-                      Open dashboard <${ExternalLink} className="w-4 h-4"/>
-                    </div>
-                  </a>
-                `)}
+                <a href="./portal.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${LogIn} className="w-6 h-6 text-cyan-400"/>
+                    <h3 className="text-xl font-semibold">Client Login</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">Secure authentication for client portal access</p>
+                  <div className="text-cyan-400 flex items-center gap-1">
+                    Access portal <${ExternalLink} className="w-4 h-4"/>
+                  </div>
+                </a>
+
+                <a href="./dashboard.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-blue-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${LayoutDashboard} className="w-6 h-6 text-blue-400"/>
+                    <h3 className="text-xl font-semibold">Project Dashboard</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">Interactive project view with deliverables and progress</p>
+                  <div className="text-blue-400 flex items-center gap-1">
+                    Open dashboard <${ExternalLink} className="w-4 h-4"/>
+                  </div>
+                </a>
+
+                <a href="./admin-dashboard.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${Settings} className="w-6 h-6 text-emerald-400"/>
+                    <h3 className="text-xl font-semibold">Admin Console</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">System administration and client management</p>
+                  <div className="text-emerald-400 flex items-center gap-1">
+                    Open admin <${ExternalLink} className="w-4 h-4"/>
+                  </div>
+                </a>
               </div>
 
               <div className="text-center mt-10">
-                <a href="./dashboards.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700">
-                  <${LayoutDashboard} className="w-5 h-5"/> All Dashboards
-                </a>
+                <div className="inline-flex items-center gap-4 px-6 py-3 rounded-lg bg-slate-800 border border-slate-700">
+                  <span className="text-slate-300">System Status:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-green-400 font-medium">Online</span>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -305,6 +349,49 @@
                     <p className="text-slate-400 text-sm">${b.desc}</p>
                   </div>
                 `)}
+              </div>
+            </div>
+          </section>
+
+          <!-- Client Access -->
+          <section id="client-access" className="py-20 px-6 bg-slate-900">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Client Portal Access</h2>
+                <p className="text-slate-400 text-lg">
+                  Secure login and project dashboard for active clients
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-8 text-center">
+                  <${LogIn} className="w-12 h-12 text-cyan-400 mx-auto mb-4"/>
+                  <h3 className="text-xl font-semibold mb-3">Client Login</h3>
+                  <p className="text-slate-400 mb-6">Access your secure project portal with client credentials</p>
+                  <a href="./portal.html" className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-all">
+                    <${LogIn} className="w-4 h-4"/>
+                    Login to Portal
+                  </a>
+                </div>
+
+                <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-8 text-center">
+                  <${LayoutDashboard} className="w-12 h-12 text-blue-400 mx-auto mb-4"/>
+                  <h3 className="text-xl font-semibold mb-3">Project Dashboard</h3>
+                  <p className="text-slate-400 mb-6">View deliverables, maps, models, and project progress</p>
+                  <a href="./dashboard.html" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all">
+                    <${Eye} className="w-4 h-4"/>
+                    View Dashboard
+                  </a>
+                </div>
+              </div>
+
+              <div className="mt-12 text-center">
+                <div className="inline-flex items-center gap-4 px-6 py-3 rounded-lg bg-slate-800 border border-slate-700">
+                  <span className="text-slate-300">Active Clients:</span>
+                  <div className="text-xl font-bold text-cyan-400">
+                    ${clients.filter(c => c.status === 'active').length}
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -338,6 +425,94 @@
                 <a href="./docs.html#client-portal" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
                   Learn more <${ExternalLink} className="w-4 h-4"/>
                 </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Project Management -->
+          <section id="management" className="py-20 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Project Management</h2>
+                <p className="text-slate-400 text-lg">
+                  Tools for managing clients, projects, and deliverables
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-cyan-500/50 transition-all">
+                  <${Plus} className="w-10 h-10 text-cyan-400 mb-4"/>
+                  <h3 className="text-lg font-semibold mb-2">New Client</h3>
+                  <p className="text-slate-400 text-sm mb-4">Create client folder structure and portal access</p>
+                  <button className="w-full px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg text-cyan-400 hover:bg-cyan-500/20 transition-all">
+                    Add Client
+                  </button>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-green-500/50 transition-all">
+                  <${CheckCircle} className="w-10 h-10 text-green-400 mb-4"/>
+                  <h3 className="text-lg font-semibold mb-2">Activate Portal</h3>
+                  <p className="text-slate-400 text-sm mb-4">Enable client access after deposit confirmation</p>
+                  <button className="w-full px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 hover:bg-green-500/20 transition-all">
+                    Activate
+                  </button>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-blue-500/50 transition-all">
+                  <${LayoutDashboard} className="w-10 h-10 text-blue-400 mb-4"/>
+                  <h3 className="text-lg font-semibold mb-2">Admin Dashboard</h3>
+                  <p className="text-slate-400 text-sm mb-4">Manage all clients, projects, and system settings</p>
+                  <a href="./admin-dashboard.html" className="block w-full px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-400 hover:bg-blue-500/20 transition-all text-center">
+                    Open Admin
+                  </a>
+                </div>
+
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 hover:border-violet-500/50 transition-all">
+                  <${FileText} className="w-10 h-10 text-violet-400 mb-4"/>
+                  <h3 className="text-lg font-semibold mb-2">Client Count</h3>
+                  <p className="text-slate-400 text-sm mb-2">Active client portals</p>
+                  <div className="text-2xl font-bold text-violet-400 mb-2">
+                    ${!loading ? clients.filter(c => c.status === 'active').length : '...'}
+                  </div>
+                  <p className="text-xs text-slate-500">Total: ${!loading ? clients.length : '...'}</p>
+                </div>
+              </div>
+
+              <div className="mt-12 bg-slate-900/50 border border-slate-800 rounded-2xl p-8">
+                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <${Settings} className="w-5 h-5 text-cyan-400"/>
+                  Quick Actions
+                </h3>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium mb-3 text-slate-300">Client Management Scripts</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <code className="bg-slate-950 px-2 py-1 rounded text-xs">npm run new:client</code>
+                        <span>Create new client</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-slate-400">
+                        <code className="bg-slate-950 px-2 py-1 rounded text-xs">npm run activate:client</code>
+                        <span>Activate portal access</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-3 text-slate-300">System Status</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="text-slate-400">Portal System Online</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                        <span className="text-slate-400">Client Config Loaded</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -382,15 +557,15 @@
             <div className="max-w-4xl mx-auto text-center">
               <div className="bg-gradient-to-br from-cyan-600 to-blue-600 rounded-2xl p-12 shadow-2xl">
                 <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
-                <p className="text-xl mb-8 text-cyan-50">Partner with EDIS for comprehensive imaging solutions that meet your project needs from every angle.</p>
+                <p className="text-xl mb-8 text-cyan-50">Partner with EYE AM STUDIOS for comprehensive imaging solutions that meet your project needs from every angle.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
                      target="_blank" rel="noopener noreferrer"
                      className="bg-white text-cyan-600 hover:bg-slate-100 focus:ring-4 focus:ring-white/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
-                    Schedule Consultation
+                    Request Quote via HoneyBook
                   </a>
-                  <a href="#portfolio" className="bg-cyan-800 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-700/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-cyan-700">
-                    Download Capabilities Deck
+                  <a href="mailto:info@eyeamstudios.com" className="bg-cyan-800 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-700/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-cyan-700">
+                    Email Direct
                   </a>
                 </div>
               </div>
@@ -417,11 +592,11 @@
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-3">Portals</h4>
+                  <h4 className="font-semibold mb-3">Portals & Tools</h4>
                   <div className="space-y-2 text-sm text-slate-400">
-                    <a href="./portal-client.html" className="hover:text-white">Client Portal</a>
-                    <a href="./portal-operator.html" className="hover:text-white">Operator Portal</a>
-                    <a href="./admin.html" className="hover:text-white">Admin Console</a>
+                    <a href="./portal.html" className="hover:text-white">TrueView Portal</a>
+                    <a href="./dashboard.html" className="hover:text-white">Client Dashboard</a>
+                    <a href="./admin-dashboard.html" className="hover:text-white">Admin Console</a>
                   </div>
                 </div>
                 <div>
