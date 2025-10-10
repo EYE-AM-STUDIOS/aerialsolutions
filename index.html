@@ -17,17 +17,32 @@
 </head>
 <body class="bg-slate-950 text-white">
   <div id="root"></div>
+  <noscript>
+    <div style="color:#fff;background:#111;padding:12px;text-align:center">
+      EDIS requires JavaScript to run.
+    </div>
+  </noscript>
 
   <script type="module">
     import React, { useState, useEffect } from 'https://esm.sh/react@18';
     import { createRoot } from 'https://esm.sh/react-dom@18/client';
     import htm from 'https://esm.sh/htm@3.1.1';
+    // IMPORTANT: pin lucide-react and explicitly list exports so the module resolves on CDN
     import {
       Camera, Maximize2, MapPin, Package, Wrench, Users,
       CheckCircle, ArrowRight, Menu, X,
       LayoutDashboard, ShieldCheck, FolderOpen, Settings,
       LogIn, ExternalLink, Building2, FileText
-    } from 'https://esm.sh/lucide-react@0.460.0';
+    } from 'https://esm.sh/lucide-react@latest?deps=react@18&exports=Camera,Maximize2,MapPin,Package,Wrench,Users,CheckCircle,ArrowRight,Menu,X,LayoutDashboard,ShieldCheck,FolderOpen,Settings,LogIn,ExternalLink,Building2,FileText';
+
+    // Minimal error reporter so production isn’t blank if a module fails
+    window.addEventListener('error', (e) => {
+      const msg = e?.error?.message || e.message || 'Unknown error';
+      const pre = document.createElement('pre');
+      pre.style.padding='16px'; pre.style.color='#fecaca'; pre.style.background='#1f2937'; pre.style.whiteSpace='pre-wrap';
+      pre.textContent = 'App failed to load:\n' + msg;
+      document.getElementById('root')?.appendChild(pre);
+    });
 
     const html = htm.bind(React.createElement);
 
