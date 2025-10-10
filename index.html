@@ -1,960 +1,469 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAS | Aerial Imaging Solutions | Nationwide Drone Mapping & Inspection</title>
-    <meta name="description" content="EYE AM STUDIOS provides high-resolution aerial imaging, mapping, and inspection solutions for construction, engineering, and industrial clients — based in Florida, serving nationwide.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --jet-black: #000000;
-            --midnight-blue: #0D1B2A;
-            --electric-cyan: #00BFFF;
-            --white: #FFFFFF;
-            --gray-light: #F8F9FA;
-            --gray-medium: #6C757D;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            color: var(--jet-black);
-            background: var(--white);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navigation */
-        .navbar {
-            background: var(--jet-black);
-            padding: 15px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: var(--electric-cyan);
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--electric-cyan);
-        }
-
-        .portal-btn {
-            background: var(--electric-cyan);
-            color: var(--jet-black);
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .portal-btn:hover {
-            background: var(--white);
-            transform: translateY(-2px);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--jet-black) 0%, var(--midnight-blue) 100%);
-            color: var(--white);
-            padding: 120px 0 80px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%2300BFFF" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--white), var(--electric-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: var(--electric-cyan);
-            font-weight: 500;
-        }
-
-        .hero-description {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            opacity: 0.9;
-        }
-
-        .cta-btn {
-            background: var(--electric-cyan);
-            color: var(--jet-black);
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .cta-btn:hover {
-            background: var(--white);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 191, 255, 0.3);
-        }
-
-        /* Credentials Section */
-        .credentials {
-            background: var(--gray-light);
-            padding: 60px 0;
-        }
-
-        .credentials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            text-align: center;
-        }
-
-        .credential-item {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .credential-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .credential-icon {
-            font-size: 3rem;
-            color: var(--electric-cyan);
-            margin-bottom: 15px;
-        }
-
-        .credential-item h3 {
-            color: var(--midnight-blue);
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-        }
-
-        /* Services Section */
-        .services {
-            padding: 80px 0;
-            background: var(--white);
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            color: var(--midnight-blue);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.2rem;
-            color: var(--gray-medium);
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 30px;
-        }
-
-        .service-card {
-            background: var(--white);
-            border: 2px solid #E9ECEF;
-            border-radius: 16px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--electric-cyan), var(--midnight-blue));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .service-card:hover {
-            border-color: var(--electric-cyan);
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(0, 191, 255, 0.2);
-        }
-
-        .service-card h3 {
-            color: var(--midnight-blue);
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .service-card p {
-            color: var(--gray-medium);
-            margin-bottom: 25px;
-            line-height: 1.6;
-        }
-
-        .price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--electric-cyan);
-            margin-bottom: 20px;
-        }
-
-        .deliverables {
-            text-align: left;
-            margin-bottom: 25px;
-        }
-
-        .deliverables h4 {
-            color: var(--midnight-blue);
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .deliverables ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .deliverables li {
-            padding: 5px 0;
-            color: var(--gray-medium);
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .deliverables li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--electric-cyan);
-            font-weight: bold;
-        }
-
-        .add-ons {
-            background: var(--gray-light);
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .add-ons h4 {
-            color: var(--midnight-blue);
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        .add-ons ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .add-ons li {
-            padding: 3px 0;
-            color: var(--gray-medium);
-            font-size: 0.9rem;
-        }
-
-        /* TrueView Portal Section */
-        .trueview-section {
-            background: linear-gradient(135deg, var(--jet-black), var(--midnight-blue));
-            color: var(--white);
-            text-align: center;
-            padding: 80px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .trueview-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="%2300BFFF" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-        }
-
-        .trueview-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .trueview-section h2 {
-            color: var(--electric-cyan);
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .trueview-section p {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .portal-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-        }
-
-        .feature-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px 20px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 191, 255, 0.3);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-
-        .feature-item h3 {
-            color: var(--electric-cyan);
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 80px 0;
-            background: var(--gray-light);
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--white);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--midnight-blue);
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #E9ECEF;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--electric-cyan);
-        }
-
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--jet-black);
-            color: var(--white);
-            padding: 40px 0;
-            text-align: center;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-
-        .footer-section h3 {
-            color: var(--electric-cyan);
-            margin-bottom: 15px;
-        }
-
-        .footer-section p,
-        .footer-section a {
-            color: var(--white);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            opacity: 1;
-            color: var(--electric-cyan);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid var(--midnight-blue);
-            padding-top: 20px;
-            opacity: 0.8;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .hero-description {
-                font-size: 1.1rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .portal-features {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 1200px) and (min-width: 769px) {
-            .services-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 25px;
-            }
-        }
-
-        @media (max-width: 1400px) and (min-width: 1201px) {
-            .services-grid {
-                gap: 25px;
-            }
-            
-            .service-card {
-                padding: 35px 25px;
-            }
-        }
-
-        /* Animation Classes */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EDIS | Enhanced Digital Imaging Solutions</title>
+  <meta name="description" content="Comprehensive aerial and ground imaging for construction, engineering, and industrial clients. One partner, complete visual documentation."/>
+  <meta name="theme-color" content="#0f172a"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  </style>
 </head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-container">
-                <a href="#" class="logo">EYE AM STUDIOS</a>
-                <ul class="nav-links">
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#portal">TrueView Portal</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <a href="portal.html" class="portal-btn">🔑 Client Login</a>
+<body class="bg-slate-950 text-white">
+  <div id="root"></div>
+
+  <script type="module">
+    import React, { useState, useEffect } from 'https://esm.sh/react@18';
+    import { createRoot } from 'https://esm.sh/react-dom@18/client';
+    import htm from 'https://esm.sh/htm@3.1.1';
+    import {
+      Camera, Maximize2, MapPin, Package, Wrench, Users,
+      CheckCircle, ArrowRight, Menu, X,
+      LayoutDashboard, ShieldCheck, FolderOpen, Settings,
+      LogIn, ExternalLink, Building2, FileText
+    } from 'https://esm.sh/lucide-react@0.460.0';
+
+    const html = htm.bind(React.createElement);
+
+    function EDISLandingPage(){
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
+
+      useEffect(()=>{
+        const onScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+      },[]);
+
+      const closeMobile = () => setMobileMenuOpen(false);
+
+      const aerialServices = [
+        { icon: MapPin,   title: "Orthomosaic Mapping", desc: "High-resolution aerial maps for site planning and analysis" },
+        { icon: Camera,   title: "Aerial Inspections",  desc: "Comprehensive drone-based infrastructure assessments" },
+        { icon: Maximize2,title: "3D / RTK Mapping",    desc: "Precision surveying with real-time kinematic accuracy" }
+      ];
+
+      const groundServices = [
+        { icon: Package,  title: "HDR / HD Imaging", desc: "High-quality imaging for sites, assets, equipment, and more" },
+        { icon: Wrench,   title: "Technical/Safety Documentation", desc: "Detailed visual documentation for safety and technical processes" },
+        { icon: Users,    title: "Industrial Portraits", desc: "Professional photography of skilled craftsmen and teams" },
+        { icon: Maximize2,title: "360 Imaging, 3D Point Cloud Modeling", desc: "Immersive virtual tours and precise 3D spatial documentation" }
+      ];
+
+      const benefits = [
+        { title: "Unified Commercial Identity",  desc: "One trusted partner for all your imaging needs" },
+        { title: "Stronger B2B Presentation",    desc: "Integrated solutions for construction, engineering, and industrial firms" },
+        { title: "Simpler Operations",           desc: "Single point of contact, one proposal system, streamlined workflow" },
+        { title: "Contract-Ready Positioning",   desc: "Preferred by government, engineering, and insurance clients" }
+      ];
+
+      // New content data
+      const dashboards = [
+        { icon: LayoutDashboard, color: "text-cyan-400", title: "Project Overview", desc: "KPIs, milestones, deliverables, and tasking", href: "./dashboards.html?view=project" },
+        { icon: FolderOpen,      color: "text-blue-400", title: "Asset Library",    desc: "Images, video, maps, models and reports",   href: "./dashboards.html?view=assets" },
+        { icon: Settings,        color: "text-emerald-400", title: "Operations",   desc: "Flights, crews, equipment, compliance",      href: "./dashboards.html?view=ops" }
+      ];
+
+      const portals = [
+        { icon: ShieldCheck, color:"text-cyan-400", title:"Client Portal",  desc:"Secure access to deliverables and approvals", href:"./portal-client.html" },
+        { icon: Users,       color:"text-blue-400", title:"Operator Portal",desc:"Field ops, manifests, and mission packages", href:"./portal-operator.html" },
+        { icon: Settings,    color:"text-emerald-400", title:"Admin Console",desc:"Org settings, users, roles, and billing",   href:"./admin.html" },
+        { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"./data-room.html" }
+      ];
+
+      const clients = [
+        { name:"Parish Public Works", tag:"Government" },
+        { name:"Acme Engineering",    tag:"AEC" },
+        { name:"Blue Harbor Energy",  tag:"Industrial" },
+        { name:"Delta Insurance",     tag:"Insurance" },
+        { name:"Coastal Utilities",   tag:"Infrastructure" },
+        { name:"Gulf Construction",   tag:"Construction" }
+      ];
+
+      return html`
+        <div className="min-h-screen bg-slate-950 text-white">
+
+          <!-- Navigation -->
+          <nav role="navigation" className=${"fixed w-full z-50 transition-all duration-300 " + (scrolled ? "bg-slate-950/95 backdrop-blur-sm shadow-lg" : "bg-transparent")}>
+            <div className="max-w-7xl mx-auto px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <${Camera} className="w-8 h-8 text-cyan-400" />
+                  <div>
+                    <div className="text-2xl font-bold">EDIS</div>
+                    <div className="text-xs text-cyan-400">EAS | Enhanced Digital Imaging Solutions</div>
+                  </div>
+                </div>
+
+                <div className="hidden md:flex items-center space-x-8">
+                  <a href="#services"  className="hover:text-cyan-400 transition-colors">Services</a>
+                  <a href="#dashboards" className="hover:text-cyan-400 transition-colors">Dashboards</a>
+                  <a href="#portals"    className="hover:text-cyan-400 transition-colors">Portals</a>
+                  <a href="#clients"    className="hover:text-cyan-400 transition-colors">Clients</a>
+                  <a href="./signin.html" className="flex items-center gap-2 text-slate-300 hover:text-white">
+                    <${LogIn} className="w-4 h-4"/> Sign In
+                  </a>
+                  <a
+                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
+                    target="_blank" rel="noopener noreferrer"
+                    className="bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg transition-all transform hover:scale-105"
+                  >Get Started</a>
+                </div>
+
+                <button
+                  className="md:hidden"
+                  aria-label="Toggle mobile menu"
+                  aria-expanded=${mobileMenuOpen}
+                  onClick=${()=>setMobileMenuOpen(v=>!v)}
+                >
+                  ${mobileMenuOpen ? html`<${X} />` : html`<${Menu} />`}
+                </button>
+              </div>
             </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="fade-in">Professional Aerial Imaging & Mapping Solutions</h1>
-                <p class="hero-subtitle fade-in stagger-1">EAS | Aerial Imaging Solutions</p>
-                <p class="hero-description fade-in stagger-2">
-                    From Florida to the Nation — high-resolution aerial data that drives safety, precision, and progress for industries that build the future.
-                </p>
-                <a href="#contact" class="cta-btn fade-in stagger-3">Request a Custom Quote</a>
+            ${mobileMenuOpen && html`
+              <div className="md:hidden bg-slate-900 border-t border-slate-800">
+                <div className="px-6 py-4 space-y-4">
+                  <a href="#services"   onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
+                  <a href="#dashboards" onClick=${closeMobile} className="block hover:text-cyan-400">Dashboards</a>
+                  <a href="#portals"    onClick=${closeMobile} className="block hover:text-cyan-400">Portals</a>
+                  <a href="#clients"    onClick=${closeMobile} className="block hover:text-cyan-400">Clients</a>
+                  <a href="./signin.html" className="block hover:text-cyan-400">Sign In</a>
+                  <a
+                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
+                    target="_blank" rel="noopener noreferrer"
+                    className="block w-full bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg text-center"
+                  >Get Started</a>
+                </div>
+              </div>
+            `}
+          </nav>
+
+          <!-- Hero -->
+          <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 via-slate-950 to-blue-900/20"></div>
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
             </div>
-        </div>
-    </section>
 
-    <!-- Credentials Section -->
-    <section class="credentials">
-        <div class="container">
-            <div class="credentials-grid">
-                <div class="credential-item fade-in">
-                    <div class="credential-icon">✈️</div>
-                    <h3>FAA Part 107 Certified</h3>
-                    <p>Fully licensed and compliant drone pilot operations nationwide</p>
-                </div>
-                <div class="credential-item fade-in stagger-1">
-                    <div class="credential-icon">🛡️</div>
-                    <h3>TWIC Card Holder</h3>
-                    <p>Transportation Worker Identification Credential for secure facilities</p>
-                </div>
-                <div class="credential-item fade-in stagger-2">
-                    <div class="credential-icon">🏭</div>
-                    <h3>Decade+ Industrial Experience</h3>
-                    <p>Over 10 years of specialized industrial inspection expertise</p>
-                </div>
+            <div className="relative max-w-6xl mx-auto text-center">
+              <div className="inline-block mb-6 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-400 text-sm">
+                Your Single-Source Imaging Partner
+              </div>
+
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Enhanced Digital Imaging</span><br/>
+                From Sky to Ground
+              </h1>
+
+              <p className="text-xl text-slate-300 mb-10 max-w-3xl mx-auto">
+                Comprehensive aerial and ground-based imaging solutions for construction, engineering, and industrial sectors.
+                One partner, complete visual documentation.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
+                   target="_blank" rel="noopener noreferrer"
+                   className="bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                  Request a Quote <${ArrowRight} className="w-5 h-5"/>
+                </a>
+                <a href="#portfolio" className="bg-slate-800 hover:bg-slate-700 focus:ring-4 focus:ring-slate-600/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-slate-700">
+                  View Portfolio
+                </a>
+              </div>
+
+              <!-- Quick Links bar -->
+              <div className="mt-10 flex flex-wrap gap-3 justify-center">
+                <a href="#dashboards" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${LayoutDashboard} className="w-4 h-4"/> Dashboards
+                </a>
+                <span className="text-slate-600">•</span>
+                <a href="#portals" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${ShieldCheck} className="w-4 h-4"/> Portals
+                </a>
+                <span className="text-slate-600">•</span>
+                <a href="./docs.html" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${FileText} className="w-4 h-4"/> Docs
+                </a>
+              </div>
             </div>
-        </div>
-    </section>
+          </section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
-            <h2 class="section-title fade-in">Our Professional Aerial Imaging Packages</h2>
-            <p class="section-subtitle fade-in stagger-1">Precision imaging solutions designed for construction, engineering, and industrial applications</p>
-            
-            <div class="services-grid">
-                <!-- Orthomosaic Mapping -->
-                <div class="service-card fade-in stagger-1">
-                    <h3>EAS | Orthomosaic Mapping</h3>
-                    <p>Create accurate, high-resolution maps stitched from aerial imagery — ideal for construction planning, land development, and site analysis.</p>
-                    <div class="price">Starting at $2,500</div>
-                    
-                    <div class="deliverables">
-                        <h4>Deliverables:</h4>
-                        <ul>
-                            <li>Geo-referenced orthomosaic map (GeoTIFF + PDF)</li>
-                            <li>15–20 geotagged aerial photos (RAW + JPEG)</li>
-                            <li>Branded PDF report with flight details</li>
-                            <li>Optional: Online viewer link (Pix4D)</li>
-                        </ul>
-                    </div>
+          <!-- Services -->
+          <section id="services" className="py-20 px-6 bg-slate-900">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Complete Imaging Solutions</h2>
+                <p className="text-slate-400 text-lg">Two specialized divisions, one unified approach</p>
+              </div>
 
-                    <div class="add-ons">
-                        <h4>Add-Ons:</h4>
-                        <ul>
-                            <li>RTK Accuracy Upgrade (+$1,000)</li>
-                            <li>3D Model / Point Cloud (+$1,200)</li>
-                            <li>DSM/DTM Model (+$1,500)</li>
-                            <li>Additional Site Visit (+$1,500 each)</li>
-                            <li>Annotated PDF Map with Key Features (+$450)</li>
-                        </ul>
+              <div className="grid md:grid-cols-2 gap-12">
+                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 hover:border-cyan-500/50 transition-all">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-3 bg-cyan-500/10 rounded-lg"><${Camera} className="w-8 h-8 text-cyan-400"/></div>
+                    <h3 className="text-2xl font-bold">Aerial Imaging Solutions</h3>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/40 rounded-full text-xs font-semibold text-cyan-300 flex items-center gap-1">
+                      <${CheckCircle} className="w-3 h-3"/> FAA Certified
                     </div>
+                    <div className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/40 rounded-full text-xs font-semibold text-cyan-300 flex items-center gap-1">
+                      <${CheckCircle} className="w-3 h-3"/> TWIC Card Holder
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    ${aerialServices.map((s, i)=>html`
+                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
+                        <${s.icon} className="w-6 h-6 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
+                        <div>
+                          <div className="font-semibold mb-1">${s.title}</div>
+                          <div className="text-sm text-slate-400">${s.desc}</div>
+                        </div>
+                      </div>
+                    `)}
+                  </div>
                 </div>
 
-                <!-- DSM/DTM Models -->
-                <div class="service-card fade-in stagger-2">
-                    <h3>EAS | DSM/DTM Models</h3>
-                    <p>Generate digital surface and terrain models for engineering, planning, and compliance documentation.</p>
-                    <div class="price">Starting at $3,500</div>
-                    
-                    <div class="deliverables">
-                        <h4>Deliverables:</h4>
-                        <ul>
-                            <li>DSM & DTM files (GeoTIFF + contour outputs)</li>
-                            <li>Elevation data & terrain analysis</li>
-                            <li>Branded PDF with visual overlays</li>
-                            <li>Optional: RTK/GCP accuracy upgrade</li>
-                        </ul>
-                    </div>
+                <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 hover:border-blue-500/50 transition-all">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-3 bg-blue-500/10 rounded-lg"><${Package} className="w-8 h-8 text-blue-400"/></div>
+                    <h3 className="text-2xl font-bold">Ground Imaging Solutions</h3>
+                  </div>
 
-                    <div class="add-ons">
-                        <h4>Add-Ons:</h4>
-                        <ul>
-                            <li>RTK Accuracy Upgrade (+$1,000)</li>
-                            <li>Ground Control Points (Survey-Grade) (+$1,200)</li>
-                            <li>3D Point Cloud Export (+$1,200)</li>
-                            <li>Contour Line Generation (+$850)</li>
-                            <li>Volume/Stockpile Analysis (+$950)</li>
-                        </ul>
-                    </div>
+                  <div className="space-y-4">
+                    ${groundServices.map((s, i)=>html`
+                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
+                        <${s.icon} className="w-6 h-6 text-blue-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
+                        <div>
+                          <div className="font-semibold mb-1">${s.title}</div>
+                          <div className="text-sm text-slate-400">${s.desc}</div>
+                        </div>
+                      </div>
+                    `)}
+                  </div>
                 </div>
-
-                <!-- Aerial Inspections -->
-                <div class="service-card fade-in stagger-3">
-                    <h3>EAS | Aerial Inspections</h3>
-                    <p>Capture detailed imagery for industrial assets, infrastructure, and structures with a focus on compliance, risk reduction, and safety.</p>
-                    <div class="price">Starting at $3,850</div>
-                    
-                    <div class="deliverables">
-                        <h4>Deliverables:</h4>
-                        <ul>
-                            <li>High-resolution inspection photos (RAW + JPEG)</li>
-                            <li>4K inspection video (1–2 min overview)</li>
-                            <li>Branded inspection report with annotations</li>
-                            <li>Optional: 360° virtual walkthroughs</li>
-                        </ul>
-                    </div>
-
-                    <div class="add-ons">
-                        <h4>Add-Ons:</h4>
-                        <ul>
-                            <li>360° Imaging (+$500)</li>
-                            <li>360° Virtual Tour (+$750)</li>
-                            <li>4K Highlight Video (2–3 minutes) (+$950)</li>
-                            <li>Thermal Imaging Add-On (+$1,200)</li>
-                            <li>Additional Asset/Structure (+$1,000 each)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Progress Monitoring -->
-                <div class="service-card fade-in stagger-4">
-                    <h3>EAS | Progress Monitoring</h3>
-                    <p>Track project phases and site progress with clear aerial updates for stakeholders, contractors, and clients.</p>
-                    <div class="price">$1,800 per visit</div>
-                    
-                    <div class="deliverables">
-                        <h4>Deliverables:</h4>
-                        <ul>
-                            <li>High-resolution orthomosaic or photo set</li>
-                            <li>Progress photo comparison (before vs. current)</li>
-                            <li>Branded PDF progress report</li>
-                            <li>Optional: Monthly or quarterly subscription</li>
-                        </ul>
-                    </div>
-
-                    <div class="add-ons">
-                        <h4>Add-Ons:</h4>
-                        <ul>
-                            <li>Monthly Subscription (Save 10%) – 3-month minimum</li>
-                            <li>360° Imaging (+$500 per visit)</li>
-                            <li>Side-by-Side Comparison PDF (+$350)</li>
-                            <li>4K Aerial Progress Video (+$800 per visit)</li>
-                            <li>Drone-to-Ground Combined Report (+$1,200)</li>
-                        </ul>
-                    </div>
-                </div>
+              </div>
             </div>
-        </div>
-    </section>
+          </section>
 
-    <!-- TrueView Portal Section -->
-    <section class="trueview-section" id="portal">
-        <div class="container">
-            <div class="trueview-content">
-                <h2 class="fade-in">EAS | TrueView Portal</h2>
-                <p class="fade-in stagger-1">Your Projects. Your Data. One Interactive Portal.</p>
-                <p class="fade-in stagger-2">Secure access to your aerial imaging reports, maps, and 3D models — anytime, anywhere.</p>
-                
-                <div class="portal-features">
-                    <div class="feature-item fade-in stagger-1">
-                        <div class="feature-icon">🗺️</div>
-                        <h3>Interactive Maps</h3>
-                        <p>Zoom, pan, and measure directly in your browser with our orthomosaic viewer</p>
-                    </div>
-                    <div class="feature-item fade-in stagger-2">
-                        <div class="feature-icon">🧭</div>
-                        <h3>3D Models</h3>
-                        <p>Explore your site in full 3D with point cloud and mesh model viewers</p>
-                    </div>
-                    <div class="feature-item fade-in stagger-3">
-                        <div class="feature-icon">📱</div>
-                        <h3>360° Imaging</h3>
-                        <p>360° imaging with annotated points of interest for comprehensive site documentation</p>
-                    </div>
-                    <div class="feature-item fade-in stagger-4">
-                        <div class="feature-icon">📊</div>
-                        <h3>Smart Reports</h3>
-                        <p>AI-generated insights and downloadable data in multiple formats</p>
-                    </div>
-                </div>
+          <!-- Dashboards -->
+          <section id="dashboards" className="py-20 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Dashboards</h2>
+                <p className="text-slate-400 text-lg">Operational visibility across projects, assets, and field ops</p>
+              </div>
 
-                <a href="portal.html" class="cta-btn fade-in stagger-3">🔑 Client Login | TrueView Portal</a>
+              <div className="grid md:grid-cols-3 gap-8">
+                ${dashboards.map((d,i)=>html`
+                  <a key=${i} href=${d.href} className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
+                    <div className="flex items-center gap-3 mb-3">
+                      <${d.icon} className=${"w-6 h-6 "+d.color}/>
+                      <h3 className="text-xl font-semibold">${d.title}</h3>
+                    </div>
+                    <p className="text-slate-400 mb-4">${d.desc}</p>
+                    <div className="text-cyan-400 flex items-center gap-1">
+                      Open dashboard <${ExternalLink} className="w-4 h-4"/>
+                    </div>
+                  </a>
+                `)}
+              </div>
+
+              <div className="text-center mt-10">
+                <a href="./dashboards.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700">
+                  <${LayoutDashboard} className="w-5 h-5"/> All Dashboards
+                </a>
+              </div>
             </div>
-        </div>
-    </section>
+          </section>
 
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <h2 class="section-title fade-in">Request a Custom Aerial Imaging Quote</h2>
-            <p class="section-subtitle fade-in stagger-1">Ready to elevate your project with professional aerial imaging? Get started today.</p>
-            
-            <form class="contact-form fade-in stagger-2" action="https://formspree.io/f/myzndjra" method="POST">
-                <div class="form-group">
-                    <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="company">Company Name *</label>
-                    <input type="text" id="company" name="company" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="location">Project Location *</label>
-                    <input type="text" id="location" name="location" placeholder="City, State" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="service">Service Type *</label>
-                    <select id="service" name="service" required>
-                        <option value="">Select a service...</option>
-                        <option value="orthomosaic">Orthomosaic Mapping</option>
-                        <option value="dsm-dtm">DSM/DTM Models</option>
-                        <option value="inspection">Aerial Inspections</option>
-                        <option value="progress">Progress Monitoring</option>
-                        <option value="custom">Custom Project</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="details">Project Details</label>
-                    <textarea id="details" name="details" placeholder="Tell us about your project requirements, timeline, and any specific needs..."></textarea>
-                </div>
-                
-                <button type="submit" class="cta-btn">Get My Aerial Quote</button>
-            </form>
-        </div>
-    </section>
+          <!-- Benefits -->
+          <section id="benefits" className="py-20 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Choose EDIS</h2>
+                <p className="text-slate-400 text-lg">The advantages of a unified imaging partner</p>
+              </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>EYE AM STUDIOS</h3>
-                    <p>Professional aerial imaging and mapping solutions for industries that build the future.</p>
-                    <p><strong>Your Future. Our Focus.</strong></p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Services</h3>
-                    <p><a href="#services">Orthomosaic Mapping</a></p>
-                    <p><a href="#services">DSM/DTM Models</a></p>
-                    <p><a href="#services">Aerial Inspections</a></p>
-                    <p><a href="#services">Progress Monitoring</a></p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Coverage Area</h3>
-                    <p>Headquartered in Tampa Bay, Florida</p>
-                    <p>Serving clients nationwide</p>
-                    <p>Travel and airspace coordination available</p>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>Credentials</h3>
-                    <p>✅ FAA Part 107 Certified</p>
-                    <p>✅ TWIC Card Holder</p>
-                    <p>✅ Fully Insured Operations</p>
-                    <p>✅ 10+ Years Industrial Experience</p>
-                </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                ${benefits.map((b,i)=>html`
+                  <div key=${i} className="bg-slate-900 rounded-xl p-6 border border-slate-800 hover:border-cyan-500/50 transition-all hover:scale-105">
+                    <${CheckCircle} className="w-10 h-10 text-cyan-400 mb-4"/>
+                    <h3 className="text-xl font-bold mb-2">${b.title}</h3>
+                    <p className="text-slate-400 text-sm">${b.desc}</p>
+                  </div>
+                `)}
+              </div>
             </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 EYE AM STUDIOS, LLC | FAA Part 107 Certified | Headquartered in Tampa Bay | Serving Clients Nationwide</p>
+          </section>
+
+          <!-- Portals -->
+          <section id="portals" className="py-20 px-6 bg-slate-900">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Portals</h2>
+                <p className="text-slate-400 text-lg">Secure access for clients, operators, and administrators</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                ${portals.map((p,i)=>html`
+                  <a key=${i} href=${p.href} className="group rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
+                    <div className="flex items-center gap-3 mb-2">
+                      <${p.icon} className=${"w-6 h-6 "+p.color}/>
+                      <h3 className="text-lg font-semibold">${p.title}</h3>
+                    </div>
+                    <p className="text-slate-400 text-sm mb-4">${p.desc}</p>
+                    <span className="text-cyan-400 inline-flex items-center gap-1">Enter <${ExternalLink} className="w-4 h-4"/></span>
+                  </a>
+                `)}
+              </div>
+
+              <div className="text-center mt-10">
+                <a href="./signin.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
+                  <${LogIn} className="w-5 h-5"/> Sign In to Your Portal
+                </a>
+              </div>
             </div>
+          </section>
+
+          <!-- Industries (kept) -->
+          <section id="industries" className="py-20 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Trusted by Leading Industries</h2>
+                <p className="text-slate-400 text-lg">Serving critical sectors with precision imaging</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-8">
+                ${[
+                  { title: "Construction & Engineering", desc: "Site surveys, progress tracking, and infrastructure documentation" },
+                  { title: "Government & Municipal",  desc: "Public works documentation, asset management, and compliance imaging" },
+                  { title: "Insurance & Industrial",  desc: "Claims documentation, facility inspections, and safety assessments" }
+                ].map((it,i)=>html`
+                  <div key=${i} className="bg-gradient-to-br from-slate-800 to-slate-950 rounded-xl p-8 border border-slate-700 hover:border-cyan-500/50 transition-all">
+                    <h3 className="text-2xl font-bold mb-3">${it.title}</h3>
+                    <p className="text-slate-400">${it.desc}</p>
+                  </div>
+                `)}
+              </div>
+            </div>
+          </section>
+
+          <!-- Clients -->
+          <section id="clients" className="py-20 px-6 bg-slate-900">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Clients & Partners</h2>
+                <p className="text-slate-400 text-lg">Organizations that rely on EDIS imaging</p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                ${clients.map((c,i)=>html`
+                  <div key=${i} className="rounded-xl border border-slate-800 bg-slate-950/50 p-6 flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold">${c.name}</div>
+                      <div className="text-xs text-slate-400">${c.tag}</div>
+                    </div>
+                    <${Building2} className="w-6 h-6 text-slate-400"/>
+                  </div>
+                `)}
+              </div>
+
+              <div className="text-center mt-10">
+                <a href="./case-studies.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700">
+                  View Case Studies <${ExternalLink} className="w-4 h-4"/>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Portfolio -->
+          <section id="portfolio" className="py-20 px-6">
+            <div className="max-w-7xl mx-auto text-center">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">Our Work</h2>
+              <p className="text-slate-400 text-lg mb-8">Portfolio showcasing our comprehensive imaging capabilities</p>
+              <div className="bg-slate-900 border-2 border-dashed border-slate-700 rounded-xl p-16">
+                <p className="text-slate-500 text-lg">Portfolio content coming soon</p>
+                <p className="text-slate-600 text-sm mt-2">Connect with case studies, project galleries, and sample deliverables</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- CTA -->
+          <section id="contact" className="py-20 px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="bg-gradient-to-br from-cyan-600 to-blue-600 rounded-2xl p-12 shadow-2xl">
+                <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
+                <p className="text-xl mb-8 text-cyan-50">Partner with EDIS for comprehensive imaging solutions that meet your project needs from every angle.</p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
+                     target="_blank" rel="noopener noreferrer"
+                     className="bg-white text-cyan-600 hover:bg-slate-100 focus:ring-4 focus:ring-white/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+                    Schedule Consultation
+                  </a>
+                  <a href="#portfolio" className="bg-cyan-800 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-700/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-cyan-700">
+                    Download Capabilities Deck
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer className="bg-slate-950 border-t border-slate-800 py-12 px-6">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid md:grid-cols-5 gap-8 mb-8">
+                <div className="md:col-span-2">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <${Camera} className="w-6 h-6 text-cyan-400"/>
+                    <span className="font-bold text-lg">EDIS</span>
+                  </div>
+                  <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Services</h4>
+                  <div className="space-y-2 text-sm text-slate-400">
+                    <a href="#services" className="hover:text-white">Aerial Imaging</a>
+                    <a href="#services" className="hover:text-white">Ground Imaging</a>
+                    <a href="#dashboards" className="hover:text-white">Dashboards</a>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Portals</h4>
+                  <div className="space-y-2 text-sm text-slate-400">
+                    <a href="./portal-client.html" className="hover:text-white">Client Portal</a>
+                    <a href="./portal-operator.html" className="hover:text-white">Operator Portal</a>
+                    <a href="./admin.html" className="hover:text-white">Admin Console</a>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-3">Company</h4>
+                  <div className="space-y-2 text-sm text-slate-400">
+                    <a href="./case-studies.html" className="hover:text-white">Case Studies</a>
+                    <a href="./docs.html" className="hover:text-white">Docs</a>
+                    <a href="mailto:info@eyeamstudios.com" className="hover:text-white">Contact</a>
+                  </div>
+                </div>
+              </div>
+              <div className="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
+                © 2025 EDIS - Enhanced Digital Imaging Solutions. All rights reserved.
+              </div>
+            </div>
+          </footer>
         </div>
-    </footer>
+      `;
+    }
 
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Form submission handler
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-            // Simple validation
-            if (!data.name || !data.company || !data.email || !data.phone || !data.location || !data.service) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-            
-            // Show loading state
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Sending Quote Request...';
-            submitBtn.disabled = true;
-            
-            // Submit to Formspree
-            fetch('https://formspree.io/f/myzndjra', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
-                if (response.ok) {
-                    // Success
-                    alert('Thank you for your interest! We will contact you within 24 hours to discuss your aerial imaging project.');
-                    this.reset();
-                } else {
-                    // Error
-                    response.json().then(data => {
-                        if (Object.hasOwnProperty.call(data, 'errors')) {
-                            alert('Error submitting form: ' + data["errors"].map(error => error["message"]).join(", "));
-                        } else {
-                            alert('Error submitting form. Please try again or contact us directly.');
-                        }
-                    });
-                }
-            }).catch(error => {
-                // Network error
-                alert('Network error. Please check your connection and try again.');
-            }).finally(() => {
-                // Reset button state
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
-        });
-
-        // Add intersection observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all fade-in elements
-        document.querySelectorAll('.fade-in').forEach(el => {
-            el.style.animationPlayState = 'paused';
-            observer.observe(el);
-        });
-
-        // Portal functionality - now active
-        console.log('EAS | TrueView Portal - Client access available at portal.html');
-    </script>
+    createRoot(document.getElementById('root')).render(html`<${EDISLandingPage}/>`);
+  </script>
 </body>
 </html>
