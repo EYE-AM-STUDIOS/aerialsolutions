@@ -110,22 +110,17 @@
                 <div className="flex items-center space-x-3">
                   <${Camera} className="w-8 h-8 text-cyan-400" />
                   <div>
-                    <div className="text-2xl font-bold">EDIS</div>
-                    <div className="text-xs text-cyan-400">EAS | Enhanced Digital Imaging Solutions</div>
+                    <div className="text-2xl font-bold">EYE AM STUDIOS</div>
                   </div>
                 </div>
 
                 <div className="hidden md:flex items-center space-x-8">
-                  <a href="#home"      className="hover:text-cyan-400 transition-colors">Home</a>
-                  <a href="#services"  className="hover:text-cyan-400 transition-colors">Services</a>
-                  <a href="./signin.html" className="flex items-center gap-2 text-slate-300 hover:text-white">
-                    <${LogIn} className="w-4 h-4"/> Sign In
+                  <a href="#services" className="hover:text-cyan-400 transition-colors">Services</a>
+                  <a href="./portal.html" className="hover:text-cyan-400 transition-colors">TrueView Portal</a>
+                  <a href="#contact" className="hover:text-cyan-400 transition-colors">Contact</a>
+                  <a href="./signin.html" className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg transition-all transform hover:scale-105">
+                    <${LogIn} className="w-4 h-4"/> Client Login
                   </a>
-                  <a
-                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
-                    target="_blank" rel="noopener noreferrer"
-                    className="bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg transition-all transform hover:scale-105"
-                  >Request Quote</a>
                 </div>
 
                 <button
@@ -142,14 +137,12 @@
             ${mobileMenuOpen && html`
               <div className="md:hidden bg-slate-900 border-t border-slate-800">
                 <div className="px-6 py-4 space-y-4">
-                  <a href="#home"      onClick=${closeMobile} className="block hover:text-cyan-400">Home</a>
-                  <a href="#services"   onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
-                  <a href="./signin.html" className="block hover:text-cyan-400">Sign In</a>
-                  <a
-                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
-                    target="_blank" rel="noopener noreferrer"
-                    className="block w-full bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg text-center"
-                  >Request Quote</a>
+                  <a href="#services" onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
+                  <a href="./portal.html" onClick=${closeMobile} className="block hover:text-cyan-400">TrueView Portal</a>
+                  <a href="#contact" onClick=${closeMobile} className="block hover:text-cyan-400">Contact</a>
+                  <a href="./signin.html" className="block w-full bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg text-center">
+                    Client Login
+                  </a>
                 </div>
               </div>
             `}
@@ -411,7 +404,7 @@
                 <div className="md:col-span-2">
                   <div className="flex items-center space-x-2 mb-4">
                     <${Camera} className="w-6 h-6 text-cyan-400"/>
-                    <span className="font-bold text-lg">EDIS</span>
+                    <span className="font-bold text-lg">EYE AM STUDIOS</span>
                   </div>
                   <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
                 </div>
@@ -441,7 +434,7 @@
                 </div>
               </div>
               <div className="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
-                © 2025 EDIS - Enhanced Digital Imaging Solutions. All rights reserved.
+                © 2025 EYE AM STUDIOS - Enhanced Digital Imaging Solutions. All rights reserved.
               </div>
             </div>
           </footer>
