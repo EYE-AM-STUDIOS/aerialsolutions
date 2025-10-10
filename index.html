@@ -92,14 +92,6 @@
         { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"./data-room.html" }
       ];
 
-      const clients = [
-        { name:"Parish Public Works", tag:"Government" },
-        { name:"Acme Engineering",    tag:"AEC" },
-        { name:"Blue Harbor Energy",  tag:"Industrial" },
-        { name:"Delta Insurance",     tag:"Insurance" },
-        { name:"Coastal Utilities",   tag:"Infrastructure" },
-        { name:"Gulf Construction",   tag:"Construction" }
-      ];
 
       // New client portal features data
       const clientFeatures = [
@@ -124,6 +116,7 @@
                 </div>
 
                 <div className="hidden md:flex items-center space-x-8">
+                  <a href="#home"      className="hover:text-cyan-400 transition-colors">Home</a>
                   <a href="#services"  className="hover:text-cyan-400 transition-colors">Services</a>
                   <a href="./signin.html" className="flex items-center gap-2 text-slate-300 hover:text-white">
                     <${LogIn} className="w-4 h-4"/> Sign In
@@ -149,6 +142,7 @@
             ${mobileMenuOpen && html`
               <div className="md:hidden bg-slate-900 border-t border-slate-800">
                 <div className="px-6 py-4 space-y-4">
+                  <a href="#home"      onClick=${closeMobile} className="block hover:text-cyan-400">Home</a>
                   <a href="#services"   onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
                   <a href="./signin.html" className="block hover:text-cyan-400">Sign In</a>
                   <a
@@ -162,7 +156,7 @@
           </nav>
 
           <!-- Hero -->
-          <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+          <section id="home" className="relative pt-32 pb-20 px-6 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/20 via-slate-950 to-blue-900/20"></div>
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
