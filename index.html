@@ -101,6 +101,13 @@
         { name:"Gulf Construction",   tag:"Construction" }
       ];
 
+      // New client portal features data
+      const clientFeatures = [
+        { icon: FileText, color: "text-cyan-400", title: "Document Center", desc: "Access project documents, reports, and manuals" },
+        { icon: Camera,   color: "text-blue-400", title: "Media Gallery",   desc: "View and download project photos and videos" },
+        { icon: MapPin,   color: "text-emerald-400", title: "Site Maps",     desc: "Interactive maps for project site navigation" }
+      ];
+
       return html`
         <div className="min-h-screen bg-slate-950 text-white">
 
@@ -319,26 +326,30 @@
           <section id="portals" className="py-20 px-6 bg-slate-900">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-14">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">Portals</h2>
-                <p className="text-slate-400 text-lg">Secure access for clients, operators, and administrators</p>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Client Portal</h2>
+                <p className="text-slate-400 text-lg">
+                  A secure, branded workspace for your team to view, approve, and download project deliverables.
+                </p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                ${portals.map((p,i)=>html`
-                  <a key=${i} href=${p.href} className="group rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                ${clientFeatures.map((f,i)=>html`
+                  <div key=${i} className="rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6">
                     <div className="flex items-center gap-3 mb-2">
-                      <${p.icon} className=${"w-6 h-6 "+p.color}/>
-                      <h3 className="text-lg font-semibold">${p.title}</h3>
+                      <${f.icon} className=${"w-6 h-6 "+f.color}/>
+                      <h3 className="text-lg font-semibold">${f.title}</h3>
                     </div>
-                    <p className="text-slate-400 text-sm mb-4">${p.desc}</p>
-                    <span className="text-cyan-400 inline-flex items-center gap-1">Enter <${ExternalLink} className="w-4 h-4"/></span>
-                  </a>
+                    <p className="text-slate-400 text-sm">${f.desc}</p>
+                  </div>
                 `)}
               </div>
 
-              <div className="text-center mt-10">
-                <a href="./signin.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
-                  <${LogIn} className="w-5 h-5"/> Sign In to Your Portal
+              <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="./portal-client.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
+                  <${LogIn} className="w-5 h-5"/> Sign in to Client Portal
+                </a>
+                <a href="./docs.html#client-portal" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
+                  Learn more <${ExternalLink} className="w-4 h-4"/>
                 </a>
               </div>
             </div>
