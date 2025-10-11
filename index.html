@@ -27,13 +27,7 @@
     import React, { useState, useEffect } from 'https://esm.sh/react@18';
     import { createRoot } from 'https://esm.sh/react-dom@18/client';
     import htm from 'https://esm.sh/htm@3.1.1';
-    // Pin lucide-react and bundle to avoid ESM interop issues on CDN
-    import {
-      Camera, Maximize2, MapPin, Package, Wrench, Users,
-      CheckCircle, ArrowRight, Menu, X,
-      LayoutDashboard, ShieldCheck, FolderOpen, Settings,
-      LogIn, ExternalLink, Building2, FileText, Plus, Eye, Calendar
-    } from 'https://esm.sh/lucide-react@0.441.0?bundle&deps=react@18';
+    // Icons: use inline SVG components to avoid external module issues on Vercel
 
     // Minimal error reporter so production isn’t blank if a module fails
     window.addEventListener('error', (e) => {
@@ -64,6 +58,29 @@
         <circle cx="12" cy="13" r="4"></circle>
       </svg>
     `;
+
+    // Inline SVG icon components (subset used on the page)
+    const IconSvg = ({ className = "w-5 h-5", children }) => html`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className=${className} aria-hidden="true" role="img">${children}</svg>
+    `;
+    const Camera = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>` });
+    const MapPin = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle>` });
+    const Maximize2 = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>` });
+    const Package = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12 20.73 6.96"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>` });
+    const Wrench = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M14.7 6.3a4 4 0 1 0-5.6 5.6L2 19v3h3l7.1-7.1a4 4 0 0 0 2.6-8.6z"></path>` });
+    const Users = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M17 21v-2a4 4 0 0 0-3-3.87"></path><path d="M7 21v-2a4 4 0 0 1 3-3.87"></path><circle cx="12" cy="7" r="4"></circle>` });
+    const CheckCircle = ({ className = "w-5 h-5" }) => IconSvg({ className, children: html`<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>` });
+    const ArrowRight = ({ className = "w-5 h-5" }) => IconSvg({ className, children: html`<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>` });
+    const Menu = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>` });
+    const X = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>` });
+    const LayoutDashboard = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect>` });
+    const ShieldCheck = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"></path><polyline points="9 12 12 15 16 11"></polyline>` });
+    const FolderOpen = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M3 8h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M3 8l2-3h6l2 2"></path>` });
+    const Settings = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V8a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>` });
+    const LogIn = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line>` });
+    const ExternalLink = ({ className = "w-4 h-4" }) => IconSvg({ className, children: html`<path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>` });
+    const FileText = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line>` });
+    const Plus = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>` });
 
     // Tiny image loader to optionally show a brand logo if present
     function useImage(src){
