@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EAS | Client Login</title>
+  <meta name="description" content="Client login to access your EYE AM STUDIOS project dashboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  </style>
+</head>
+<body class="bg-slate-950 text-white">
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-8">
+        <img src="./images/eas-logo.png" alt="EYE AM STUDIOS logo" class="h-10 w-auto mx-auto object-contain max-w-[200px] block" onerror="this.style.display='none'">
+        <h1 class="text-3xl font-bold mt-4">Client Login</h1>
+        <p class="text-slate-400 mt-2 text-sm">Use the credentials provided after booking to access your dashboard.</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <form id="loginForm" class="space-y-4" novalidate>
+          <div>
+            <label for="email" class="block text-sm mb-1">Email</label>
+            <input id="email" name="email" type="email" required autocomplete="username"
+                   class="w-full rounded-lg bg-slate-950 border border-slate-800 px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-500">
+          </div>
+          <div>
+            <label for="password" class="block text-sm mb-1">Password</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password"
+                   class="w-full rounded-lg bg-slate-950 border border-slate-800 px-4 py-2 outline-none focus:ring-2 focus:ring-cyan-500">
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <label class="inline-flex items-center gap-2 select-none">
+              <input type="checkbox" id="remember" class="rounded border-slate-700 bg-slate-900">
+              <span class="text-slate-300">Remember me</span>
+            </label>
+            <a href="./portal.html" class="text-cyan-300 hover:text-cyan-200">What is the Client Portal?</a>
+          </div>
+          <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded-lg font-semibold transition">Sign In</button>
+          <p id="loginError" class="text-rose-300 text-sm h-5" aria-live="polite"></p>
+        </form>
+
+        <div class="mt-6 rounded-lg bg-slate-950 border border-slate-800 p-4 text-sm">
+          <div class="font-semibold mb-1 text-slate-200">Demo access</div>
+          <div class="text-slate-400">Email: <code class="text-slate-300">demo@test.com</code> — Password: <code class="text-slate-300">demo123</code></div>
+        </div>
+
+        <div class="mt-6 text-center text-sm text-slate-400">
+          Need access? 
+          <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e" target="_blank" rel="noopener" class="text-cyan-300 hover:text-cyan-200">Book your project</a>
+        </div>
+
+        <div class="mt-6 text-center">
+          <a href="./index.html" class="text-slate-400 hover:text-slate-200 text-sm">← Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const form = document.getElementById('loginForm');
+      const err = document.getElementById('loginError');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        err.textContent = '';
+        const email = (document.getElementById('email').value || '').trim();
+        const password = (document.getElementById('password').value || '').trim();
+
+        // Demo-only handling
+        if (email.toLowerCase() === 'demo@test.com' && password === 'demo123') {
+          try { if (document.getElementById('remember').checked) localStorage.setItem('eas_demo_login','1'); } catch {}
+          window.location.href = './dashboard.html?demo=1';
+          return;
+        }
+
+        // In production, authenticate against your backend.
+        err.textContent = 'Invalid credentials. If you are a client, use the login details provided after booking.';
+      });
+    })();
+  </script>
+</body>
+</html>

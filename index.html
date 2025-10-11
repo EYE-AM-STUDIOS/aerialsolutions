@@ -27,13 +27,13 @@
     import React, { useState, useEffect } from 'https://esm.sh/react@18';
     import { createRoot } from 'https://esm.sh/react-dom@18/client';
     import htm from 'https://esm.sh/htm@3.1.1';
-    // IMPORTANT: pin lucide-react and explicitly list exports so the module resolves on CDN
+    // Pin lucide-react and bundle to avoid ESM interop issues on CDN
     import {
       Camera, Maximize2, MapPin, Package, Wrench, Users,
       CheckCircle, ArrowRight, Menu, X,
       LayoutDashboard, ShieldCheck, FolderOpen, Settings,
       LogIn, ExternalLink, Building2, FileText, Plus, Eye, Calendar
-    } from 'https://esm.sh/lucide-react@latest?deps=react@18&exports=Camera,Maximize2,MapPin,Package,Wrench,Users,CheckCircle,ArrowRight,Menu,X,LayoutDashboard,ShieldCheck,FolderOpen,Settings,LogIn,ExternalLink,Building2,FileText,Plus,Eye,Calendar';
+    } from 'https://esm.sh/lucide-react@0.441.0?bundle&deps=react@18';
 
     // Minimal error reporter so production isn’t blank if a module fails
     window.addEventListener('error', (e) => {
