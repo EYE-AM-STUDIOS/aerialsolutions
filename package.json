@@ -5,13 +5,16 @@
   "main": "index.html",
   "scripts": {
     "dev": "python -m http.server 8000 || php -S localhost:8000 || live-server",
+    "dev:cloudinary": "echo 'Starting EDIS with Cloudinary integration...' && python -m http.server 8000 || php -S localhost:8000 || live-server",
     "build": "echo 'Static site - no build needed'",
     "deploy": "vercel --prod",
     "preview": "vercel",
     "new:client": "node scripts/new-client.js",
     "new:client:demo": "node scripts/new-client.js --id demo-mosaic --name 'Demo Mosaic Client' --email demo@test.com",
     "activate:client": "node scripts/activate-client.js",
-    "activate:demo": "node scripts/activate-client.js --id demo-mosaic --deposit true --status active"
+    "activate:demo": "node scripts/activate-client.js --id demo-mosaic --deposit true --status active",
+    "cloudinary:setup": "echo 'Setting up Cloudinary presets...' && node scripts/cloudinary-setup.js",
+    "cloudinary:sync": "echo 'Syncing with Cloudinary...' && node scripts/cloudinary-sync.js"
   },
   "keywords": [
     "aerial-imaging",
