@@ -15,3 +15,8 @@ Optimization tips:
 - Target 1600–2400px width for hero banners; 1200px for content images; 400–800px for thumbnails
 - Compress to < 200KB per image when possible
 - Export multiple sizes if you plan to use `srcset`
+
+Brand logo:
+- Copy your logo file (e.g., `EAS Logo(1).png`) into this folder and rename it to `eas-logo.png`
+- `index.html` will automatically try to load `./images/eas-logo.png` for the header/footer
+- Recommended: also export a 2x retina version (e.g., 512–640px wide) and optimize with lossless compression

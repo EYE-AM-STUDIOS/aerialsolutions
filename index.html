@@ -44,7 +44,7 @@
       document.getElementById('root')?.appendChild(pre);
     });
 
-    const html = htm.bind(React.createElement);
+  const html = htm.bind(React.createElement);
 
     // Inline SVG icons for top-of-page performance (used in nav/footer)
     const CameraIcon = ({ className = "w-8 h-8 text-cyan-400" } = {}) => html`
@@ -65,11 +65,27 @@
       </svg>
     `;
 
+    // Tiny image loader to optionally show a brand logo if present
+    function useImage(src){
+      const [ok, setOk] = useState(false);
+      useEffect(()=>{
+        if(!src) return;
+        const img = new Image();
+        img.onload = () => setOk(true);
+        img.onerror = () => setOk(false);
+        img.src = src + (src.includes('?') ? '&' : '?') + 'v=' + Date.now(); // bypass cache once
+      }, [src]);
+      return ok;
+    }
+
+    const LOGO_SRC = './images/eas-logo.png';
+
     function EDISLandingPage(){
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [scrolled, setScrolled] = useState(false);
       const [clients, setClients] = useState([]);
       const [loading, setLoading] = useState(true);
+  const hasLogo = useImage(LOGO_SRC);
 
       // Load client data
       useEffect(()=>{
@@ -147,10 +163,10 @@
             <div className="max-w-7xl mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  ${CameraIcon({ className: "w-8 h-8 text-cyan-400" })}
-                  <div>
-                    <div className="text-2xl font-bold">EYE AM STUDIOS</div>
-                  </div>
+                  ${hasLogo
+                    ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-8 w-auto rounded-sm"/>`
+                    : CameraIcon({ className: "w-8 h-8 text-cyan-400" })}
+                  <div className="text-2xl font-bold">EYE AM STUDIOS</div>
                 </div>
 
                 <div className="hidden md:flex items-center space-x-8">
@@ -599,7 +615,9 @@
               <div className="grid md:grid-cols-5 gap-8 mb-8">
                 <div className="md:col-span-2">
                   <div className="flex items-center space-x-2 mb-4">
-                    ${CameraIcon({ className: "w-6 h-6 text-cyan-400" })}
+                    ${hasLogo
+                      ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-6 w-auto rounded-sm"/>`
+                      : CameraIcon({ className: "w-6 h-6 text-cyan-400" })}
                     <span className="font-bold text-lg">EYE AM STUDIOS</span>
                   </div>
                   <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
