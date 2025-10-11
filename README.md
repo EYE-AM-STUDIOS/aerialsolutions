@@ -1,31 +1,32 @@
-# EAS | Aerial Imaging Solutions
+# EDIS | Enhanced Digital Imaging Solutions
 
-Professional aerial imaging and drone services with an integrated client portal system. Serving Florida and nationwide with comprehensive orthomosaic mapping, 3D modeling, and aerial photography solutions.
+Comprehensive aerial and ground imaging with an integrated client portal system. Serving Florida and nationwide with orthomosaic mapping, 3D/RTK modeling, inspections, and industrial documentation.
 
 ## 🚀 Quick Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/EYE-AM-STUDIOS/aerialsolutions)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/EYE-AM-STUDIOS/edis)
 
 ## 📁 Project Structure
 
 ```
-aerialsolutions/
+edis/
 ├── index.html              # Main landing page
-├── portal.html             # Login interface
-├── dashboard.html          # Client portal
+├── portal.html             # Portal information (how access works)
+├── signin.html             # Client sign-in
+├── dashboard.html          # Client portal dashboard
 ├── admin-dashboard.html    # Admin management
-├── vercel.json            # Vercel deployment config
-├── package.json           # Project metadata
-└── DEPLOYMENT.md          # Detailed deployment guide
+├── vercel.json             # Vercel deployment config
+├── package.json            # Project metadata
+└── DEPLOYMENT.md           # Deployment guide
 ```
 
 ## 🌟 Features
 
 ### Landing Page
-- **4 Service Packages**: Observer, Scout, Surveyor, Enterprise
-- **Professional Credentials**: FAA Part 107, TWIC, 10+ years experience
-- **Contact Integration**: Formspree contact form
-- **Responsive Design**: Mobile-first approach
+- Aerial and Ground Imaging overview with collapsible details
+- Clear Client Portal vs. Client Login separation
+- Contact CTA and inline iconography (no external icon packages)
+- Responsive, Tailwind-powered layout
 
 ### Client Portal System
 - **Secure Login**: Demo authentication (admin@eyeamstudios.com/admin123)
@@ -69,8 +70,8 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete production implementation guid
 
 ```bash
 # Clone repository
-git clone https://github.com/EYE-AM-STUDIOS/aerialsolutions.git
-cd aerialsolutions
+git clone https://github.com/EYE-AM-STUDIOS/edis.git
+cd edis
 
 # Start local server (choose one)
 python -m http.server 8000    # Python
@@ -146,7 +147,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 For questions or support:
 - **Email**: admin@eyeamstudios.com
-- **Website**: [EAS Aerial Solutions](https://your-vercel-domain.vercel.app)
+- **Website**: [EDIS](https://your-vercel-domain.vercel.app)
 
 ---
 

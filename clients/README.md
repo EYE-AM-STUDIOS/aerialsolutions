@@ -1,6 +1,6 @@
 # Clients Folder
 
-This directory stores per-client deliverables for the EAS TrueView Portal.
+This directory stores per-client deliverables for the EDIS TrueView Portal.
 
 Scaffold a new client:
 

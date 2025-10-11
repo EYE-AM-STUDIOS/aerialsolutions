@@ -1,4 +1,4 @@
-**EAS | Aerial Imaging Solutions - Deployment Guide**
+**EDIS | Enhanced Digital Imaging Solutions - Deployment Guide**
 
 ## Quick Deployment to Vercel
 
@@ -14,7 +14,7 @@ vercel
 # - Set up and deploy? Yes
 # - Which scope? (your account)
 # - Link to existing project? No
-# - Project name: aerialsolutions
+# - Project name: edis
 # - Directory: ./
 # - Override settings? No
 ```

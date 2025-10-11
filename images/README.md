@@ -17,6 +17,6 @@ Optimization tips:
 - Export multiple sizes if you plan to use `srcset`
 
 Brand logo:
-- Copy your logo file (e.g., `EAS Logo(1).png`) into this folder and rename it to `eas-logo.png`
+- Copy your logo file (e.g., `EDIS Logo(1).png`) into this folder and rename it to `eas-logo.png`
 - `index.html` will automatically try to load `./images/eas-logo.png` for the header/footer
 - Recommended: also export a 2x retina version (e.g., 512–640px wide) and optimize with lossless compression

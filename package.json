@@ -1,7 +1,7 @@
 {
-  "name": "eas-aerial-imaging-solutions",
+  "name": "edis",
   "version": "1.0.0",
-  "description": "EAS | Aerial Imaging Solutions - Professional drone services with client portal system",
+  "description": "EDIS | Enhanced Digital Imaging Solutions - Aerial + Ground imaging with client portal",
   "main": "index.html",
   "scripts": {
     "dev": "python -m http.server 8000 || php -S localhost:8000 || live-server",
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EYE-AM-STUDIOS/aerialsolutions.git"
+    "url": "https://github.com/EYE-AM-STUDIOS/edis.git"
   },
   "devDependencies": {
     "live-server": "^1.2.2"
