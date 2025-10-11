@@ -361,6 +361,36 @@
             color: var(--white);
         }
 
+        /* Package type chips and selection badges */
+        .pkg-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .chip {
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+        }
+        .chip-aerial {
+            color: var(--electric-cyan);
+            border-color: var(--electric-cyan);
+            background: rgba(0,191,255,0.12);
+        }
+        .chip-ground {
+            color: #60A5FA; /* blue-400 */
+            border-color: #60A5FA;
+            background: rgba(59,130,246,0.12);
+        }
+        .chip-selected {
+            color: #E5E7EB;
+            border-color: rgba(229,231,235,0.6);
+            background: rgba(255,255,255,0.08);
+        }
+
         /* HD Images Gallery */
         .hd-modal-overlay {
             position: fixed;
@@ -1772,6 +1802,9 @@
                 showNotification('Welcome to your EAS TrueView Portal!', 'success');
             }, 1000);
 
+            // Add package selection controls under Quick Actions
+            initPackageControls();
+
             // Focus from config or localStorage
             async function applyFocusFromState(state) {
                 const currentProject = state && state.currentProject;
@@ -1816,11 +1849,35 @@
                 const headerTitle = document.querySelector('.page-title');
                 const headerSubtitle = document.querySelector('.page-subtitle');
                 if (headerTitle) headerTitle.textContent = 'Welcome to Your Project Portal';
+                // Compute package type and selected deliverable
+                const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring', ground_docs: 'Ground Documentation', portraits: 'Industrial Portraits', tech_docs: 'Technical/Safety Documentation' };
+                const pkgCategory = { orthomosaic: 'aerial', inspections: 'aerial', dsmdtm: 'aerial', progress: 'aerial', ground_docs: 'ground', portraits: 'ground', tech_docs: 'ground' };
+                const packageType = (state && state.selectedPackageType) || localStorage.getItem('selectedPackageType') || (selectedPackage && pkgCategory[selectedPackage]) || 'aerial';
+                const aerialOpts = [
+                    { value: 'map', label: 'Orthomosaic Map' },
+                    { value: '3d', label: '3D Model / Point Cloud' },
+                    { value: 'hd', label: 'HD Aerial Images' },
+                    { value: 'report', label: 'Branded PDF Report' }
+                ];
+                const groundOpts = [
+                    { value: 'report', label: 'Branded PDF Report' },
+                    { value: 'ground-photos', label: 'Ground Reference Photos' },
+                    { value: '360', label: '360° Walkthrough' }
+                ];
+                const bothOpts = [...aerialOpts, ...groundOpts];
+                const storedDel = (state && state.selectedDeliverable) || localStorage.getItem('selectedDeliverable');
+                const defaultDel = (packageType === 'ground' ? groundOpts[0] : aerialOpts[0]).value;
+                const selectedDeliverable = storedDel || defaultDel;
                 if (headerSubtitle && selectedPackage) {
-                    const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring' };
                     const pkgLabel = pkgNames[selectedPackage] || 'Your Selected Package';
-                    headerSubtitle.textContent = `Your selected package: ${pkgLabel}`;
+                    const typeLabel = packageType === 'both' ? 'Aerial + Ground' : (packageType === 'ground' ? 'Ground' : 'Aerial');
+                    const list = packageType === 'both' ? bothOpts : (packageType === 'ground' ? groundOpts : aerialOpts);
+                    const delLabel = (list.find(d => d.value === selectedDeliverable) || {}).label || '—';
+                    headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}`;
                 }
+
+                // Show chips for current selection on the highlighted card
+                updatePackageChips({ packageType, selectedDeliverable });
 
                 const qa = document.querySelector('.quick-actions .action-buttons');
                 if (qa) {
@@ -1886,6 +1943,8 @@
                                 try {
                                     if (found.currentProject) localStorage.setItem('currentProject', found.currentProject);
                                     if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
+                                    if (found.selectedPackageType) localStorage.setItem('selectedPackageType', found.selectedPackageType);
+                                    if (found.selectedDeliverable) localStorage.setItem('selectedDeliverable', found.selectedDeliverable);
                                     if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
                                 } catch {}
                                 await applyFocusFromState(found);
@@ -1899,6 +1958,8 @@
                     await applyFocusFromState({
                         currentProject: fallbackProject,
                         selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
+                        selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 } catch (e) {
@@ -1907,6 +1968,8 @@
                     await applyFocusFromState({
                         currentProject: fallbackProject,
                         selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
+                        selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 }
@@ -1938,6 +2001,158 @@
                 showNotification('Contact form opened - our team will reach out within 24 hours!', 'success');
                 // This would typically open a contact form or redirect to upgrade page
             }, 1500);
+        }
+
+        // =====================
+        // Package selection controls and chips
+        // =====================
+        function initPackageControls() {
+            const qaContainer = document.querySelector('.quick-actions');
+            if (!qaContainer) return;
+            if (document.getElementById('pkgControls')) return; // prevent duplicates
+
+            const wrapper = document.createElement('div');
+            wrapper.id = 'pkgControls';
+            wrapper.className = 'dashboard-card fade-in';
+            wrapper.style.marginTop = '16px';
+            wrapper.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">Package & Deliverables</h3>
+                    <span class="card-icon">📦</span>
+                </div>
+                <div class="card-content" style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end;">
+                    <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Package Type</label>
+                        <select id="pkgType" style="width:100%; background:#0B1220; color:white; border:1px solid #1F2A44; border-radius:8px; padding:10px;">
+                            <option value="aerial">Aerial</option>
+                            <option value="ground">Ground</option>
+                            <option value="both">Aerial + Ground</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Selected Deliverable</label>
+                        <select id="pkgDeliverable" style="width:100%; background:#0B1220; color:white; border:1px solid #1F2A44; border-radius:8px; padding:10px;"></select>
+                    </div>
+                    <div>
+                        <button id="pkgSave" class="btn btn-primary">Save Selection</button>
+                    </div>
+                </div>`;
+
+            qaContainer.parentNode.insertBefore(wrapper, qaContainer.nextSibling);
+
+            const aerialOpts = [
+                { value: 'map', label: 'Orthomosaic Map' },
+                { value: '3d', label: '3D Model / Point Cloud' },
+                { value: 'hd', label: 'HD Aerial Images' },
+                { value: 'report', label: 'Branded PDF Report' }
+            ];
+            const groundOpts = [
+                { value: 'report', label: 'Branded PDF Report' },
+                { value: 'ground-photos', label: 'Ground Reference Photos' },
+                { value: '360', label: '360° Walkthrough' }
+            ];
+
+            const pkgTypeSel = wrapper.querySelector('#pkgType');
+            const delSel = wrapper.querySelector('#pkgDeliverable');
+
+            function populateDeliverables(type) {
+                const list = type === 'both' ? [...aerialOpts, ...groundOpts] : (type === 'ground' ? groundOpts : aerialOpts);
+                delSel.innerHTML = '';
+                list.forEach(opt => {
+                    const o = document.createElement('option');
+                    o.value = opt.value; o.textContent = opt.label; delSel.appendChild(o);
+                });
+            }
+
+            // Initialize from storage
+            const stType = localStorage.getItem('selectedPackageType') || 'aerial';
+            pkgTypeSel.value = stType;
+            populateDeliverables(stType);
+            const stDel = localStorage.getItem('selectedDeliverable');
+            if (stDel) delSel.value = stDel;
+
+            pkgTypeSel.addEventListener('change', () => {
+                populateDeliverables(pkgTypeSel.value);
+            });
+
+            wrapper.querySelector('#pkgSave').addEventListener('click', (e) => {
+                e.preventDefault();
+                try {
+                    localStorage.setItem('selectedPackageType', pkgTypeSel.value);
+                    localStorage.setItem('selectedDeliverable', delSel.value);
+                } catch {}
+                updateHeaderForSelection();
+                updatePackageChips({ packageType: pkgTypeSel.value, selectedDeliverable: delSel.value });
+                showNotification('Package selection saved', 'success');
+            });
+        }
+
+        function updateHeaderForSelection() {
+            const headerSubtitle = document.querySelector('.page-subtitle');
+            const selectedPackage = localStorage.getItem('selectedPackage');
+            const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring', ground_docs: 'Ground Documentation', portraits: 'Industrial Portraits', tech_docs: 'Technical/Safety Documentation' };
+            const pkgLabel = selectedPackage ? (pkgNames[selectedPackage] || selectedPackage) : '—';
+            const type = localStorage.getItem('selectedPackageType') || 'aerial';
+            const typeLabel = type === 'both' ? 'Aerial + Ground' : (type === 'ground' ? 'Ground' : 'Aerial');
+            const aerialOpts = [
+                { value: 'map', label: 'Orthomosaic Map' },
+                { value: '3d', label: '3D Model / Point Cloud' },
+                { value: 'hd', label: 'HD Aerial Images' },
+                { value: 'report', label: 'Branded PDF Report' }
+            ];
+            const groundOpts = [
+                { value: 'report', label: 'Branded PDF Report' },
+                { value: 'ground-photos', label: 'Ground Reference Photos' },
+                { value: '360', label: '360° Walkthrough' }
+            ];
+            const both = [...aerialOpts, ...groundOpts];
+            const sd = localStorage.getItem('selectedDeliverable');
+            const list = type === 'both' ? both : (type === 'ground' ? groundOpts : aerialOpts);
+            const delLabel = (list.find(d => d.value === sd) || {}).label || '—';
+            if (headerSubtitle) headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}`;
+        }
+
+        function updatePackageChips({ packageType, selectedDeliverable }) {
+            // Find highlighted or current project card
+            const currentId = localStorage.getItem('currentProject');
+            let card = document.querySelector('.dashboard-card.highlight');
+            if (!card && currentId) card = document.querySelector(`.dashboard-card[data-project-id="${currentId}"]`);
+            if (!card) return;
+
+            // Remove existing chips
+            const old = card.querySelector('.pkg-chips');
+            if (old && old.parentNode) old.parentNode.removeChild(old);
+
+            const chips = document.createElement('div');
+            chips.className = 'pkg-chips';
+            const makeChip = (cls, text) => {
+                const span = document.createElement('span');
+                span.className = `chip ${cls}`;
+                span.textContent = text;
+                return span;
+            };
+            if (packageType === 'both') {
+                chips.appendChild(makeChip('chip-aerial', 'Aerial'));
+                chips.appendChild(makeChip('chip-ground', 'Ground'));
+            } else if (packageType === 'ground') {
+                chips.appendChild(makeChip('chip-ground', 'Ground'));
+            } else {
+                chips.appendChild(makeChip('chip-aerial', 'Aerial'));
+            }
+            // Selected deliverable label mapping
+            const labels = {
+                map: 'Selected: Orthomosaic Map',
+                '3d': 'Selected: 3D Model / Point Cloud',
+                hd: 'Selected: HD Aerial Images',
+                report: 'Selected: Branded PDF Report',
+                'ground-photos': 'Selected: Ground Reference Photos',
+                '360': 'Selected: 360° Walkthrough'
+            };
+            chips.appendChild(makeChip('chip-selected', labels[selectedDeliverable] || 'Selected deliverable'));
+
+            // Attach under the card header
+            const header = card.querySelector('.card-header');
+            if (header && header.parentNode) header.parentNode.insertBefore(chips, header.nextSibling);
         }
     </script>
 </body>
