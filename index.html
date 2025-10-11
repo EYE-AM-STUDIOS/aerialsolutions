@@ -86,6 +86,9 @@
       const [clients, setClients] = useState([]);
       const [loading, setLoading] = useState(true);
   const hasLogo = useImage(LOGO_SRC);
+  const [showAerialDetails, setShowAerialDetails] = useState(false);
+  const [showGroundDetails, setShowGroundDetails] = useState(false);
+  const [showClientFeatures, setShowClientFeatures] = useState(false);
 
       // Load client data
       useEffect(()=>{
@@ -216,17 +219,29 @@
             </div>
 
             <div className="relative max-w-6xl mx-auto text-center">
-              <div className="inline-block mb-6 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-400 text-sm">
-                Your Single-Source Imaging Partner
-              </div>
+                <div className="text-center mb-8">
+                  <button
+                    onClick=${()=>setShowClientFeatures(v=>!v)}
+                    aria-expanded=${typeof showClientFeatures !== 'undefined' ? showClientFeatures : false}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm"
+                  >
+                    ${typeof showClientFeatures !== 'undefined' && showClientFeatures ? 'Hide features' : 'View features'}
+                  </button>
+                </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Enhanced Digital Imaging</span><br/>
-                From Sky to Ground
-              </h1>
-
-              <p className="text-xl text-slate-300 mb-10 max-w-3xl mx-auto">
-                Comprehensive aerial and ground-based imaging solutions for construction, engineering, and industrial sectors.
+                ${typeof showClientFeatures !== 'undefined' && showClientFeatures && html`
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${clientFeatures.map((f,i)=>html`
+                      <div key=${i} className="rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6">
+                        <div className="flex items-center gap-3 mb-2">
+                          <${f.icon} className=${"w-6 h-6 "+f.color}/>
+                          <h3 className="text-lg font-semibold">${f.title}</h3>
+                        </div>
+                        <p className="text-slate-400 text-sm">${f.desc}</p>
+                      </div>
+                    `)}
+                  </div>
+                `}
                 One partner, complete visual documentation.
               </p>
 
@@ -282,17 +297,23 @@
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    ${aerialServices.map((s, i)=>html`
-                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
-                        <${s.icon} className="w-6 h-6 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
-                        <div>
-                          <div className="font-semibold mb-1">${s.title}</div>
-                          <div className="text-sm text-slate-400">${s.desc}</div>
+                  <button onClick=${()=>setShowAerialDetails(v=>!v)} className="mt-2 mb-4 inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-200 text-sm">
+                    ${showAerialDetails ? 'Hide details' : 'View details'}
+                  </button>
+
+                  ${showAerialDetails && html`
+                    <div className="space-y-4">
+                      ${aerialServices.map((s, i)=>html`
+                        <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group">
+                          <${s.icon} className="w-6 h-6 text-cyan-400 flex-shrink-0"/>
+                          <div>
+                            <div className="font-semibold mb-1">${s.title}</div>
+                            <div className="text-sm text-slate-400">${s.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                    `)}
-                  </div>
+                      `)}
+                    </div>
+                  `}
                 </div>
 
                 <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 hover:border-blue-500/50 transition-all">
@@ -301,17 +322,23 @@
                     <h3 className="text-2xl font-bold">Ground Imaging Solutions</h3>
                   </div>
 
-                  <div className="space-y-4">
-                    ${groundServices.map((s, i)=>html`
-                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
-                        <${s.icon} className="w-6 h-6 text-blue-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
-                        <div>
-                          <div className="font-semibold mb-1">${s.title}</div>
-                          <div className="text-sm text-slate-400">${s.desc}</div>
+                  <button onClick=${()=>setShowGroundDetails(v=>!v)} className="mt-2 mb-4 inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm">
+                    ${showGroundDetails ? 'Hide details' : 'View details'}
+                  </button>
+
+                  ${showGroundDetails && html`
+                    <div className="space-y-4">
+                      ${groundServices.map((s, i)=>html`
+                        <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group">
+                          <${s.icon} className="w-6 h-6 text-blue-400 flex-shrink-0"/>
+                          <div>
+                            <div className="font-semibold mb-1">${s.title}</div>
+                            <div className="text-sm text-slate-400">${s.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                    `)}
-                  </div>
+                      `)}
+                    </div>
+                  `}
                 </div>
               </div>
             </div>
@@ -602,9 +629,6 @@
                      target="_blank" rel="noopener noreferrer"
                      className="bg-white text-cyan-600 hover:bg-slate-100 focus:ring-4 focus:ring-white/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
                     Request Quote via HoneyBook
-                  </a>
-                  <a href="mailto:info@eyeamstudios.com" className="bg-cyan-800 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-700/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-cyan-700">
-                    Email Direct
                   </a>
                 </div>
               </div>
