@@ -46,6 +46,25 @@
 
     const html = htm.bind(React.createElement);
 
+    // Inline SVG icons for top-of-page performance (used in nav/footer)
+    const CameraIcon = ({ className = "w-8 h-8 text-cyan-400" } = {}) => html`
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        className=${className}
+        aria-hidden="true"
+        role="img"
+      >
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+    `;
+
     function EDISLandingPage(){
       const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [scrolled, setScrolled] = useState(false);
@@ -106,10 +125,10 @@
       ];
 
       const portals = [
-        { icon: ShieldCheck, color:"text-cyan-400", title:"Client Portal",  desc:"Secure access to deliverables and approvals", href:"./portal-client.html" },
-        { icon: Users,       color:"text-blue-400", title:"Operator Portal",desc:"Field ops, manifests, and mission packages", href:"./portal-operator.html" },
-        { icon: Settings,    color:"text-emerald-400", title:"Admin Console",desc:"Org settings, users, roles, and billing",   href:"./admin.html" },
-        { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"./data-room.html" }
+        { icon: ShieldCheck, color:"text-cyan-400", title:"Client Portal",  desc:"Secure access to deliverables and approvals", href:"./portal.html" },
+        { icon: Users,       color:"text-blue-400", title:"Operator Portal",desc:"Field ops, manifests, and mission packages", href:"#" },
+        { icon: Settings,    color:"text-emerald-400", title:"Admin Console",desc:"Org settings, users, roles, and billing",   href:"./admin-dashboard.html" },
+        { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"#" }
       ];
 
 
@@ -128,7 +147,7 @@
             <div className="max-w-7xl mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <${Camera} className="w-8 h-8 text-cyan-400" />
+                  ${CameraIcon({ className: "w-8 h-8 text-cyan-400" })}
                   <div>
                     <div className="text-2xl font-bold">EYE AM STUDIOS</div>
                   </div>
@@ -419,10 +438,10 @@
               </div>
 
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="./portal-client.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
+                <a href="./signin.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
                   <${LogIn} className="w-5 h-5"/> Sign in to Client Portal
                 </a>
-                <a href="./docs.html#client-portal" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
+                <a href="./portal.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
                   Learn more <${ExternalLink} className="w-4 h-4"/>
                 </a>
               </div>
@@ -578,7 +597,7 @@
               <div className="grid md:grid-cols-5 gap-8 mb-8">
                 <div className="md:col-span-2">
                   <div className="flex items-center space-x-2 mb-4">
-                    <${Camera} className="w-6 h-6 text-cyan-400"/>
+                    ${CameraIcon({ className: "w-6 h-6 text-cyan-400" })}
                     <span className="font-bold text-lg">EYE AM STUDIOS</span>
                   </div>
                   <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
@@ -588,7 +607,7 @@
                   <div className="space-y-2 text-sm text-slate-400">
                     <a href="#services" className="hover:text-white">Aerial Imaging</a>
                     <a href="#services" className="hover:text-white">Ground Imaging</a>
-                    <a href="#dashboards" className="hover:text-white">Dashboards</a>
+                    <a href="#system" className="hover:text-white">Portal System</a>
                   </div>
                 </div>
                 <div>

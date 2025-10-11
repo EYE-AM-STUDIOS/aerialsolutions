@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="refresh" content="0; url=./signin.html" />
+  <title>Redirecting…</title>
+  <style>
+    html, body { height: 100%; }
+    body { display: grid; place-items: center; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0b1220; color:#e2e8f0 }
+    a { color:#22d3ee }
+  </style>
+</head>
+<body>
+  <p>Redirecting to Client Login… <a href="./signin.html">Click here if you are not redirected</a>.</p>
+  <script>
+    // Fallback redirect if meta refresh is blocked
+    setTimeout(function(){ window.location.replace('./signin.html'); }, 0);
+  </script>
+</body>
+</html>
