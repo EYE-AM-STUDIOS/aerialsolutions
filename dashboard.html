@@ -377,13 +377,15 @@
         }
         .chip-aerial {
             color: var(--electric-cyan);
-            border-color: var(--electric-cyan);
-            background: rgba(0,191,255,0.12);
+            border-color: rgba(0,191,255,0.8);
+            background: rgba(0,191,255,0.14);
+            box-shadow: 0 0 0 1px rgba(0,191,255,0.15) inset;
         }
         .chip-ground {
             color: #60A5FA; /* blue-400 */
-            border-color: #60A5FA;
-            background: rgba(59,130,246,0.12);
+            border-color: rgba(96,165,250,0.85);
+            background: rgba(59,130,246,0.14);
+            box-shadow: 0 0 0 1px rgba(96,165,250,0.15) inset;
         }
         .chip-selected {
             color: #E5E7EB;
@@ -1966,6 +1968,8 @@
                                     if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
                                 } catch {}
                                 await applyFocusFromState(found);
+                                // Start a lightweight refresh check to pull config updates periodically
+                                startConfigRefreshWatcher(clientId);
                                 return;
                             }
                         }
@@ -1981,6 +1985,9 @@
                         selectedAddons: localStorage.getItem('selectedAddons') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
+                    // Start refresh watcher if we at least have a clientId stored
+                    const cid = localStorage.getItem('clientId');
+                    if (cid) startConfigRefreshWatcher(cid);
                 } catch (e) {
                     const existing = localStorage.getItem('currentProject');
                     const fallbackProject = existing || 'temp-active';
@@ -1992,9 +1999,55 @@
                         selectedAddons: localStorage.getItem('selectedAddons') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
+                    const cid = localStorage.getItem('clientId');
+                    if (cid) startConfigRefreshWatcher(cid);
                 }
             })();
         });
+
+        // Lightweight polling refresh to sync server-backed changes from clients/config.json
+        let __cfgWatcherTimer = null;
+        function startConfigRefreshWatcher(clientId) {
+            if (!clientId) return;
+            if (__cfgWatcherTimer) return; // avoid duplicates
+            // Poll every 30s; on change, merge into localStorage and refresh UI
+            let lastSnapshot = null;
+            const poll = async () => {
+                try {
+                    const res = await fetch('clients/config.json', { cache: 'no-store' });
+                    if (!res.ok) return;
+                    const cfg = await res.json();
+                    const found = (cfg.clients || []).find(c => c.id === clientId);
+                    if (!found) return;
+                    const snapshot = JSON.stringify({
+                        currentProject: found.currentProject,
+                        selectedPackage: found.selectedPackage,
+                        selectedPackageType: found.selectedPackageType,
+                        selectedDeliverable: found.selectedDeliverable,
+                        selectedAddons: found.selectedAddons,
+                        focusMode: found.focusMode
+                    });
+                    if (lastSnapshot === null) {
+                        lastSnapshot = snapshot;
+                        return;
+                    }
+                    if (snapshot !== lastSnapshot) {
+                        lastSnapshot = snapshot;
+                        try {
+                            if (found.currentProject) localStorage.setItem('currentProject', found.currentProject);
+                            if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
+                            if (found.selectedPackageType) localStorage.setItem('selectedPackageType', found.selectedPackageType);
+                            if (found.selectedDeliverable) localStorage.setItem('selectedDeliverable', found.selectedDeliverable);
+                            if (found.selectedAddons) localStorage.setItem('selectedAddons', JSON.stringify(found.selectedAddons));
+                            if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
+                        } catch {}
+                        await applyFocusFromState(found);
+                        showNotification('Client configuration updated', 'info');
+                    }
+                } catch {}
+            };
+            __cfgWatcherTimer = setInterval(poll, 30000);
+        }
 
         // Handle mobile menu (future enhancement)
         function toggleMobileMenu() {
