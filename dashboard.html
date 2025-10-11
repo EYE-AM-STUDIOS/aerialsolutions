@@ -866,7 +866,7 @@
                                 Reports
                             </a>
                         </li>
-                    </nav>
+                    </ul>
                 </div>
 
                 <div class="nav-section">
@@ -1658,7 +1658,15 @@
                     const isSelected = card.dataset.projectId === currentProject;
                     if (isSelected) {
                         card.classList.add('highlight');
-                        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                        // Only scroll if card is outside the viewport, and align to start to avoid large empty space
+                        setTimeout(() => {
+                            const rect = card.getBoundingClientRect();
+                            const vh = window.innerHeight || document.documentElement.clientHeight;
+                            const isInView = rect.top >= 0 && rect.bottom <= vh;
+                            if (!isInView) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }, 300);
                         const pkgInfo = card.querySelector('.package-info');
                         if (pkgInfo) {
                             pkgInfo.classList.add('selected');
