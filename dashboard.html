@@ -861,7 +861,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" onclick="showReports()">
                                 <span class="nav-icon">📊</span>
                                 Reports
                             </a>
@@ -1033,6 +1033,46 @@
 
                 <!-- Recent Projects Grid -->
                 <div class="dashboard-grid">
+                    <!-- Temporary Active Project (Demo) -->
+                    <div class="dashboard-card fade-in stagger-1" data-project-id="temp-active" data-package="orthomosaic">
+                        <div class="card-header">
+                            <h3 class="card-title">Demo: Temporary Active Project</h3>
+                            <span class="card-icon">🧪</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Demo Location</span>
+                                <span class="project-status status-ready">Active</span>
+                            </div>
+
+                            <!-- Package Information -->
+                            <div class="package-info">
+                                <h4 class="package-title">📦 EAS | Orthomosaic Mapping (Demo)</h4>
+                                <div class="deliverables-section">
+                                    <h5>✅ Included Deliverables:</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Orthomosaic preview</li>
+                                        <li>✓ Sample HD images</li>
+                                        <li>✓ Demo PDF report</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="card-description">
+                                Temporary project inserted for layout testing. Remove after verifying spacing and active project behavior.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 11, 2025</span>
+                                <span>Altitude: 200ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')">🗺️ Interactive Map</a>
+                            <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
+                        </div>
+                    </div>
+
                     <!-- Project 1: ID=mosaic, package=orthomosaic -->
                     <div class="dashboard-card fade-in stagger-3" data-project-id="mosaic" data-package="orthomosaic">
                         <div class="card-header">
@@ -1400,6 +1440,34 @@
             }, 1500);
         }
 
+        function showReports() {
+            const content = document.getElementById('dashboard-content');
+            content.innerHTML = `
+                <div class="page-header fade-in">
+                    <h1 class="page-title">Reports</h1>
+                    <p class="page-subtitle">Your latest reports and exports</p>
+                </div>
+
+                <div class="dashboard-card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Reports</h3>
+                        <span class="card-icon">📄</span>
+                    </div>
+                    <div class="card-content">
+                        <ul class="deliverables-list">
+                            <li>📄 Demo Report • Temporary Active Project • Oct 11, 2025</li>
+                            <li>📄 Mosaic Construction Site • Sep 22, 2025</li>
+                            <li>📄 Industrial Tank Inspection • Oct 1, 2025</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="btn btn-secondary" onclick="downloadAllReports()">📥 Download All Reports</a>
+                    </div>
+                </div>
+            `;
+            setActiveNav(event.target);
+        }
+
         function viewInspectionReport(projectId) {
             showNotification(`Opening inspection report for ${projectId} project...`, 'info');
             setTimeout(() => {
@@ -1455,15 +1523,39 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card fade-in stagger-2">
-                    <div class="card-header">
-                        <h3 class="card-title">Project List View</h3>
-                        <span class="card-icon">📋</span>
-                    </div>
-                    <div class="card-content">
-                        <p class="card-description">
-                            Complete project management interface would be displayed here with sorting, filtering, and detailed project information.
-                        </p>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card fade-in" data-project-id="temp-active" data-package="orthomosaic">
+                        <div class="card-header">
+                            <h3 class="card-title">Demo: Temporary Active Project</h3>
+                            <span class="card-icon">🧪</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Demo Location</span>
+                                <span class="project-status status-ready">Active</span>
+                            </div>
+                            <div class="package-info">
+                                <h4 class="package-title">📦 EAS | Orthomosaic Mapping (Demo)</h4>
+                                <div class="deliverables-section">
+                                    <h5>✅ Included Deliverables:</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Orthomosaic preview</li>
+                                        <li>✓ Sample HD images</li>
+                                        <li>✓ Demo PDF report</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="card-description">Temporary project for layout testing within My Projects.</p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 11, 2025</span>
+                                <span>Altitude: 200ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')">🗺️ Interactive Map</a>
+                            <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1767,16 +1859,21 @@
                             }
                         }
                     }
+                    // If no current project is set, temporarily focus the demo project for layout verification
+                    const existing = localStorage.getItem('currentProject');
+                    const fallbackProject = existing || 'temp-active';
                     await applyFocusFromState({
-                        currentProject: localStorage.getItem('currentProject'),
-                        selectedPackage: localStorage.getItem('selectedPackage'),
-                        focusMode: localStorage.getItem('focusMode')
+                        currentProject: fallbackProject,
+                        selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 } catch (e) {
+                    const existing = localStorage.getItem('currentProject');
+                    const fallbackProject = existing || 'temp-active';
                     await applyFocusFromState({
-                        currentProject: localStorage.getItem('currentProject'),
-                        selectedPackage: localStorage.getItem('selectedPackage'),
-                        focusMode: localStorage.getItem('focusMode')
+                        currentProject: fallbackProject,
+                        selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 }
             })();
