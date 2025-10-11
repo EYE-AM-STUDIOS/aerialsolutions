@@ -164,9 +164,11 @@
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   ${hasLogo
-                    ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-8 w-auto rounded-sm"/>`
+                    ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-8 w-auto object-contain max-w-[160px] block"/>`
                     : CameraIcon({ className: "w-8 h-8 text-cyan-400" })}
-                  <div className="text-2xl font-bold">EYE AM STUDIOS</div>
+                  ${hasLogo
+                    ? html`<span className="sr-only">EYE AM STUDIOS</span>`
+                    : html`<div className="text-2xl font-bold">EYE AM STUDIOS</div>`}
                 </div>
 
                 <div className="hidden md:flex items-center space-x-8">
@@ -616,9 +618,11 @@
                 <div className="md:col-span-2">
                   <div className="flex items-center space-x-2 mb-4">
                     ${hasLogo
-                      ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-6 w-auto rounded-sm"/>`
+                      ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-6 w-auto object-contain max-w-[140px] block"/>`
                       : CameraIcon({ className: "w-6 h-6 text-cyan-400" })}
-                    <span className="font-bold text-lg">EYE AM STUDIOS</span>
+                    ${hasLogo
+                      ? html`<span className="sr-only">EYE AM STUDIOS</span>`
+                      : html`<span className="font-bold text-lg">EYE AM STUDIOS</span>`}
                   </div>
                   <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
                 </div>
