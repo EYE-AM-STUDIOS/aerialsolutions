@@ -1866,6 +1866,9 @@
                 ];
                 const bothOpts = [...aerialOpts, ...groundOpts];
                 const storedDel = (state && state.selectedDeliverable) || localStorage.getItem('selectedDeliverable');
+                const addonsStr = (state && state.selectedAddons) || localStorage.getItem('selectedAddons');
+                let selectedAddons = [];
+                try { selectedAddons = typeof addonsStr === 'string' ? JSON.parse(addonsStr) : (addonsStr || []); } catch {}
                 const defaultDel = (packageType === 'ground' ? groundOpts[0] : aerialOpts[0]).value;
                 const selectedDeliverable = storedDel || defaultDel;
                 if (headerSubtitle && selectedPackage) {
@@ -1873,11 +1876,22 @@
                     const typeLabel = packageType === 'both' ? 'Aerial + Ground' : (packageType === 'ground' ? 'Ground' : 'Aerial');
                     const list = packageType === 'both' ? bothOpts : (packageType === 'ground' ? groundOpts : aerialOpts);
                     const delLabel = (list.find(d => d.value === selectedDeliverable) || {}).label || '—';
-                    headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}`;
+                    const addonLabelsMap = {
+                        'aerial:map': 'Orthomosaic Map',
+                        'aerial:3d': '3D Model / Point Cloud',
+                        'aerial:hd': 'HD Aerial Images',
+                        'aerial:report': 'Branded PDF Report',
+                        'ground:report': 'Branded PDF Report',
+                        'ground:ground-photos': 'Ground Photos',
+                        'ground:360': '360° Walkthrough'
+                    };
+                    const addonLabels = (selectedAddons || []).map(a => addonLabelsMap[a] || a);
+                    const addonText = addonLabels.length ? ` • Add-ons: ${addonLabels.join(', ')}` : '';
+                    headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}${addonText}`;
                 }
 
                 // Show chips for current selection on the highlighted card
-                updatePackageChips({ packageType, selectedDeliverable });
+                updatePackageChips({ packageType, selectedDeliverable, selectedAddons });
 
                 const qa = document.querySelector('.quick-actions .action-buttons');
                 if (qa) {
@@ -1889,6 +1903,9 @@
                         e.preventDefault();
                         try { localStorage.removeItem('currentProject'); } catch{}
                         try { localStorage.removeItem('selectedPackage'); } catch{}
+                        try { localStorage.removeItem('selectedPackageType'); } catch{}
+                        try { localStorage.removeItem('selectedDeliverable'); } catch{}
+                        try { localStorage.removeItem('selectedAddons'); } catch{}
                         try { localStorage.removeItem('focusMode'); } catch{}
                         document.querySelectorAll('.dashboard-card').forEach(c => {
                             c.classList.remove('dimmed', 'highlight');
@@ -1945,6 +1962,7 @@
                                     if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
                                     if (found.selectedPackageType) localStorage.setItem('selectedPackageType', found.selectedPackageType);
                                     if (found.selectedDeliverable) localStorage.setItem('selectedDeliverable', found.selectedDeliverable);
+                                    if (found.selectedAddons) localStorage.setItem('selectedAddons', JSON.stringify(found.selectedAddons));
                                     if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
                                 } catch {}
                                 await applyFocusFromState(found);
@@ -1960,6 +1978,7 @@
                         selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
                         selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
                         selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
+                        selectedAddons: localStorage.getItem('selectedAddons') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 } catch (e) {
@@ -1970,6 +1989,7 @@
                         selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
                         selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
                         selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
+                        selectedAddons: localStorage.getItem('selectedAddons') || null,
                         focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
                 }
@@ -2034,6 +2054,10 @@
                         <select id="pkgDeliverable" style="width:100%; background:#0B1220; color:white; border:1px solid #1F2A44; border-radius:8px; padding:10px;"></select>
                     </div>
                     <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Add-ons (Cross-Category)</label>
+                        <div id="pkgAddons" style="display:grid; grid-template-columns: 1fr; gap:6px; align-items:center;"></div>
+                    </div>
+                    <div>
                         <button id="pkgSave" class="btn btn-primary">Save Selection</button>
                     </div>
                 </div>`;
@@ -2054,6 +2078,7 @@
 
             const pkgTypeSel = wrapper.querySelector('#pkgType');
             const delSel = wrapper.querySelector('#pkgDeliverable');
+            const addonsBox = wrapper.querySelector('#pkgAddons');
 
             function populateDeliverables(type) {
                 const list = type === 'both' ? [...aerialOpts, ...groundOpts] : (type === 'ground' ? groundOpts : aerialOpts);
@@ -2064,15 +2089,51 @@
                 });
             }
 
+            function populateAddons(type) {
+                addonsBox.innerHTML = '';
+                const cross = type === 'ground' ? aerialOpts : type === 'aerial' ? groundOpts : [...aerialOpts, ...groundOpts];
+                // Remove the currently selected deliverable from options to avoid duplicate semantics
+                const currentDel = delSel.value;
+                const filtered = cross.filter(opt => opt.value !== currentDel);
+                filtered.forEach(opt => {
+                    const id = `addon-${opt.value}`;
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--white)';
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.value = opt.value;
+                    input.dataset.category = aerialOpts.find(a=>a.value===opt.value) ? 'aerial' : 'ground';
+                    input.id = id;
+                    label.appendChild(input);
+                    const span = document.createElement('span');
+                    span.textContent = `${opt.label} (${input.dataset.category === 'aerial' ? 'Aerial' : 'Ground'})`;
+                    label.appendChild(span);
+                    addonsBox.appendChild(label);
+                });
+                // Restore selections from storage
+                try {
+                    const saved = JSON.parse(localStorage.getItem('selectedAddons') || '[]');
+                    addonsBox.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        const code = `${cb.dataset.category}:${cb.value}`;
+                        cb.checked = saved.includes(code);
+                    });
+                } catch {}
+            }
+
             // Initialize from storage
             const stType = localStorage.getItem('selectedPackageType') || 'aerial';
             pkgTypeSel.value = stType;
             populateDeliverables(stType);
             const stDel = localStorage.getItem('selectedDeliverable');
             if (stDel) delSel.value = stDel;
+            populateAddons(stType);
 
             pkgTypeSel.addEventListener('change', () => {
                 populateDeliverables(pkgTypeSel.value);
+                populateAddons(pkgTypeSel.value);
+            });
+            delSel.addEventListener('change', () => {
+                populateAddons(pkgTypeSel.value);
             });
 
             wrapper.querySelector('#pkgSave').addEventListener('click', (e) => {
@@ -2080,9 +2141,16 @@
                 try {
                     localStorage.setItem('selectedPackageType', pkgTypeSel.value);
                     localStorage.setItem('selectedDeliverable', delSel.value);
+                    const chosen = [];
+                    addonsBox.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        if (cb.checked) chosen.push(`${cb.dataset.category}:${cb.value}`);
+                    });
+                    localStorage.setItem('selectedAddons', JSON.stringify(chosen));
                 } catch {}
                 updateHeaderForSelection();
-                updatePackageChips({ packageType: pkgTypeSel.value, selectedDeliverable: delSel.value });
+                let selectedAddons = [];
+                try { selectedAddons = JSON.parse(localStorage.getItem('selectedAddons') || '[]'); } catch {}
+                updatePackageChips({ packageType: pkgTypeSel.value, selectedDeliverable: delSel.value, selectedAddons });
                 showNotification('Package selection saved', 'success');
             });
         }
@@ -2107,12 +2175,24 @@
             ];
             const both = [...aerialOpts, ...groundOpts];
             const sd = localStorage.getItem('selectedDeliverable');
+            let addons = [];
+            try { addons = JSON.parse(localStorage.getItem('selectedAddons') || '[]'); } catch {}
+            const addonLabelsMap = {
+                'aerial:map': 'Orthomosaic Map',
+                'aerial:3d': '3D Model / Point Cloud',
+                'aerial:hd': 'HD Aerial Images',
+                'aerial:report': 'Branded PDF Report',
+                'ground:report': 'Branded PDF Report',
+                'ground:ground-photos': 'Ground Photos',
+                'ground:360': '360° Walkthrough'
+            };
+            const addonText = addons.length ? ` • Add-ons: ${addons.map(a => addonLabelsMap[a] || a).join(', ')}` : '';
             const list = type === 'both' ? both : (type === 'ground' ? groundOpts : aerialOpts);
             const delLabel = (list.find(d => d.value === sd) || {}).label || '—';
-            if (headerSubtitle) headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}`;
+            if (headerSubtitle) headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}${addonText}`;
         }
 
-        function updatePackageChips({ packageType, selectedDeliverable }) {
+        function updatePackageChips({ packageType, selectedDeliverable, selectedAddons = [] }) {
             // Find highlighted or current project card
             const currentId = localStorage.getItem('currentProject');
             let card = document.querySelector('.dashboard-card.highlight');
@@ -2149,6 +2229,21 @@
                 '360': 'Selected: 360° Walkthrough'
             };
             chips.appendChild(makeChip('chip-selected', labels[selectedDeliverable] || 'Selected deliverable'));
+
+            // Add-on chips
+            const addonLabels = {
+                'aerial:map': { text: 'Add-on: Orthomosaic Map', cls: 'chip-aerial' },
+                'aerial:3d': { text: 'Add-on: 3D Model', cls: 'chip-aerial' },
+                'aerial:hd': { text: 'Add-on: HD Aerial Images', cls: 'chip-aerial' },
+                'aerial:report': { text: 'Add-on: PDF Report', cls: 'chip-aerial' },
+                'ground:report': { text: 'Add-on: PDF Report', cls: 'chip-ground' },
+                'ground:ground-photos': { text: 'Add-on: Ground Photos', cls: 'chip-ground' },
+                'ground:360': { text: 'Add-on: 360° Walkthrough', cls: 'chip-ground' }
+            };
+            (selectedAddons || []).forEach(code => {
+                const meta = addonLabels[code];
+                if (meta) chips.appendChild(makeChip(meta.cls, meta.text));
+            });
 
             // Attach under the card header
             const header = card.querySelector('.card-header');
