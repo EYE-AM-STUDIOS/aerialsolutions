@@ -12,13 +12,13 @@ class CloudinaryHelpers {
 
     /**
      * Generate optimized image URL with transformations
-     * FREE TIER OPTIMIZED - Minimizes transformation usage
+     * FREE TIER OPTIMIZED - Supports both Aerial and Ground-Based Imaging
      * @param {string} publicId - Cloudinary public ID
      * @param {string} preset - Size preset (thumb, small, medium, large, full)
      * @param {object} options - Additional transformation options
      */
     getImageUrl(publicId, preset = 'medium', options = {}) {
-        // FREE TIER OPTIMIZED PRESETS - Lower quality, smaller sizes
+        // FREE TIER OPTIMIZED PRESETS - Both Aerial and Ground-Based
         const presets = {
             // Basic presets (minimize transformations)
             thumb: 'w_300,h_200,c_fill,f_auto,q_auto:low',
@@ -27,15 +27,33 @@ class CloudinaryHelpers {
             large: 'w_1200,h_800,c_fill,f_auto,q_auto:eco',
             full: 'f_auto,q_auto:eco', // No resize = minimal transformation cost
             
-            // Free tier aerial presets (no expensive effects like sharpen)
+            // AERIAL IMAGING PRESETS
             aerial_thumb: 'w_300,h_200,c_fill,f_auto,q_auto:low',
             aerial_preview: 'w_800,h_533,c_fill,f_auto,q_auto:eco',
             aerial_full: 'w_1600,h_1067,c_limit,f_auto,q_auto:eco',
+            aerial_ortho: 'w_2000,c_limit,f_auto,q_auto:eco', // Orthomosaic maps
             
-            // Map presets (preserve aspect, free tier friendly)
-            map_thumb: 'w_300,c_fit,f_auto,q_auto:low',
-            map_preview: 'w_800,c_fit,f_auto,q_auto:eco', 
-            map_full: 'w_1600,c_limit,f_auto,q_auto:eco'
+            // GROUND-BASED IMAGING PRESETS
+            ground_thumb: 'w_300,h_200,c_fill,f_auto,q_auto:low',
+            ground_preview: 'w_800,h_533,c_fill,f_auto,q_auto:eco',
+            ground_full: 'w_1600,h_1067,c_limit,f_auto,q_auto:eco',
+            ground_detail: 'w_1200,h_1600,c_limit,f_auto,q_auto:eco', // Portrait orientation for equipment/structural
+            
+            // SPECIALIZED PRESETS
+            // Infrastructure/Construction Documentation
+            infra_thumb: 'w_300,h_225,c_fill,f_auto,q_auto:low',
+            infra_preview: 'w_800,h_600,c_fill,f_auto,q_auto:eco',
+            infra_full: 'w_1600,h_1200,c_limit,f_auto,q_auto:eco',
+            
+            // Equipment/Asset Documentation  
+            equipment_thumb: 'w_200,h_200,c_fill,f_auto,q_auto:low', // Square for equipment
+            equipment_preview: 'w_600,h_600,c_fill,f_auto,q_auto:eco',
+            equipment_full: 'w_1200,h_1200,c_limit,f_auto,q_auto:eco',
+            
+            // Progress Documentation (Time-lapse style)
+            progress_thumb: 'w_300,h_169,c_fill,f_auto,q_auto:low', // 16:9 aspect
+            progress_preview: 'w_800,h_450,c_fill,f_auto,q_auto:eco',
+            progress_full: 'w_1600,h_900,c_limit,f_auto,q_auto:eco'
         };
 
         const transformation = presets[preset] || presets.medium;
@@ -96,15 +114,17 @@ class CloudinaryHelpers {
     }
 
     /**
-     * Generate gallery data structure for client projects
+     * Generate gallery data structure for EDIS client projects
+     * Supports both Aerial and Ground-Based Imaging
      */
-    formatGalleryData(cloudinaryAssets, projectId) {
+    formatGalleryData(cloudinaryAssets, projectId, serviceType = 'aerial') {
         return cloudinaryAssets.map(asset => ({
-            name: asset.context?.custom?.title || asset.display_name || 'Aerial Photo',
+            name: asset.context?.custom?.title || asset.display_name || this.getDefaultImageName(serviceType),
             publicId: asset.public_id,
-            src: this.getImageUrl(asset.public_id, 'large'),
-            thumb: this.getImageUrl(asset.public_id, 'thumb'), 
-            alt: asset.context?.custom?.alt || `Aerial image from ${projectId} project`,
+            serviceType: serviceType,
+            src: this.getImageUrl(asset.public_id, `${serviceType}_full`),
+            thumb: this.getImageUrl(asset.public_id, `${serviceType}_thumb`), 
+            alt: asset.context?.custom?.alt || `${this.getServiceDisplayName(serviceType)} image from ${projectId} project`,
             caption: asset.context?.custom?.caption || '',
             metadata: {
                 width: asset.width,
@@ -112,9 +132,40 @@ class CloudinaryHelpers {
                 size: asset.bytes,
                 format: asset.format,
                 created: asset.created_at,
+                serviceType: serviceType,
+                equipment: asset.context?.custom?.equipment || 'Unknown',
+                location: asset.context?.custom?.location || 'Unknown',
                 ...asset.context?.custom
             }
         }));
+    }
+
+    /**
+     * Get default image name based on service type
+     */
+    getDefaultImageName(serviceType) {
+        const defaults = {
+            aerial: 'Aerial Photo',
+            ground: 'Ground-Based Image',
+            infrastructure: 'Infrastructure Documentation',
+            equipment: 'Equipment Photo',
+            progress: 'Progress Documentation'
+        };
+        return defaults[serviceType] || 'EDIS Image';
+    }
+
+    /**
+     * Get service display name
+     */
+    getServiceDisplayName(serviceType) {
+        const names = {
+            aerial: 'Aerial',
+            ground: 'Ground-Based',
+            infrastructure: 'Infrastructure',
+            equipment: 'Equipment',
+            progress: 'Progress'
+        };
+        return names[serviceType] || 'EDIS';
     }
 
     /**

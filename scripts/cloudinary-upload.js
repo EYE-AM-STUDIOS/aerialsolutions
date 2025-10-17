@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * EAS Cloudinary Bulk Upload Script
+ * EDIS Cloudinary Bulk Upload Script
  * Upload images from client folders to Cloudinary with proper organization
+ * Supports both Aerial and Ground-Based Imaging services
  */
 
 const fs = require('fs');
@@ -16,9 +17,71 @@ cloudinary.config({
 });
 
 /**
+ * EDIS Service Type Utilities
+ */
+
+// Infer service type from project details
+function inferServiceType(clientId, projectType) {
+    const aerialKeywords = ['aerial', 'drone', 'orthomosaic', 'mapping', 'survey', 'inspection'];
+    const groundKeywords = ['ground', 'interior', 'equipment', 'infrastructure', 'documentation'];
+    
+    const searchText = `${clientId} ${projectType}`.toLowerCase();
+    
+    if (aerialKeywords.some(keyword => searchText.includes(keyword))) {
+        return 'aerial';
+    } else if (groundKeywords.some(keyword => searchText.includes(keyword))) {
+        return 'ground';
+    }
+    
+    // Default to aerial for backward compatibility
+    return 'aerial';
+}
+
+// Get folder structure for service type
+function getServiceFolder(serviceType) {
+    const folderMap = {
+        aerial: 'aerial-imaging',
+        ground: 'ground-imaging', 
+        infrastructure: 'infrastructure',
+        equipment: 'equipment',
+        progress: 'progress-docs'
+    };
+    return folderMap[serviceType] || 'aerial-imaging';
+}
+
+// Get default equipment based on service type
+function getDefaultEquipment(serviceType) {
+    const equipmentMap = {
+        aerial: 'DJI Mavic 3 Pro',
+        ground: 'Canon EOS R5',
+        infrastructure: 'Sony A7R IV',
+        equipment: 'Canon EOS R5',
+        progress: 'Various'
+    };
+    return equipmentMap[serviceType] || 'EDIS Equipment';
+}
+
+// Get service-specific transformation settings
+function getServiceTransformation(serviceType) {
+    const transformations = {
+        aerial: { width: 1600, height: 1067, crop: 'limit' },
+        ground: { width: 1600, height: 1200, crop: 'limit' },
+        infrastructure: { width: 1600, height: 1200, crop: 'limit' },
+        equipment: { width: 1200, height: 1200, crop: 'limit' },
+        progress: { width: 1600, height: 900, crop: 'limit' } // 16:9 for progress docs
+    };
+    return transformations[serviceType] || transformations.aerial;
+}
+
+/**
  * Upload images for a specific client
  * @param {string} clientId - Client folder ID
  * @param {object} options - Upload options
+ * @param {string} options.serviceType - 'aerial', 'ground', 'infrastructure', 'equipment', 'progress'
+ * @param {string} options.projectType - Project type for tagging
+ * @param {string} options.equipment - Equipment used for capture
+ * @param {string} options.pilot - Operator/photographer name
+ * @param {string} options.location - Capture location
  */
 async function uploadClientImages(clientId, options = {}) {
     const clientDir = path.join(__dirname, '..', 'clients', clientId);
@@ -36,12 +99,17 @@ async function uploadClientImages(clientId, options = {}) {
         clientMeta = JSON.parse(fs.readFileSync(clientMetaPath, 'utf8'));
     }
 
+    // Determine service type from options or infer from project
+    const serviceType = options.serviceType || inferServiceType(clientId, options.projectType);
+    const serviceFolder = getServiceFolder(serviceType);
+
     // Get image files
     const imageFiles = fs.readdirSync(imagesDir)
         .filter(f => /\.(jpg|jpeg|png|tiff|raw|dng)$/i.test(f))
         .filter(f => !f.startsWith('thumb-')); // Skip thumbnails for main upload
 
     console.log(`📤 Starting upload for client: ${clientId}`);
+    console.log(`🎯 Service Type: ${serviceType.toUpperCase()}`);
     console.log(`📁 Found ${imageFiles.length} images to upload`);
 
     const results = [];
@@ -53,43 +121,47 @@ async function uploadClientImages(clientId, options = {}) {
         console.log(`⬆️  Uploading: ${filename} (${(fileStats.size / 1024 / 1024).toFixed(2)} MB)`);
 
         try {
-            // Generate public ID based on client and filename
-            const publicId = `eas-clients/${clientId}/${path.parse(filename).name}`;
+            // Generate public ID based on service type and client
+            const publicId = `edis-clients/${serviceFolder}/${clientId}/${path.parse(filename).name}`;
             
-            // Upload options
-        const uploadOptions = {
-            public_id: publicId,
-            folder: `eas-clients/${clientId}`,
-            tags: [
-                'aerial',
-                'eas-portal',
-                clientId,
-                options.projectType || 'construction'
-            ],
-            context: {
-                project: clientId,
-                client_name: clientMeta.name || 'Unknown Client',
-                upload_date: new Date().toISOString().split('T')[0], // Date only (save space)
-                // Minimize metadata on free tier
-                ...(options.pilot && { pilot: options.pilot }),
-                ...(options.equipment && { equipment: options.equipment }),
-                ...options.customContext
-            },
-            // FREE TIER OPTIMIZATION
-            quality: 'auto:eco',           // Lower quality = smaller files
-            fetch_format: 'auto',          // WebP when supported
-            format: 'jpg',                 // Force JPEG (smaller than PNG)
-            
-            // SKIP EAGER TRANSFORMATIONS (saves transformation credits)
-            // Generate on-demand instead of pre-generating
-            eager: options.generateEager ? [
-                { width: 300, height: 200, crop: 'fill', quality: 'auto:low' }  // Only one small thumb
-            ] : [],
-            
-            // Limit file size for free tier
-            bytes_step: 100000,            // 100KB chunks (better for free tier)
-            overwrite: options.overwrite || false
-        };            const result = await cloudinary.uploader.upload(filePath, uploadOptions);
+            // Upload options with EDIS-specific context
+            const uploadOptions = {
+                public_id: publicId,
+                folder: `edis-clients/${serviceFolder}/${clientId}`,
+                tags: [
+                    serviceType,
+                    'edis-portal',
+                    clientId,
+                    options.projectType || 'documentation',
+                    'edis' // EDIS brand tag
+                ],
+                context: {
+                    project: clientId,
+                    service_type: serviceType,
+                    client_name: clientMeta.name || 'Unknown Client',
+                    upload_date: new Date().toISOString().split('T')[0],
+                    equipment: options.equipment || getDefaultEquipment(serviceType),
+                    operator: options.pilot || options.photographer || 'EDIS Team',
+                    location: options.location || 'Unknown Location',
+                    project_type: options.projectType || 'documentation',
+                    ...options.customContext
+                },
+                // FREE TIER OPTIMIZATION
+                quality: 'auto:eco',
+                fetch_format: 'auto',
+                format: 'jpg',
+                
+                // Service-specific transformations
+                ...getServiceTransformation(serviceType),
+                
+                // SKIP EAGER TRANSFORMATIONS (saves transformation credits)
+                eager: options.generateEager ? [
+                    { width: 300, height: 200, crop: 'fill', quality: 'auto:low' }
+                ] : [],
+                
+                bytes_step: 100000,
+                overwrite: options.overwrite || false
+            };            const result = await cloudinary.uploader.upload(filePath, uploadOptions);
             
             results.push({
                 filename,
@@ -239,19 +311,32 @@ async function main() {
     switch (command) {
         case 'upload':
             const clientId = args[1];
+            const serviceType = args[2] || 'aerial';
+            const projectType = args[3] || 'documentation';
+            const operator = args[4] || 'EDIS Team';
+            const equipment = args[5];
+            const location = args[6];
+            
             if (!clientId) {
-                console.error('Usage: node cloudinary-upload.js upload <client-id>');
+                console.error('Usage: node cloudinary-upload.js upload <client-id> [service-type] [project-type] [operator] [equipment] [location]');
+                console.error('Service types: aerial, ground, infrastructure, equipment, progress');
                 process.exit(1);
             }
             await uploadClientImages(clientId, {
-                projectType: args[2] || 'construction',
-                pilot: args[3] || 'EAS Team',
-                equipment: args[4] || 'DJI Mavic 3 Pro'
+                serviceType,
+                projectType,
+                pilot: operator,
+                photographer: operator,
+                equipment,
+                location
             });
             break;
 
         case 'upload-all':
-            await uploadAllClients();
+            const globalServiceType = args[1] || 'aerial';
+            await uploadAllClients({
+                serviceType: globalServiceType
+            });
             break;
 
         case 'delete':
@@ -265,25 +350,43 @@ async function main() {
 
         case 'list':
             const listClientId = args[1];
+            const listServiceType = args[2];
             if (!listClientId) {
-                console.error('Usage: node cloudinary-upload.js list <client-id>');
+                console.error('Usage: node cloudinary-upload.js list <client-id> [service-type]');
                 process.exit(1);
             }
-            await listClientImages(listClientId);
+            await listClientImages(listClientId, listServiceType);
             break;
 
         default:
-            console.log('EAS Cloudinary Upload Tool');
+            console.log('EDIS Cloudinary Upload Tool');
+            console.log('Supports both Aerial and Ground-Based Imaging');
             console.log('');
             console.log('Usage:');
-            console.log('  node scripts/cloudinary-upload.js upload <client-id> [project-type] [pilot] [equipment]');
-            console.log('  node scripts/cloudinary-upload.js upload-all');
-            console.log('  node scripts/cloudinary-upload.js list <client-id>');
+            console.log('  node scripts/cloudinary-upload.js upload <client-id> [service-type] [project-type] [operator] [equipment] [location]');
+            console.log('  node scripts/cloudinary-upload.js upload-all [default-service-type]');
+            console.log('  node scripts/cloudinary-upload.js list <client-id> [service-type]');
             console.log('  node scripts/cloudinary-upload.js delete <client-id>');
             console.log('');
+            console.log('Service Types:');
+            console.log('  aerial        - Drone/UAV imaging (default)');
+            console.log('  ground        - Ground-based photography');
+            console.log('  infrastructure- Infrastructure documentation');
+            console.log('  equipment     - Equipment/asset photography');
+            console.log('  progress      - Progress documentation');
+            console.log('');
             console.log('Examples:');
-            console.log('  node scripts/cloudinary-upload.js upload demo-mosaic construction "John Smith" "DJI Mavic 3 Pro"');
-            console.log('  node scripts/cloudinary-upload.js list demo-mosaic');
+            console.log('  # Aerial imaging (default)');
+            console.log('  node scripts/cloudinary-upload.js upload demo-mosaic aerial mapping "John Smith" "DJI Mavic 3 Pro" "Bartow, FL"');
+            console.log('');
+            console.log('  # Ground-based imaging');
+            console.log('  node scripts/cloudinary-upload.js upload office-interior ground documentation "Jane Doe" "Canon EOS R5" "Orlando, FL"');
+            console.log('');
+            console.log('  # Equipment documentation');
+            console.log('  node scripts/cloudinary-upload.js upload hvac-audit equipment inspection "Mike Johnson" "Sony A7R IV" "Tampa, FL"');
+            console.log('');
+            console.log('  # List specific service type');
+            console.log('  node scripts/cloudinary-upload.js list demo-mosaic aerial');
             break;
     }
 }
