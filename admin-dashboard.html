@@ -724,6 +724,176 @@
             border-left: 4px solid var(--error-red);
         }
 
+        /* Deliverables Management Styles */
+        .deliverables-section {
+            background: rgba(0, 191, 255, 0.1);
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .client-deliverables-card {
+            background: rgba(111, 66, 193, 0.1);
+            border: 2px solid rgba(111, 66, 193, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .client-deliverables-card:hover {
+            border-color: var(--admin-purple);
+            transform: translateY(-2px);
+        }
+
+        .deliverables-upload-area {
+            border: 2px dashed var(--electric-cyan);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(0, 191, 255, 0.05);
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .deliverables-upload-area:hover {
+            background: rgba(0, 191, 255, 0.1);
+            border-color: var(--white);
+        }
+
+        .deliverables-upload-area.dragover {
+            background: rgba(0, 191, 255, 0.2);
+            border-color: var(--white);
+            transform: scale(1.02);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: var(--electric-cyan);
+            color: var(--jet-black);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            font-size: 1.2rem;
+        }
+
+        .file-details h5 {
+            color: var(--white);
+            margin: 0 0 4px 0;
+            font-size: 0.95rem;
+        }
+
+        .file-details p {
+            color: var(--gray-medium);
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .delete-btn {
+            background: var(--error-red);
+            color: white;
+        }
+
+        .notify-btn {
+            background: var(--warning-orange);
+            color: white;
+        }
+
+        .file-action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .deliverables-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .deliverables-stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .deliverables-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            display: block;
+        }
+
+        .deliverables-stat-label {
+            color: var(--gray-medium);
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -847,6 +1017,10 @@
                             <a href="#" class="admin-nav-link" onclick="showPackageManagement()">
                                 <span class="admin-nav-icon">📦</span>
                                 Package Management
+                            </a>
+                            <a href="#" class="admin-nav-link" onclick="showDeliverables()">
+                                <span class="admin-nav-icon">📤</span>
+                                Client Deliverables
                             </a>
                         </li>
                         <li class="admin-nav-item">
@@ -2215,6 +2389,162 @@
             setActiveNav(event.target);
         }
 
+        function showDeliverables() {
+            showAdminNotification('Loading Client Deliverables...', 'info');
+            const content = document.getElementById('admin-content');
+            content.innerHTML = `
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">📤 Client Deliverables</h1>
+                    <p class="admin-page-subtitle">Upload, manage and distribute files to clients</p>
+                </div>
+                
+                <div class="deliverables-stats fade-in stagger-1">
+                    <div class="deliverables-stat">
+                        <span class="deliverables-stat-value">24</span>
+                        <div class="deliverables-stat-label">Total Files</div>
+                    </div>
+                    <div class="deliverables-stat">
+                        <span class="deliverables-stat-value">3</span>
+                        <div class="deliverables-stat-label">Active Clients</div>
+                    </div>
+                    <div class="deliverables-stat">
+                        <span class="deliverables-stat-value">2.3 GB</span>
+                        <div class="deliverables-stat-label">Storage Used</div>
+                    </div>
+                    <div class="deliverables-stat">
+                        <span class="deliverables-stat-value">12</span>
+                        <div class="deliverables-stat-label">Pending Downloads</div>
+                    </div>
+                </div>
+                
+                <div class="deliverables-section fade-in stagger-2">
+                    <h3 style="color: var(--electric-cyan); margin-bottom: 25px;">Active Client Projects</h3>
+                    
+                    <!-- Demo Client - Kemuel Burns -->
+                    <div class="client-deliverables-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="color: var(--white); margin-bottom: 5px;">Kemuel Burns - Demo Project</h4>
+                                <p style="color: var(--gray-medium); font-size: 0.9rem;">EDIS | Orthomosaic Mapping • Active Since Oct 17, 2025</p>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <span style="background: rgba(40, 167, 69, 0.2); color: var(--success-green); padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">6 Files</span>
+                                <span style="background: rgba(0, 191, 255, 0.2); color: var(--electric-cyan); padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="deliverables-upload-area" onclick="document.getElementById('fileUpload-demo').click()" 
+                             ondrop="handleFileDrop(event, 'demo')" 
+                             ondragover="handleDragOver(event)" 
+                             ondragleave="handleDragLeave(event)">
+                            <input type="file" id="fileUpload-demo" class="upload-input" multiple accept="*/*" onchange="handleFileUpload(event, 'demo')">
+                            <div style="font-size: 3rem; color: var(--electric-cyan); margin-bottom: 15px;">📁</div>
+                            <h4 style="color: var(--white); margin-bottom: 10px;">Upload Deliverables</h4>
+                            <p style="color: var(--gray-medium); margin-bottom: 20px;">Drag & drop files here or click to browse</p>
+                            <button class="upload-btn" type="button">
+                                <span>📤</span> Choose Files
+                            </button>
+                        </div>
+                        
+                        <div class="file-list">
+                            <h5 style="color: var(--white); margin-bottom: 15px;">Current Deliverables:</h5>
+                            
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">🗺️</span>
+                                    <div class="file-details">
+                                        <h5>Orthomosaic_Map_Final.tiff</h5>
+                                        <p>45.2 MB • Uploaded Oct 17, 2025 • Downloaded 2 times</p>
+                                    </div>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="file-action-btn download-btn" onclick="downloadFile('demo', 'orthomosaic')">⬇️ Download</button>
+                                    <button class="file-action-btn notify-btn" onclick="notifyClientNewFile('demo', 'Orthomosaic_Map_Final.tiff')">📧 Notify</button>
+                                    <button class="file-action-btn delete-btn" onclick="deleteFile('demo', 'orthomosaic')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📸</span>
+                                    <div class="file-details">
+                                        <h5>Aerial_Photos_Collection.zip</h5>
+                                        <p>128.7 MB • Uploaded Oct 17, 2025 • Downloaded 1 time</p>
+                                    </div>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="file-action-btn download-btn" onclick="downloadFile('demo', 'photos')">⬇️ Download</button>
+                                    <button class="file-action-btn notify-btn" onclick="notifyClientNewFile('demo', 'Aerial_Photos_Collection.zip')">📧 Notify</button>
+                                    <button class="file-action-btn delete-btn" onclick="deleteFile('demo', 'photos')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">📄</span>
+                                    <div class="file-details">
+                                        <h5>EDIS_Survey_Report_Demo.pdf</h5>
+                                        <p>2.8 MB • Uploaded Oct 17, 2025 • Downloaded 3 times</p>
+                                    </div>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="file-action-btn download-btn" onclick="downloadFile('demo', 'report')">⬇️ Download</button>
+                                    <button class="file-action-btn notify-btn" onclick="notifyClientNewFile('demo', 'EDIS_Survey_Report_Demo.pdf')">📧 Notify</button>
+                                    <button class="file-action-btn delete-btn" onclick="deleteFile('demo', 'report')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="file-item">
+                                <div class="file-info">
+                                    <span class="file-icon">🎥</span>
+                                    <div class="file-details">
+                                        <h5>360_Virtual_Walkthrough.mp4</h5>
+                                        <p>98.1 MB • Uploaded Oct 17, 2025 • New • Add-on Service</p>
+                                    </div>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="file-action-btn download-btn" onclick="downloadFile('demo', '360video')">⬇️ Download</button>
+                                    <button class="file-action-btn notify-btn" onclick="notifyClientNewFile('demo', '360_Virtual_Walkthrough.mp4')">📧 Notify</button>
+                                    <button class="file-action-btn delete-btn" onclick="deleteFile('demo', '360video')">🗑️ Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                            <button onclick="bulkNotifyClient('demo')" style="background: var(--warning-orange); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                📧 Notify All Files
+                            </button>
+                            <button onclick="generateDownloadLink('demo')" style="background: var(--electric-cyan); color: var(--jet-black); border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                🔗 Generate Download Link
+                            </button>
+                            <button onclick="viewClientPortal('demo')" style="background: rgba(111, 66, 193, 0.8); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                👁️ View Client Portal
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Clients Placeholder -->
+                    <div class="client-deliverables-card" style="opacity: 0.6;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div>
+                                <h4 style="color: var(--white); margin-bottom: 5px;">Future Client Projects</h4>
+                                <p style="color: var(--gray-medium); font-size: 0.9rem;">New projects will appear here as they're created</p>
+                            </div>
+                            <span style="background: rgba(255, 255, 255, 0.1); color: var(--gray-medium); padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Pending</span>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 40px; color: var(--gray-medium);">
+                            <span style="font-size: 3rem; display: block; margin-bottom: 15px;">📂</span>
+                            <p>No additional client projects yet</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Set active navigation
+            setActiveNav(event.target);
+        }
+
         function showClientAccess() {
             showNotification('Loading Client Access controls...', 'info');
             const content = document.getElementById('admin-content');
@@ -2450,6 +2780,198 @@
             }
         `;
         document.head.appendChild(addonStyles);
+
+        // File Management Functions for Deliverables
+        function handleFileDrop(event, clientId) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const uploadArea = event.target.closest('.deliverables-upload-area');
+            uploadArea.classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            handleFileUpload({ target: { files: files } }, clientId);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const uploadArea = event.target.closest('.deliverables-upload-area');
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const uploadArea = event.target.closest('.deliverables-upload-area');
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleFileUpload(event, clientId) {
+            const files = event.target.files;
+            if (!files.length) return;
+            
+            showAdminNotification(`📤 Uploading ${files.length} file(s) for client ${clientId}...`, 'info');
+            
+            // Simulate file upload process
+            Array.from(files).forEach((file, index) => {
+                setTimeout(() => {
+                    const fileSize = (file.size / (1024 * 1024)).toFixed(1);
+                    showAdminNotification(`✅ Uploaded: ${file.name} (${fileSize} MB)`, 'success');
+                    
+                    // Add file to the file list
+                    addFileToList(clientId, file.name, fileSize + ' MB', 'Just uploaded');
+                    
+                    // Notify client about new file
+                    setTimeout(() => {
+                        showAdminNotification(`📧 Client notification sent for: ${file.name}`, 'info');
+                    }, 1000);
+                }, (index + 1) * 1500);
+            });
+            
+            // Clear the input
+            event.target.value = '';
+        }
+
+        function addFileToList(clientId, fileName, fileSize, uploadDate) {
+            // Find the client's file list
+            const clientCard = document.querySelector('.client-deliverables-card');
+            const fileList = clientCard.querySelector('.file-list');
+            
+            // Determine file icon based on extension
+            const extension = fileName.split('.').pop().toLowerCase();
+            let fileIcon = '📄';
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) fileIcon = '📸';
+            else if (['mp4', 'avi', 'mov'].includes(extension)) fileIcon = '🎥';
+            else if (['pdf'].includes(extension)) fileIcon = '📄';
+            else if (['zip', 'rar', '7z'].includes(extension)) fileIcon = '📦';
+            else if (['tiff', 'tif', 'geotiff'].includes(extension)) fileIcon = '🗺️';
+            
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.style.animation = 'newAddonSlide 0.5s ease-out';
+            
+            const safeFileName = fileName.replace(/[^a-zA-Z0-9.-]/g, '');
+            
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <span class="file-icon">${fileIcon}</span>
+                    <div class="file-details">
+                        <h5>${fileName}</h5>
+                        <p>${fileSize} • ${uploadDate} • New</p>
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button class="file-action-btn download-btn" onclick="downloadFile('${clientId}', '${safeFileName}')">⬇️ Download</button>
+                    <button class="file-action-btn notify-btn" onclick="notifyClientNewFile('${clientId}', '${fileName}')">📧 Notify</button>
+                    <button class="file-action-btn delete-btn" onclick="deleteFile('${clientId}', '${safeFileName}')">🗑️ Delete</button>
+                </div>
+            `;
+            
+            // Insert after the header but before existing files
+            const headerElement = fileList.querySelector('h5');
+            headerElement.parentNode.insertBefore(fileItem, headerElement.nextSibling);
+        }
+
+        function downloadFile(clientId, fileId) {
+            showAdminNotification(`⬇️ Downloading file for client ${clientId}...`, 'info');
+            
+            // Simulate download
+            setTimeout(() => {
+                showAdminNotification('✅ File download completed', 'success');
+                
+                // In a real implementation, you would:
+                // 1. Generate a secure download URL
+                // 2. Trigger the actual download
+                // 3. Log the download activity
+                console.log(`Admin downloading file: ${fileId} for client: ${clientId}`);
+            }, 1000);
+        }
+
+        function notifyClientNewFile(clientId, fileName) {
+            showAdminNotification(`📧 Sending file notification to client ${clientId}...`, 'info');
+            
+            setTimeout(() => {
+                showAdminNotification(`✅ Client notified about: ${fileName}`, 'success');
+                showAdminNotification('📱 Client portal updated with new file notification', 'info');
+                
+                // In a real implementation, you would:
+                // 1. Send email notification to client
+                // 2. Update client portal with notification badge
+                // 3. Log the notification activity
+            }, 1500);
+        }
+
+        function deleteFile(clientId, fileId) {
+            if (confirm('Are you sure you want to delete this file? This action cannot be undone.')) {
+                showAdminNotification(`🗑️ Deleting file for client ${clientId}...`, 'warning');
+                
+                // Find and remove the file item
+                const fileItems = document.querySelectorAll('.file-item');
+                fileItems.forEach(item => {
+                    const downloadBtn = item.querySelector('.download-btn');
+                    if (downloadBtn && downloadBtn.onclick.toString().includes(fileId)) {
+                        item.style.animation = 'fadeOut 0.3s ease-in forwards';
+                        setTimeout(() => {
+                            item.remove();
+                            showAdminNotification('✅ File deleted successfully', 'success');
+                        }, 300);
+                    }
+                });
+            }
+        }
+
+        function bulkNotifyClient(clientId) {
+            showAdminNotification(`📧 Sending bulk notification to client ${clientId}...`, 'info');
+            
+            setTimeout(() => {
+                showAdminNotification('✅ Bulk notification sent for all deliverables', 'success');
+                showAdminNotification('📱 Client portal updated with comprehensive file list', 'info');
+                
+                // In a real implementation:
+                // 1. Send comprehensive email with all files
+                // 2. Update client portal with all available files
+                // 3. Generate secure download links
+            }, 2000);
+        }
+
+        function generateDownloadLink(clientId) {
+            showAdminNotification(`🔗 Generating secure download link for client ${clientId}...`, 'info');
+            
+            setTimeout(() => {
+                const downloadLink = `https://edis-secure.download/client/${clientId}/${Date.now()}`;
+                showAdminNotification('✅ Secure download link generated', 'success');
+                
+                // Show the link in a modal or copy to clipboard
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(downloadLink).then(() => {
+                        showAdminNotification('📋 Download link copied to clipboard', 'info');
+                    });
+                } else {
+                    prompt('Download link (copy manually):', downloadLink);
+                }
+                
+                // In a real implementation:
+                // 1. Generate time-limited secure URLs
+                // 2. Set expiration dates
+                // 3. Log access attempts
+            }, 1500);
+        }
+
+        // Initialize deliverables upload handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent default drag behaviors on the entire page
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                document.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
     </script>
 </body>
 </html>

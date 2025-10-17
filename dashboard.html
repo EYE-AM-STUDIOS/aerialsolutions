@@ -1121,6 +1121,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="#" class="nav-link" onclick="showDeliverables()">
+                                <span class="nav-icon">📥</span>
+                                Deliverables
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link" onclick="showReports()">
                                 <span class="nav-icon">📊</span>
                                 Reports
@@ -1940,6 +1946,260 @@
             setActiveNav(event.target);
         }
 
+        function showDeliverables() {
+            showNotification('Loading your deliverables...', 'info');
+            const content = document.getElementById('main-content');
+            content.innerHTML = `
+                <div class="page-header fade-in">
+                    <h1 class="page-title">📥 Your Deliverables</h1>
+                    <p class="page-subtitle">Download and access your project files</p>
+                </div>
+                
+                <div class="quick-actions fade-in stagger-1">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">File Summary</h3>
+                            <span class="card-icon">📊</span>
+                        </div>
+                        <div class="card-content">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--electric-cyan);">6</div>
+                                    <div style="color: var(--gray-medium); font-size: 0.9rem;">Total Files</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--success-green);">274 MB</div>
+                                    <div style="color: var(--gray-medium); font-size: 0.9rem;">Total Size</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--warning-orange);">2</div>
+                                    <div style="color: var(--gray-medium); font-size: 0.9rem;">New Files</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 2rem; font-weight: 700; color: var(--electric-cyan);">4</div>
+                                    <div style="color: var(--gray-medium); font-size: 0.9rem;">Downloads</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="projects-grid fade-in stagger-2">
+                    <!-- Deliverables for Demo Project -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Demo Project Files</h3>
+                            <span class="card-icon">📦</span>
+                        </div>
+                        <div class="card-content">
+                            <div style="margin-bottom: 20px;">
+                                <p style="color: var(--gray-medium); font-size: 0.9rem; margin-bottom: 15px;">
+                                    Project: EDIS | Orthomosaic Mapping • Last updated: Oct 17, 2025
+                                </p>
+                                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                                    <span style="background: rgba(40, 167, 69, 0.2); color: var(--success-green); padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">6 Files Available</span>
+                                    <span style="background: rgba(255, 193, 7, 0.2); color: var(--warning-orange); padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">2 New</span>
+                                </div>
+                            </div>
+                            
+                            <div id="deliverablesList" style="display: grid; gap: 12px;">
+                                <!-- Core Project Files -->
+                                <div class="deliverable-item">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">🗺️</span>
+                                        <div class="deliverable-details">
+                                            <h5>Orthomosaic_Map_Final.tiff</h5>
+                                            <p>45.2 MB • GeoTIFF format • Ready for download</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('orthomosaic_map')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('orthomosaic_map')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="deliverable-item">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">📸</span>
+                                        <div class="deliverable-details">
+                                            <h5>Aerial_Photos_Collection.zip</h5>
+                                            <p>128.7 MB • 45 high-resolution images • ZIP archive</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('aerial_photos')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('aerial_photos')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="deliverable-item">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">📄</span>
+                                        <div class="deliverable-details">
+                                            <h5>EDIS_Survey_Report_Demo.pdf</h5>
+                                            <p>2.8 MB • Comprehensive project report • PDF format</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('survey_report')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('survey_report')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="deliverable-item">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">📊</span>
+                                        <div class="deliverable-details">
+                                            <h5>Ground_Reference_Photos.zip</h5>
+                                            <p>18.4 MB • Reference point documentation • ZIP archive</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('ground_photos')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('ground_photos')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- New Add-on Files -->
+                                <div class="deliverable-item new-file">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">🎥</span>
+                                        <div class="deliverable-details">
+                                            <h5>360_Virtual_Walkthrough.mp4 <span class="new-badge">NEW</span></h5>
+                                            <p>98.1 MB • 360° immersive video • Add-on service</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('360_video')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('360_video')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="deliverable-item new-file">
+                                    <div class="deliverable-info">
+                                        <span class="deliverable-icon">📐</span>
+                                        <div class="deliverable-details">
+                                            <h5>Custom_Measurements_Report.pdf <span class="new-badge">NEW</span></h5>
+                                            <p>1.2 MB • Detailed measurements and analysis • Just uploaded</p>
+                                        </div>
+                                    </div>
+                                    <div class="deliverable-actions">
+                                        <button class="btn btn-primary" onclick="downloadDeliverable('measurements')">⬇️ Download</button>
+                                        <button class="btn btn-secondary" onclick="previewDeliverable('measurements')">👁️ Preview</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 15px;">
+                                <button onclick="downloadAllDeliverables()" style="background: var(--electric-cyan); color: var(--jet-black); border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                                    📥 Download All Files
+                                </button>
+                                <button onclick="generateShareLink()" style="background: rgba(111, 66, 193, 0.8); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1;">
+                                    🔗 Generate Share Link
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification for new files -->
+                    <div class="dashboard-card" style="border: 2px solid var(--warning-orange); background: rgba(255, 193, 7, 0.1);">
+                        <div class="card-header">
+                            <h3 class="card-title" style="color: var(--warning-orange);">📬 Recent Updates</h3>
+                            <span class="card-icon">🔔</span>
+                        </div>
+                        <div class="card-content">
+                            <div style="color: var(--white); margin-bottom: 15px;">
+                                <h4 style="margin-bottom: 10px;">New files have been added to your project!</h4>
+                                <ul style="margin-left: 20px; line-height: 1.8;">
+                                    <li>360° Virtual Walkthrough video</li>
+                                    <li>Custom Measurements Report</li>
+                                </ul>
+                            </div>
+                            <p style="color: var(--gray-medium); font-size: 0.9rem; margin-bottom: 15px;">
+                                These files were uploaded by your project manager and are ready for download.
+                            </p>
+                            <button onclick="markAsRead()" style="background: var(--warning-orange); color: var(--jet-black); border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                ✓ Mark as Read
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add deliverables-specific styles
+            if (!document.getElementById('deliverables-styles')) {
+                const style = document.createElement('style');
+                style.id = 'deliverables-styles';
+                style.textContent = `
+                    .deliverable-item {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 15px;
+                        background: rgba(255, 255, 255, 0.05);
+                        border-radius: 10px;
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .deliverable-item:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                        border-color: var(--electric-cyan);
+                    }
+                    
+                    .deliverable-item.new-file {
+                        border-color: var(--warning-orange);
+                        background: rgba(255, 193, 7, 0.1);
+                    }
+                    
+                    .deliverable-info {
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+                        flex: 1;
+                    }
+                    
+                    .deliverable-icon {
+                        font-size: 1.5rem;
+                        width: 40px;
+                        text-align: center;
+                    }
+                    
+                    .deliverable-details h5 {
+                        color: var(--white);
+                        margin: 0 0 5px 0;
+                        font-size: 1rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                    
+                    .deliverable-details p {
+                        color: var(--gray-medium);
+                        margin: 0;
+                        font-size: 0.85rem;
+                    }
+                    
+                    .deliverable-actions {
+                        display: flex;
+                        gap: 10px;
+                    }
+                    
+                    .new-badge {
+                        background: var(--warning-orange);
+                        color: var(--jet-black);
+                        padding: 2px 8px;
+                        border-radius: 10px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            setActiveNav(event.target);
+        }
+
         // Add-on Management (Client-side display only)
         function displayNewAddon(projectId, addonData) {
             const addonsContainer = document.getElementById(`projectAddons-${projectId}`);
@@ -2689,6 +2949,149 @@
             // Attach under the card header
             const header = card.querySelector('.card-header');
             if (header && header.parentNode) header.parentNode.insertBefore(chips, header.nextSibling);
+        }
+
+        // Deliverables Management Functions
+        function downloadDeliverable(fileId) {
+            showNotification(`⬇️ Downloading ${fileId}...`, 'info');
+            
+            // Simulate download process
+            setTimeout(() => {
+                showNotification('✅ Download completed successfully', 'success');
+                
+                // In a real implementation, you would:
+                // 1. Generate secure download URL from admin-uploaded files
+                // 2. Trigger the actual file download
+                // 3. Track download analytics for admin
+                console.log(`Client downloading deliverable: ${fileId}`);
+            }, 1500);
+        }
+
+        function previewDeliverable(fileId) {
+            showNotification(`👁️ Opening preview for ${fileId}...`, 'info');
+            
+            // Simulate preview opening
+            setTimeout(() => {
+                showNotification('Preview opened in new tab', 'success');
+                
+                // In a real implementation, you would:
+                // 1. Open file in appropriate viewer (PDF, image, video)
+                // 2. Use secure preview URLs
+                // 3. Track preview analytics
+                console.log(`Client previewing deliverable: ${fileId}`);
+            }, 1000);
+        }
+
+        function downloadAllDeliverables() {
+            showNotification('📦 Preparing download package...', 'info');
+            
+            setTimeout(() => {
+                showNotification('⬇️ Downloading all files as ZIP archive...', 'info');
+                
+                setTimeout(() => {
+                    showNotification('✅ All deliverables downloaded successfully', 'success');
+                    
+                    // In a real implementation:
+                    // 1. Create ZIP archive of all available files
+                    // 2. Generate secure download link
+                    // 3. Track bulk download activity
+                }, 2000);
+            }, 1000);
+        }
+
+        function generateShareLink() {
+            showNotification('🔗 Generating secure share link...', 'info');
+            
+            setTimeout(() => {
+                const shareLink = `https://edis-client.share/deliverables/demo-${Date.now()}`;
+                showNotification('✅ Share link generated', 'success');
+                
+                // Copy to clipboard if available
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareLink).then(() => {
+                        showNotification('📋 Share link copied to clipboard', 'info');
+                    });
+                } else {
+                    prompt('Share link (copy manually):', shareLink);
+                }
+                
+                // In a real implementation:
+                // 1. Generate time-limited share URLs
+                // 2. Set access permissions
+                // 3. Track share link usage
+            }, 1500);
+        }
+
+        function markAsRead() {
+            const notificationCard = event.target.closest('.dashboard-card');
+            if (notificationCard) {
+                notificationCard.style.animation = 'fadeOut 0.5s ease-in forwards';
+                setTimeout(() => {
+                    notificationCard.remove();
+                    showNotification('✓ Notifications marked as read', 'success');
+                }, 500);
+            }
+            
+            // In a real implementation:
+            // 1. Update server-side notification status
+            // 2. Sync with admin dashboard
+            // 3. Clear notification badges
+        }
+
+        // Simulate receiving new deliverables from admin (for demo)
+        function simulateNewDeliverable(fileName, fileSize, fileType) {
+            // This would be called when admin pushes new files
+            const deliverablesList = document.getElementById('deliverablesList');
+            if (!deliverablesList) return;
+            
+            const icons = {
+                'pdf': '📄',
+                'image': '📸',
+                'video': '🎥',
+                'map': '🗺️',
+                'archive': '📦'
+            };
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'deliverable-item new-file';
+            newItem.style.animation = 'newFileSlide 0.5s ease-out';
+            
+            newItem.innerHTML = `
+                <div class="deliverable-info">
+                    <span class="deliverable-icon">${icons[fileType] || '📄'}</span>
+                    <div class="deliverable-details">
+                        <h5>${fileName} <span class="new-badge">NEW</span></h5>
+                        <p>${fileSize} • Just uploaded by admin</p>
+                    </div>
+                </div>
+                <div class="deliverable-actions">
+                    <button class="btn btn-primary" onclick="downloadDeliverable('${fileName}')">⬇️ Download</button>
+                    <button class="btn btn-secondary" onclick="previewDeliverable('${fileName}')">👁️ Preview</button>
+                </div>
+            `;
+            
+            // Insert at the top of the list
+            deliverablesList.insertBefore(newItem, deliverablesList.firstChild);
+            
+            // Show notification
+            showNotification(`📁 New file available: ${fileName}`, 'success');
+        }
+
+        // Add animation styles for new deliverables
+        if (!document.getElementById('deliverables-animations')) {
+            const animationStyle = document.createElement('style');
+            animationStyle.id = 'deliverables-animations';
+            animationStyle.textContent = `
+                @keyframes newFileSlide {
+                    from { transform: translateX(-100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: scale(1); }
+                    to { opacity: 0; transform: scale(0.9); }
+                }
+            `;
+            document.head.appendChild(animationStyle);
         }
     </script>
 </body>
