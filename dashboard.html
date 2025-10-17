@@ -194,9 +194,9 @@
         }
 
         /* Dashboard Cards */
-        .dashboard-grid {
+        .dashboard-grid, .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }
@@ -210,6 +210,9 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
         }
 
         .dashboard-card::before {
@@ -265,6 +268,9 @@
 
         .card-content {
             margin-bottom: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .card-description {
@@ -272,6 +278,13 @@
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 15px;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .card-meta {
@@ -826,10 +839,12 @@
 
         .progress-steps {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             position: relative;
+            gap: 10px;
         }
 
         .progress-steps::before {
@@ -850,9 +865,12 @@
             position: relative;
             z-index: 2;
             background: var(--midnight-blue);
-            padding: 10px;
+            padding: 8px;
             border-radius: 50%;
-            min-width: 80px;
+            min-width: 70px;
+            max-width: 70px;
+            height: 70px;
+            justify-content: center;
         }
 
         .progress-step.completed {
@@ -876,15 +894,17 @@
         }
 
         .step-icon {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+            line-height: 1;
         }
 
         .step-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--white);
             text-align: center;
             font-weight: 500;
+            line-height: 1.1;
         }
 
         .progress-note {
@@ -908,6 +928,16 @@
 
         /* Mobile Progress Steps */
         @media (max-width: 768px) {
+            .dashboard-grid, .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .dashboard-card {
+                min-height: auto;
+                padding: 20px;
+            }
+            
             .progress-steps {
                 flex-direction: column;
                 gap: 15px;
@@ -919,7 +949,9 @@
 
             .progress-step {
                 min-width: auto;
+                max-width: none;
                 width: 100%;
+                height: auto;
                 flex-direction: row;
                 justify-content: flex-start;
                 padding: 15px;
@@ -929,10 +961,17 @@
             .step-icon {
                 margin-bottom: 0;
                 margin-right: 15px;
+                font-size: 1.2rem;
             }
 
             .step-label {
                 font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid, .projects-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             }
         }
         
