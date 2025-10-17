@@ -656,6 +656,30 @@
             padding: 20px;
             margin: 15px 0;
         }
+        
+        .package-info.confirmed {
+            background: rgba(0, 191, 255, 0.05);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+        }
+
+        .package-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .package-status {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
         .package-info.selected {
             border-color: var(--electric-cyan);
             box-shadow: 0 0 0 2px rgba(0,191,255,0.25);
@@ -665,7 +689,7 @@
             color: var(--electric-cyan);
             font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 0;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -706,12 +730,65 @@
 
         .deliverables-list li,
         .addons-list li {
-            padding: 4px 0;
+            padding: 8px 0;
             font-size: 0.85rem;
             color: var(--white);
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* Add-ons specific styling */
+        .addons-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .addons-list li {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .addons-list li[data-status="new"] {
+            animation: newAddonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes newAddonGlow {
+            from { box-shadow: 0 0 5px rgba(255, 193, 7, 0.3); }
+            to { box-shadow: 0 0 15px rgba(255, 193, 7, 0.6); }
+        }
+
+        .addon-badge {
+            background: var(--warning-orange);
+            color: var(--jet-black);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .addon-badge.new {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .addons-list li small {
+            color: var(--gray-medium);
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .no-addons {
+            color: var(--gray-medium);
+            font-style: italic;
+            font-size: 0.85rem;
         }
 
         .deliverables-list.processing li {
@@ -1009,6 +1086,14 @@
         <header class="dashboard-header">
             <div class="portal-logo">EDIS | TrueView Portal</div>
             <div class="header-controls">
+                <div class="demo-controls" style="margin-right: 20px;">
+                    <button onclick="simulateAdminAddon()" 
+                            style="background: rgba(255, 193, 7, 0.2); border: 1px solid var(--warning-orange); 
+                                   color: var(--warning-orange); padding: 6px 12px; border-radius: 6px; 
+                                   font-size: 0.8rem; cursor: pointer;">
+                        🎮 Simulate Admin Add-on
+                    </button>
+                </div>
                 <div class="user-info">
                     <div class="user-avatar">KB</div>
                     <span>Kemuel Burns - Demo Client</span>
@@ -1221,21 +1306,41 @@
                             </div>
 
                             <!-- Package Information -->
-                            <div class="package-info">
-                                <h4 class="package-title">📦 EDIS | Orthomosaic Mapping (Demo)</h4>
-                                <div class="deliverables-section">
-                                    <h5>🛩️ Aerial Deliverables</h5>
-                                    <ul class="deliverables-list">
-                                        <li>✓ Orthomosaic preview (GeoTIFF + web viewer)</li>
-                                        <li>✓ Sample HD aerial images (JPEG)</li>
-                                    </ul>
+                            <div class="package-info confirmed">
+                                <div class="package-header">
+                                    <h4 class="package-title">📦 EDIS | Orthomosaic Mapping (Demo)</h4>
+                                    <span class="package-status">✅ Confirmed Package</span>
                                 </div>
-                                <div class="deliverables-section">
-                                    <h5>📸 Ground-Based Deliverables</h5>
-                                    <ul class="deliverables-list">
-                                        <li>✓ Demo PDF report (branded)</li>
-                                        <li>✓ Ground reference photos (sample)</li>
-                                    </ul>
+                                
+                                <div class="package-details">
+                                    <div class="deliverables-section">
+                                        <h5>🛩️ Included Aerial Services</h5>
+                                        <ul class="deliverables-list confirmed">
+                                            <li data-status="completed">✓ Orthomosaic preview (GeoTIFF + web viewer)</li>
+                                            <li data-status="completed">✓ Sample HD aerial images (JPEG)</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="deliverables-section">
+                                        <h5>📸 Included Ground Services</h5>
+                                        <ul class="deliverables-list confirmed">
+                                            <li data-status="completed">✓ Demo PDF report (branded)</li>
+                                            <li data-status="completed">✓ Ground reference photos (sample)</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Add-ons Section (Admin can push these) -->
+                                    <div class="addons-section" id="projectAddons-temp-active">
+                                        <h5>🎁 Additional Services</h5>
+                                        <ul class="addons-list">
+                                            <li data-status="new" data-addon-id="360-walkthrough">
+                                                <span class="addon-badge new">NEW</span>
+                                                360° Virtual Walkthrough - Added by Admin
+                                                <small>Added: Oct 17, 2025</small>
+                                            </li>
+                                        </ul>
+                                        <p class="no-addons hidden">No additional services added to this project.</p>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1833,6 +1938,62 @@
             `;
             
             setActiveNav(event.target);
+        }
+
+        // Add-on Management (Client-side display only)
+        function displayNewAddon(projectId, addonData) {
+            const addonsContainer = document.getElementById(`projectAddons-${projectId}`);
+            const addonsList = addonsContainer.querySelector('.addons-list');
+            const noAddonsMessage = addonsContainer.querySelector('.no-addons');
+            
+            // Hide "no addons" message
+            if (noAddonsMessage) {
+                noAddonsMessage.classList.add('hidden');
+            }
+            
+            // Create addon element
+            const addonElement = document.createElement('li');
+            addonElement.setAttribute('data-status', 'new');
+            addonElement.setAttribute('data-addon-id', addonData.id);
+            addonElement.innerHTML = `
+                <span class="addon-badge new">NEW</span>
+                ${addonData.name} - Added by Admin
+                <small>Added: ${addonData.dateAdded}</small>
+            `;
+            
+            // Add to list
+            addonsList.appendChild(addonElement);
+            
+            // Show notification
+            showNotification(`New add-on service added: ${addonData.name}`, 'success');
+            
+            // Simulate email notification
+            setTimeout(() => {
+                showNotification('📧 Email notification sent about new add-on service', 'info');
+            }, 2000);
+        }
+
+        // Simulate admin pushing addon (for demo purposes)
+        function simulateAdminAddon() {
+            const addonData = {
+                id: 'progress-monitoring',
+                name: 'Monthly Progress Monitoring',
+                dateAdded: new Date().toLocaleDateString()
+            };
+            displayNewAddon('temp-active', addonData);
+        }
+
+        // Mark addon as acknowledged
+        function acknowledgeAddon(addonId) {
+            const addonElement = document.querySelector(`[data-addon-id="${addonId}"]`);
+            if (addonElement) {
+                addonElement.setAttribute('data-status', 'acknowledged');
+                const badge = addonElement.querySelector('.addon-badge');
+                if (badge) {
+                    badge.textContent = 'ADDED';
+                    badge.classList.remove('new');
+                }
+            }
         }
 
         // Notification system
