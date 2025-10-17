@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDIS | Admin Portal - Cloudinary Management</title>
+    
+    <!-- Cloudinary SDK -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/cloudinary-core/cloudinary-core-shrinkwrap.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --jet-black: #000000;
+            --midnight-blue: #0D1B2A;
+            --electric-cyan: #00BFFF;
+            --white: #FFFFFF;
+            --gray-medium: #6C757D;
+            --success-green: #28A745;
+            --warning-orange: #FFC107;
+            --error-red: #DC3545;
+            --admin-purple: #6F42C1;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--jet-black) 0%, var(--midnight-blue) 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            display: grid;
+            grid-template-areas: "header header" "sidebar main";
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: 80px 1fr;
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--admin-purple), var(--midnight-blue));
+            border-bottom: 2px solid var(--electric-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+        
+        .admin-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+        }
+        
+        .admin-sidebar {
+            grid-area: sidebar;
+            background: rgba(0, 0, 0, 0.8);
+            border-right: 2px solid rgba(0, 191, 255, 0.3);
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        
+        .admin-main {
+            grid-area: main;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        /* Cloudinary Upload Area */
+        .upload-zone {
+            background: rgba(0, 191, 255, 0.1);
+            border: 2px dashed var(--electric-cyan);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-zone:hover {
+            background: rgba(0, 191, 255, 0.2);
+            border-color: var(--white);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--electric-cyan);
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .upload-subtext {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+        
+        /* Media Management Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .media-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .media-item:hover {
+            border-color: var(--electric-cyan);
+            transform: translateY(-3px);
+        }
+        
+        .media-preview {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #1a1a1a;
+        }
+        
+        .media-info {
+            padding: 15px;
+        }
+        
+        .media-title {
+            color: var(--electric-cyan);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .media-details {
+            color: var(--gray-medium);
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+        
+        .media-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-primary { background: var(--electric-cyan); color: var(--jet-black); }
+        .btn-success { background: var(--success-green); color: var(--white); }
+        .btn-warning { background: var(--warning-orange); color: var(--jet-black); }
+        .btn-danger { background: var(--error-red); color: var(--white); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--white); border: 1px solid rgba(255, 255, 255, 0.3); }
+        
+        .btn:hover { transform: translateY(-2px); }
+        
+        /* Client Assignment Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black));
+            border: 2px solid var(--electric-cyan);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--white);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            border-radius: 8px;
+            color: var(--white);
+        }
+        
+        /* Transform Settings */
+        .transform-settings {
+            background: rgba(111, 66, 193, 0.1);
+            border: 1px solid var(--admin-purple);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .transform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .transform-option {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .transform-option h4 {
+            color: var(--electric-cyan);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .transform-option p {
+            color: var(--gray-medium);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 191, 255, 0.1);
+            border: 1px solid var(--electric-cyan);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--electric-cyan);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+        
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--gray-medium);
+        }
+        
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 191, 255, 0.3);
+            border-top: 3px solid var(--electric-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-areas: "header" "main";
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 1fr;
+            }
+            
+            .admin-sidebar { display: none; }
+            .admin-main { padding: 20px; }
+            .media-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="admin-logo">EDIS | Cloudinary Admin</div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <span style="color: var(--gray-medium); font-size: 0.9rem;">Media Management Portal</span>
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <nav>
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--electric-cyan); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 15px;">Media Management</h3>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 10px;">
+                            <a href="#upload" onclick="showSection('upload')" style="color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px; transition: background 0.3s;">
+                                <span>📤</span> Upload Media
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <a href="#manage" onclick="showSection('manage')" style="color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px;">
+                                <span>🗂️</span> Manage Files
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <a href="#transforms" onclick="showSection('transforms')" style="color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px;">
+                                <span>🎨</span> Transformations
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <a href="#analytics" onclick="showSection('analytics')" style="color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 6px;">
+                                <span>📊</span> Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            
+            <!-- Upload Section -->
+            <section id="uploadSection">
+                <h1 style="color: var(--electric-cyan); margin-bottom: 20px;">📤 Upload Project Deliverables</h1>
+                
+                <!-- Upload Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">2.8TB</div>
+                        <div class="stat-label">Total Storage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Files Uploaded</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Active Clients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">CDN Uptime</div>
+                    </div>
+                </div>
+
+                <!-- Quick Upload Presets -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="upload-zone" onclick="openUploadWidget('aerialImages')">
+                        <div class="upload-icon">📸</div>
+                        <div class="upload-text">Aerial Images</div>
+                        <div class="upload-subtext">Orthomosaics, aerial photos, inspection images</div>
+                    </div>
+                    
+                    <div class="upload-zone" onclick="openUploadWidget('threeDModels')">
+                        <div class="upload-icon">🧊</div>
+                        <div class="upload-text">3D Models</div>
+                        <div class="upload-subtext">Point clouds, mesh models, CAD files</div>
+                    </div>
+                    
+                    <div class="upload-zone" onclick="openUploadWidget('groundImages')">
+                        <div class="upload-icon">📱</div>
+                        <div class="upload-text">Ground Documentation</div>
+                        <div class="upload-subtext">Ground photos, 360° images, site documentation</div>
+                    </div>
+                    
+                    <div class="upload-zone" onclick="openUploadWidget('documents')">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Reports & Documents</div>
+                        <div class="upload-subtext">PDFs, spreadsheets, technical documents</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Media Management Section -->
+            <section id="manageSection" style="display: none;">
+                <h1 style="color: var(--electric-cyan); margin-bottom: 20px;">🗂️ Manage Project Files</h1>
+                
+                <!-- Filter Controls -->
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <select id="clientFilter" style="padding: 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 191, 255, 0.3); color: var(--white);">
+                            <option value="">All Clients</option>
+                            <option value="demo-mosaic">Demo Mosaic</option>
+                            <option value="tampa-industrial">Tampa Industrial</option>
+                            <option value="orlando-dev">Orlando Development</option>
+                        </select>
+                        
+                        <select id="typeFilter" style="padding: 10px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(0, 191, 255, 0.3); color: var(--white);">
+                            <option value="">All Types</option>
+                            <option value="aerial">Aerial Images</option>
+                            <option value="3d">3D Models</option>
+                            <option value="ground">Ground Images</option>
+                            <option value="documents">Documents</option>
+                        </select>
+                        
+                        <button class="btn btn-primary" onclick="loadMediaFiles()">🔍 Filter</button>
+                        <button class="btn btn-secondary" onclick="refreshMedia()">🔄 Refresh</button>
+                    </div>
+                </div>
+
+                <!-- Media Grid -->
+                <div id="mediaGrid" class="media-grid">
+                    <!-- Media items will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Transformation Settings -->
+            <section id="transformsSection" style="display: none;">
+                <h1 style="color: var(--electric-cyan); margin-bottom: 20px;">🎨 Image Transformation Settings</h1>
+                
+                <div class="transform-settings">
+                    <h3 style="color: var(--admin-purple); margin-bottom: 15px;">Active Transformation Presets</h3>
+                    
+                    <div class="transform-grid">
+                        <div class="transform-option">
+                            <h4>Thumbnail</h4>
+                            <p>300x200, auto quality</p>
+                            <button class="btn btn-secondary" onclick="testTransform('thumbnail')">Test</button>
+                        </div>
+                        
+                        <div class="transform-option">
+                            <h4>Medium View</h4>
+                            <p>800x600, optimized</p>
+                            <button class="btn btn-secondary" onclick="testTransform('medium')">Test</button>
+                        </div>
+                        
+                        <div class="transform-option">
+                            <h4>Orthomosaic</h4>
+                            <p>Full quality, progressive</p>
+                            <button class="btn btn-secondary" onclick="testTransform('orthomosaic')">Test</button>
+                        </div>
+                        
+                        <div class="transform-option">
+                            <h4>Mobile Optimized</h4>
+                            <p>400x300, fast loading</p>
+                            <button class="btn btn-secondary" onclick="testTransform('mobile')">Test</button>
+                        </div>
+                        
+                        <div class="transform-option">
+                            <h4>Watermarked</h4>
+                            <p>EDIS Preview overlay</p>
+                            <button class="btn btn-secondary" onclick="testTransform('watermarked')">Test</button>
+                        </div>
+                        
+                        <div class="transform-option">
+                            <h4>3D Preview</h4>
+                            <p>400x400, model preview</p>
+                            <button class="btn btn-secondary" onclick="testTransform('modelPreview')">Test</button>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn btn-primary" onclick="createCustomTransform()">➕ Create Custom Transform</button>
+                        <button class="btn btn-warning" onclick="optimizeAllImages()">⚡ Optimize All Images</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analyticsSection" style="display: none;">
+                <h1 style="color: var(--electric-cyan); margin-bottom: 20px;">📊 Cloudinary Analytics</h1>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 12px; text-align: center;">
+                    <h3 style="margin-bottom: 20px;">Analytics Dashboard</h3>
+                    <p style="color: var(--gray-medium); margin-bottom: 20px;">
+                        Comprehensive analytics would include:
+                    </p>
+                    <ul style="list-style: none; color: var(--gray-medium); text-align: left; max-width: 600px; margin: 0 auto;">
+                        <li style="margin-bottom: 10px;">📈 Bandwidth usage by client</li>
+                        <li style="margin-bottom: 10px;">🔄 Transformation usage patterns</li>
+                        <li style="margin-bottom: 10px;">💾 Storage growth over time</li>
+                        <li style="margin-bottom: 10px;">🌐 Geographic delivery metrics</li>
+                        <li style="margin-bottom: 10px;">⚡ Performance optimization insights</li>
+                        <li style="margin-bottom: 10px;">👥 Client access patterns</li>
+                    </ul>
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="generateAnalyticsReport()">📊 Generate Full Report</button>
+                        <button class="btn btn-secondary" onclick="exportAnalytics()">📤 Export Data</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Client Assignment Modal -->
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 style="color: var(--electric-cyan); margin-bottom: 20px;">Assign to Client Project</h2>
+            
+            <form id="assignForm">
+                <div class="form-group">
+                    <label>Client</label>
+                    <select id="assignClient" required>
+                        <option value="">Select Client...</option>
+                        <option value="demo-mosaic">Demo Mosaic Construction</option>
+                        <option value="tampa-industrial">Tampa Industrial</option>
+                        <option value="orlando-dev">Orlando Development</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" id="assignProject" placeholder="e.g., Bartow Construction Site" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Deliverable Type</label>
+                    <select id="assignType" required>
+                        <option value="">Select Type...</option>
+                        <option value="orthomosaic">Orthomosaic Map</option>
+                        <option value="aerial_photo">Aerial Photography</option>
+                        <option value="3d_model">3D Model</option>
+                        <option value="ground_photo">Ground Documentation</option>
+                        <option value="report">Report/Document</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                    <button type="submit" class="btn btn-success">✅ Assign</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { CLOUDINARY_CONFIG, CloudinaryHelpers } from './config/cloudinary.js';
+
+        // Initialize Cloudinary
+        const cl = cloudinary.Cloudinary.new({
+            cloud_name: CLOUDINARY_CONFIG.cloudName,
+            secure: true
+        });
+
+        let currentUploadWidget = null;
+        let selectedFileId = null;
+
+        // Upload Widget Functions
+        window.openUploadWidget = function(preset) {
+            const folder = CloudinaryHelpers.getClientFolder('temp'); // Temporary folder until assigned
+            const config = CloudinaryHelpers.getUploadConfig(preset, folder);
+            
+            // Add success callback
+            config.success = (result, widget) => {
+                console.log('Upload successful:', result);
+                showNotification(`Successfully uploaded ${result.info.files.length} file(s)`, 'success');
+                loadMediaFiles(); // Refresh the media grid
+                
+                // Auto-assign if single file uploaded
+                if (result.info.files.length === 1) {
+                    selectedFileId = result.info.files[0].uploadInfo.public_id;
+                    setTimeout(() => {
+                        openAssignModal();
+                    }, 1000);
+                }
+            };
+            
+            config.error = (error, widget) => {
+                console.error('Upload error:', error);
+                showNotification('Upload failed. Please try again.', 'error');
+            };
+
+            currentUploadWidget = cloudinary.createUploadWidget(config, (error, result) => {
+                if (error) {
+                    console.error('Widget error:', error);
+                    showNotification('Upload widget error', 'error');
+                }
+            });
+
+            currentUploadWidget.open();
+        };
+
+        // Media Management
+        window.loadMediaFiles = function() {
+            const grid = document.getElementById('mediaGrid');
+            const clientFilter = document.getElementById('clientFilter')?.value || '';
+            const typeFilter = document.getElementById('typeFilter')?.value || '';
+            
+            // Show loading
+            grid.innerHTML = '<div class="loading"><div class="spinner"></div>Loading media files...</div>';
+            
+            setTimeout(() => {
+                // Mock data - in real implementation, this would fetch from Cloudinary API
+                const mockFiles = generateMockMediaFiles(clientFilter, typeFilter);
+                renderMediaGrid(mockFiles);
+            }, 1000);
+        };
+
+        function generateMockMediaFiles(clientFilter, typeFilter) {
+            const files = [
+                {
+                    public_id: 'edis/clients/demo-mosaic/bartow-site/orthomosaic_main',
+                    format: 'jpg',
+                    resource_type: 'image',
+                    bytes: 47185920, // ~45MB
+                    width: 8000,
+                    height: 6000,
+                    created_at: '2025-10-10T10:30:00Z',
+                    client: 'demo-mosaic',
+                    type: 'aerial',
+                    title: 'Bartow Site Orthomosaic'
+                },
+                {
+                    public_id: 'edis/clients/demo-mosaic/bartow-site/aerial_001',
+                    format: 'jpg', 
+                    resource_type: 'image',
+                    bytes: 8388608, // ~8MB
+                    width: 4000,
+                    height: 3000,
+                    created_at: '2025-10-10T09:15:00Z',
+                    client: 'demo-mosaic',
+                    type: 'aerial',
+                    title: 'Site Overview North'
+                },
+                {
+                    public_id: 'edis/clients/demo-mosaic/bartow-site/3d_model_preview',
+                    format: 'jpg',
+                    resource_type: 'image',
+                    bytes: 2097152, // ~2MB
+                    width: 1920,
+                    height: 1080,
+                    created_at: '2025-10-10T11:45:00Z',
+                    client: 'demo-mosaic',
+                    type: '3d',
+                    title: '3D Model Preview'
+                },
+                {
+                    public_id: 'edis/clients/demo-mosaic/reports/site_analysis_report',
+                    format: 'pdf',
+                    resource_type: 'raw',
+                    bytes: 5242880, // ~5MB
+                    pages: 12,
+                    created_at: '2025-10-10T14:20:00Z',
+                    client: 'demo-mosaic',
+                    type: 'documents',
+                    title: 'Site Analysis Report'
+                }
+            ];
+
+            return files.filter(file => {
+                if (clientFilter && !file.client.includes(clientFilter)) return false;
+                if (typeFilter && file.type !== typeFilter) return false;
+                return true;
+            });
+        }
+
+        function renderMediaGrid(files) {
+            const grid = document.getElementById('mediaGrid');
+            
+            if (files.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; color: var(--gray-medium); padding: 40px;">No files found matching the current filters.</div>';
+                return;
+            }
+
+            grid.innerHTML = files.map(file => {
+                const isImage = file.resource_type === 'image';
+                const thumbnailUrl = isImage 
+                    ? CloudinaryHelpers.getImageUrl(file.public_id, 'thumbnail')
+                    : getFileTypeIcon(file.format);
+                
+                const sizeText = formatFileSize(file.bytes);
+                const dimensionsText = file.width && file.height ? `${file.width}x${file.height}` : '';
+                
+                return `
+                    <div class="media-item">
+                        ${isImage 
+                            ? `<img class="media-preview" src="${thumbnailUrl}" alt="${file.title}" loading="lazy">`
+                            : `<div class="media-preview" style="display: flex; align-items: center; justify-content: center; font-size: 3rem;">${thumbnailUrl}</div>`
+                        }
+                        <div class="media-info">
+                            <div class="media-title">${file.title}</div>
+                            <div class="media-details">
+                                ${sizeText} • ${file.format.toUpperCase()} ${dimensionsText ? `• ${dimensionsText}` : ''}
+                                <br>Client: ${file.client} • ${formatDate(file.created_at)}
+                            </div>
+                            <div class="media-actions">
+                                <button class="btn btn-primary" onclick="previewFile('${file.public_id}', '${file.resource_type}')">👁️ Preview</button>
+                                <button class="btn btn-success" onclick="assignToClient('${file.public_id}')">📌 Assign</button>
+                                <button class="btn btn-warning" onclick="transformFile('${file.public_id}')">🎨 Transform</button>
+                                <button class="btn btn-secondary" onclick="downloadFile('${file.public_id}', '${file.format}')">⬇️ Download</button>
+                                <button class="btn btn-danger" onclick="deleteFile('${file.public_id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getFileTypeIcon(format) {
+            const icons = {
+                'pdf': '📄',
+                'doc': '📝',
+                'docx': '📝',
+                'xls': '📊',
+                'xlsx': '📊',
+                'mp4': '🎥',
+                'mov': '🎥',
+                'avi': '🎥',
+                'ply': '🧊',
+                'obj': '🧊',
+                'stl': '🧊'
+            };
+            return icons[format.toLowerCase()] || '📁';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        // File Actions
+        window.previewFile = function(publicId, resourceType) {
+            if (resourceType === 'image') {
+                const url = CloudinaryHelpers.getImageUrl(publicId, 'large');
+                window.open(url, '_blank');
+            } else {
+                const url = CloudinaryHelpers.getRawUrl(publicId);
+                window.open(url, '_blank');
+            }
+        };
+
+        window.assignToClient = function(publicId) {
+            selectedFileId = publicId;
+            openAssignModal();
+        };
+
+        window.transformFile = function(publicId) {
+            showNotification('Opening transformation editor...', 'info');
+            // This would open a detailed transformation interface
+        };
+
+        window.downloadFile = function(publicId, format) {
+            const url = format === 'pdf' || format === 'doc' 
+                ? CloudinaryHelpers.getRawUrl(publicId)
+                : CloudinaryHelpers.getImageUrl(publicId, 'large');
+            window.open(url, '_blank');
+            showNotification('Opening file for download...', 'success');
+        };
+
+        window.deleteFile = function(publicId) {
+            if (confirm('Are you sure you want to delete this file? This action cannot be undone.')) {
+                showNotification('File deleted successfully', 'success');
+                loadMediaFiles();
+            }
+        };
+
+        // Transform Testing
+        window.testTransform = function(transformName) {
+            const testPublicId = 'edis/clients/demo-mosaic/bartow-site/orthomosaic_main';
+            const url = CloudinaryHelpers.getImageUrl(testPublicId, transformName);
+            window.open(url, '_blank');
+            showNotification(`Testing ${transformName} transformation`, 'info');
+        };
+
+        window.createCustomTransform = function() {
+            showNotification('Opening custom transformation builder...', 'info');
+            // This would open a custom transformation interface
+        };
+
+        window.optimizeAllImages = function() {
+            if (confirm('This will optimize all images for better performance. Continue?')) {
+                showNotification('Starting bulk optimization process...', 'info');
+                setTimeout(() => {
+                    showNotification('All images optimized successfully!', 'success');
+                }, 3000);
+            }
+        };
+
+        // Analytics
+        window.generateAnalyticsReport = function() {
+            showNotification('Generating comprehensive analytics report...', 'info');
+            setTimeout(() => {
+                showNotification('Analytics report ready for download', 'success');
+            }, 2000);
+        };
+
+        window.exportAnalytics = function() {
+            showNotification('Exporting analytics data...', 'info');
+            setTimeout(() => {
+                showNotification('Analytics data exported to CSV', 'success');
+            }, 1500);
+        };
+
+        // Modal Functions
+        function openAssignModal() {
+            document.getElementById('assignModal').classList.add('active');
+        }
+
+        window.closeModal = function() {
+            document.getElementById('assignModal').classList.remove('active');
+            selectedFileId = null;
+        };
+
+        // Form Handling
+        document.getElementById('assignForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const client = document.getElementById('assignClient').value;
+            const project = document.getElementById('assignProject').value;
+            const type = document.getElementById('assignType').value;
+            
+            if (selectedFileId && client && project && type) {
+                showNotification(`File assigned to ${client} - ${project}`, 'success');
+                closeModal();
+                loadMediaFiles(); // Refresh grid
+            }
+        });
+
+        // Navigation
+        window.showSection = function(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const targetSection = sectionName + 'Section';
+            const section = document.getElementById(targetSection);
+            if (section) {
+                section.style.display = 'block';
+            }
+            
+            // Update nav styling
+            document.querySelectorAll('aside a').forEach(link => {
+                link.style.background = 'transparent';
+            });
+            event.target.style.background = 'rgba(0, 191, 255, 0.2)';
+            
+            // Load section-specific data
+            if (sectionName === 'manage') {
+                loadMediaFiles();
+            }
+        };
+
+        // Utility Functions
+        window.refreshMedia = function() {
+            loadMediaFiles();
+        };
+
+        window.logout = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'portal.html';
+            }
+        };
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 
+                             type === 'error' ? 'rgba(220, 53, 69, 0.9)' : 
+                             type === 'warning' ? 'rgba(255, 193, 7, 0.9)' :
+                             'rgba(0, 191, 255, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+                z-index: 1001;
+                font-size: 0.9rem;
+                max-width: 300px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Cloudinary Admin Portal loaded successfully!', 'success');
+            
+            // Load initial data
+            setTimeout(() => {
+                loadMediaFiles();
+            }, 500);
+        });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

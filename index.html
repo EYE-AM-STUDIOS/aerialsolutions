@@ -27,6 +27,7 @@
     import React, { useState, useEffect } from 'https://esm.sh/react@18';
     import { createRoot } from 'https://esm.sh/react-dom@18/client';
     import htm from 'https://esm.sh/htm@3.1.1';
+<<<<<<< HEAD
     // IMPORTANT: pin lucide-react and explicitly list exports so the module resolves on CDN
     import {
       Camera, Maximize2, MapPin, Package, Wrench, Users,
@@ -34,6 +35,9 @@
       ShieldCheck, FolderOpen, Settings,
       LogIn, ExternalLink, FileText
     } from 'https://esm.sh/lucide-react@latest?deps=react@18&exports=Camera,Maximize2,MapPin,Package,Wrench,Users,CheckCircle,ArrowRight,Menu,X,ShieldCheck,FolderOpen,Settings,LogIn,ExternalLink,FileText';
+=======
+    // Icons: use inline SVG components to avoid external module issues on Vercel
+>>>>>>> 207c6df71a29863d0fa8728212b6dfe66361f7a6
 
     // Minimal error reporter so production isn’t blank if a module fails
     window.addEventListener('error', (e) => {
@@ -44,11 +48,93 @@
       document.getElementById('root')?.appendChild(pre);
     });
 
-    const html = htm.bind(React.createElement);
+  const html = htm.bind(React.createElement);
+
+    // Inline SVG icons for top-of-page performance (used in nav/footer)
+    const CameraIcon = ({ className = "w-8 h-8 text-cyan-400" } = {}) => html`
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        className=${className}
+        aria-hidden="true"
+        role="img"
+      >
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+    `;
+
+    // Inline SVG icon components (subset used on the page)
+    const IconSvg = ({ className = "w-5 h-5", children }) => html`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className=${className} aria-hidden="true" role="img">${children}</svg>
+    `;
+    const Camera = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>` });
+    const MapPin = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle>` });
+    const Maximize2 = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>` });
+    const Package = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12 20.73 6.96"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>` });
+    const Wrench = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M14.7 6.3a4 4 0 1 0-5.6 5.6L2 19v3h3l7.1-7.1a4 4 0 0 0 2.6-8.6z"></path>` });
+    const Users = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M17 21v-2a4 4 0 0 0-3-3.87"></path><path d="M7 21v-2a4 4 0 0 1 3-3.87"></path><circle cx="12" cy="7" r="4"></circle>` });
+    const CheckCircle = ({ className = "w-5 h-5" }) => IconSvg({ className, children: html`<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>` });
+    const ArrowRight = ({ className = "w-5 h-5" }) => IconSvg({ className, children: html`<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>` });
+    const Menu = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line>` });
+    const X = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>` });
+    const LayoutDashboard = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="5" rx="2"></rect><rect x="13" y="10" width="8" height="11" rx="2"></rect><rect x="3" y="13" width="8" height="8" rx="2"></rect>` });
+    const ShieldCheck = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M12 3l7 3v6c0 5-3.5 8-7 9-3.5-1-7-4-7-9V6l7-3z"></path><polyline points="9 12 12 15 16 11"></polyline>` });
+    const FolderOpen = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M3 8h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M3 8l2-3h6l2 2"></path>` });
+    const Settings = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V8a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>` });
+    const LogIn = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line>` });
+    const ExternalLink = ({ className = "w-4 h-4" }) => IconSvg({ className, children: html`<path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line>` });
+    const FileText = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line>` });
+    const Plus = ({ className = "w-6 h-6" }) => IconSvg({ className, children: html`<line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>` });
+
+    // Tiny image loader to optionally show a brand logo if present
+    function useImage(src){
+      const [ok, setOk] = useState(false);
+      useEffect(()=>{
+        if(!src) return;
+        const img = new Image();
+        img.onload = () => setOk(true);
+        img.onerror = () => setOk(false);
+        img.src = src + (src.includes('?') ? '&' : '?') + 'v=' + Date.now(); // bypass cache once
+      }, [src]);
+      return ok;
+    }
+
+    const LOGO_SRC = './images/eas-logo.png';
 
     function EDISLandingPage(){
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
       const [scrolled, setScrolled] = useState(false);
+      const [clients, setClients] = useState([]);
+      const [loading, setLoading] = useState(true);
+  const hasLogo = useImage(LOGO_SRC);
+  const [showAerialDetails, setShowAerialDetails] = useState(false);
+  const [showGroundDetails, setShowGroundDetails] = useState(false);
+  const [showClientFeatures, setShowClientFeatures] = useState(false);
+  const [showAdminQuick, setShowAdminQuick] = useState(false);
+
+      // Load client data
+      useEffect(()=>{
+        async function loadClients() {
+          try {
+            const response = await fetch('./clients/config.json');
+            if (response.ok) {
+              const config = await response.json();
+              setClients(config.clients || []);
+            }
+          } catch (error) {
+            console.warn('Could not load client data:', error);
+          } finally {
+            setLoading(false);
+          }
+        }
+        loadClients();
+      }, []);
 
       useEffect(()=>{
         const onScroll = () => setScrolled(window.scrollY > 50);
@@ -86,10 +172,10 @@
       ];
 
       const portals = [
-        { icon: ShieldCheck, color:"text-cyan-400", title:"Client Portal",  desc:"Secure access to deliverables and approvals", href:"./portal-client.html" },
-        { icon: Users,       color:"text-blue-400", title:"Operator Portal",desc:"Field ops, manifests, and mission packages", href:"./portal-operator.html" },
-        { icon: Settings,    color:"text-emerald-400", title:"Admin Console",desc:"Org settings, users, roles, and billing",   href:"./admin.html" },
-        { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"./data-room.html" }
+        { icon: ShieldCheck, color:"text-cyan-400", title:"Client Portal",  desc:"Secure access to deliverables and approvals", href:"./portal.html" },
+        { icon: Users,       color:"text-blue-400", title:"Operator Portal",desc:"Field ops, manifests, and mission packages", href:"#" },
+        { icon: Settings,    color:"text-emerald-400", title:"Admin Console",desc:"Org settings, users, roles, and billing",   href:"./admin-dashboard.html" },
+        { icon: FolderOpen,  color:"text-violet-400", title:"Data Room",    desc:"Share zipped exports, PDFs, and reports",   href:"#" }
       ];
 
 
@@ -108,24 +194,22 @@
             <div className="max-w-7xl mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <${Camera} className="w-8 h-8 text-cyan-400" />
-                  <div>
-                    <div className="text-2xl font-bold">EDIS</div>
-                    <div className="text-xs text-cyan-400">EAS | Enhanced Digital Imaging Solutions</div>
-                  </div>
+                  ${hasLogo
+                    ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-8 w-auto object-contain max-w-[160px] block"/>`
+                    : CameraIcon({ className: "w-8 h-8 text-cyan-400" })}
+                  ${hasLogo
+                    ? html`<span className="sr-only">EYE AM STUDIOS</span>`
+                    : html`<div className="text-2xl font-bold">EYE AM STUDIOS</div>`}
                 </div>
 
                 <div className="hidden md:flex items-center space-x-8">
-                  <a href="#home"      className="hover:text-cyan-400 transition-colors">Home</a>
-                  <a href="#services"  className="hover:text-cyan-400 transition-colors">Services</a>
-                  <a href="./signin.html" className="flex items-center gap-2 text-slate-300 hover:text-white">
-                    <${LogIn} className="w-4 h-4"/> Sign In
+                  <a href="#home" className="hover:text-cyan-400 transition-colors">Home</a>
+                  <a href="#services" className="hover:text-cyan-400 transition-colors">Services</a>
+                  <a href="./portal.html" className="hover:text-cyan-400 transition-colors">TrueView Portal</a>
+                  <a href="#contact" className="hover:text-cyan-400 transition-colors">Contact</a>
+                  <a href="./signin.html" className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg transition-all transform hover:scale-105">
+                    <${LogIn} className="w-4 h-4"/> Client Login
                   </a>
-                  <a
-                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
-                    target="_blank" rel="noopener noreferrer"
-                    className="bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg transition-all transform hover:scale-105"
-                  >Request Quote</a>
                 </div>
 
                 <button
@@ -142,14 +226,13 @@
             ${mobileMenuOpen && html`
               <div className="md:hidden bg-slate-900 border-t border-slate-800">
                 <div className="px-6 py-4 space-y-4">
-                  <a href="#home"      onClick=${closeMobile} className="block hover:text-cyan-400">Home</a>
-                  <a href="#services"   onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
-                  <a href="./signin.html" className="block hover:text-cyan-400">Sign In</a>
-                  <a
-                    href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
-                    target="_blank" rel="noopener noreferrer"
-                    className="block w-full bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg text-center"
-                  >Request Quote</a>
+                  <a href="#home" onClick=${closeMobile} className="block hover:text-cyan-400">Home</a>
+                  <a href="#services" onClick=${closeMobile} className="block hover:text-cyan-400">Services</a>
+                  <a href="./portal.html" onClick=${closeMobile} className="block hover:text-cyan-400">TrueView Portal</a>
+                  <a href="#contact" onClick=${closeMobile} className="block hover:text-cyan-400">Contact</a>
+                  <a href="./signin.html" className="block w-full bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-6 py-2 rounded-lg text-center">
+                    Client Login
+                  </a>
                 </div>
               </div>
             `}
@@ -164,39 +247,62 @@
             </div>
 
             <div className="relative max-w-6xl mx-auto text-center">
-              <div className="inline-block mb-6 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full text-cyan-400 text-sm">
-                Your Single-Source Imaging Partner
-              </div>
+                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6">
+                  Enhanced Digital Imaging Solutions
+                </h1>
+                <div className="text-center mb-8">
+                  <button
+                    onClick=${()=>setShowClientFeatures(v=>!v)}
+                    aria-expanded=${typeof showClientFeatures !== 'undefined' ? showClientFeatures : false}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm"
+                  >
+                    ${typeof showClientFeatures !== 'undefined' && showClientFeatures ? 'Hide features' : 'View features'}
+                  </button>
+                </div>
 
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Enhanced Digital Imaging</span><br/>
-                From Sky to Ground
-              </h1>
-
-              <p className="text-xl text-slate-300 mb-10 max-w-3xl mx-auto">
-                Comprehensive aerial and ground-based imaging solutions for construction, engineering, and industrial sectors.
-                One partner, complete visual documentation.
-              </p>
+                ${typeof showClientFeatures !== 'undefined' && showClientFeatures && html`
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${clientFeatures.map((f,i)=>html`
+                      <div key=${i} className="rounded-2xl border border-slate-800 bg-slate-950/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6">
+                        <div className="flex items-center gap-3 mb-2">
+                          <${f.icon} className=${"w-6 h-6 "+f.color}/>
+                          <h3 className="text-lg font-semibold">${f.title}</h3>
+                        </div>
+                        <p className="text-slate-400 text-sm">${f.desc}</p>
+                      </div>
+                    `)}
+                  </div>
+                `}
+                <p className="mt-6 text-slate-300 text-lg">One partner, complete visual documentation.</p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
                    target="_blank" rel="noopener noreferrer"
                    className="bg-cyan-500 hover:bg-cyan-600 focus:ring-4 focus:ring-cyan-500/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 flex items-center justify-center gap-2">
-                  Request a Quote <${ArrowRight} className="w-5 h-5"/>
+                  Book Your Project <${ArrowRight} className="w-5 h-5"/>
                 </a>
-                <a href="#portfolio" className="bg-slate-800 hover:bg-slate-700 focus:ring-4 focus:ring-slate-600/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-slate-700">
-                  View Portfolio
+                <a href="./portal.html" className="bg-slate-800 hover:bg-slate-700 focus:ring-4 focus:ring-slate-600/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-slate-700">
+                  Learn About Portal Access
                 </a>
               </div>
 
               <!-- Quick Links bar -->
               <div className="mt-10 flex flex-wrap gap-3 justify-center">
+<<<<<<< HEAD
                 <a href="#portals" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
                   <${ShieldCheck} className="w-4 h-4"/> Portals
                 </a>
                 <span className="text-slate-600">•</span>
                 <a href="./docs.html" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
                   <${FileText} className="w-4 h-4"/> Docs
+=======
+                <a href="#client-access" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${ShieldCheck} className="w-4 h-4"/> Client Access
+                </a>
+                <span className="text-slate-600">•</span>
+                <a href="./admin-dashboard.html" className="text-cyan-300/90 hover:text-cyan-300 flex items-center gap-2">
+                  <${LayoutDashboard} className="w-4 h-4"/> Admin
+>>>>>>> 207c6df71a29863d0fa8728212b6dfe66361f7a6
                 </a>
               </div>
             </div>
@@ -226,17 +332,23 @@
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    ${aerialServices.map((s, i)=>html`
-                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
-                        <${s.icon} className="w-6 h-6 text-cyan-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
-                        <div>
-                          <div className="font-semibold mb-1">${s.title}</div>
-                          <div className="text-sm text-slate-400">${s.desc}</div>
+                  <button onClick=${()=>setShowAerialDetails(v=>!v)} className="mt-2 mb-4 inline-flex items-center gap-2 text-cyan-300 hover:text-cyan-200 text-sm">
+                    ${showAerialDetails ? 'Hide details' : 'View details'}
+                  </button>
+
+                  ${showAerialDetails && html`
+                    <div className="space-y-4">
+                      ${aerialServices.map((s, i)=>html`
+                        <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group">
+                          <${s.icon} className="w-6 h-6 text-cyan-400 flex-shrink-0"/>
+                          <div>
+                            <div className="font-semibold mb-1">${s.title}</div>
+                            <div className="text-sm text-slate-400">${s.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                    `)}
-                  </div>
+                      `)}
+                    </div>
+                  `}
                 </div>
 
                 <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 hover:border-blue-500/50 transition-all">
@@ -245,50 +357,72 @@
                     <h3 className="text-2xl font-bold">Ground Imaging Solutions</h3>
                   </div>
 
-                  <div className="space-y-4">
-                    ${groundServices.map((s, i)=>html`
-                      <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group cursor-pointer">
-                        <${s.icon} className="w-6 h-6 text-blue-400 flex-shrink-0 group-hover:scale-110 transition-transform"/>
-                        <div>
-                          <div className="font-semibold mb-1">${s.title}</div>
-                          <div className="text-sm text-slate-400">${s.desc}</div>
+                  <button onClick=${()=>setShowGroundDetails(v=>!v)} className="mt-2 mb-4 inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 text-sm">
+                    ${showGroundDetails ? 'Hide details' : 'View details'}
+                  </button>
+
+                  ${showGroundDetails && html`
+                    <div className="space-y-4">
+                      ${groundServices.map((s, i)=>html`
+                        <div key=${i} className="flex gap-4 p-4 bg-slate-950/50 rounded-lg hover:bg-slate-950 transition-all group">
+                          <${s.icon} className="w-6 h-6 text-blue-400 flex-shrink-0"/>
+                          <div>
+                            <div className="font-semibold mb-1">${s.title}</div>
+                            <div className="text-sm text-slate-400">${s.desc}</div>
+                          </div>
                         </div>
-                      </div>
-                    `)}
-                  </div>
+                      `)}
+                    </div>
+                  `}
                 </div>
               </div>
             </div>
           </section>
 
-          <!-- Dashboards -->
-          <section id="dashboards" className="py-20 px-6">
+          <!-- System Overview -->
+          <section id="system" className="py-20 px-6">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-14">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">Dashboards</h2>
-                <p className="text-slate-400 text-lg">Operational visibility across projects, assets, and field ops</p>
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">EDIS Client Portal System</h2>
+                <p className="text-slate-400 text-lg">Providing client deliverables within an interactive portal</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-8">
-                ${dashboards.map((d,i)=>html`
-                  <a key=${i} href=${d.href} className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
-                    <div className="flex items-center gap-3 mb-3">
-                      <${d.icon} className=${"w-6 h-6 "+d.color}/>
-                      <h3 className="text-xl font-semibold">${d.title}</h3>
-                    </div>
-                    <p className="text-slate-400 mb-4">${d.desc}</p>
-                    <div className="text-cyan-400 flex items-center gap-1">
-                      Open dashboard <${ExternalLink} className="w-4 h-4"/>
-                    </div>
-                  </a>
-                `)}
-              </div>
+                <a href="./portal.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-cyan-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${FileText} className="w-6 h-6 text-cyan-400"/>
+                    <h3 className="text-xl font-semibold">TrueView Portal Info</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">Learn how clients receive login credentials after booking and payment</p>
+                  <div className="text-cyan-400 flex items-center gap-1">
+                    Learn more <${ExternalLink} className="w-4 h-4"/>
+                  </div>
+                </a>
 
-              <div className="text-center mt-10">
-                <a href="./dashboards.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700">
-                  <${LayoutDashboard} className="w-5 h-5"/> All Dashboards
+                <a href="./signin.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-blue-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${LogIn} className="w-6 h-6 text-blue-400"/>
+                    <h3 className="text-xl font-semibold">Client Login</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">Access with credentials received after project booking and payment</p>
+                  <div className="text-blue-400 flex items-center gap-1">
+                    Access login <${ExternalLink} className="w-4 h-4"/>
+                  </div>
+                </a>
+
+                <a href="./admin-dashboard.html" className="group rounded-2xl border border-slate-800 bg-slate-900/60 hover:border-emerald-500/50 hover:bg-slate-900 transition-all p-6 block">
+                  <div className="flex items-center gap-3 mb-3">
+                    <${Settings} className="w-6 h-6 text-emerald-400"/>
+                    <h3 className="text-xl font-semibold">Admin Console</h3>
+                  </div>
+                  <p className="text-slate-400 mb-4">System administration and client management</p>
+                  <div className="text-emerald-400 flex items-center gap-1">
+                    Open admin <${ExternalLink} className="w-4 h-4"/>
+                  </div>
                 </a>
               </div>
+
+              <!-- System Status removed for client-facing simplicity -->
             </div>
           </section>
 
@@ -309,6 +443,42 @@
                   </div>
                 `)}
               </div>
+            </div>
+          </section>
+
+          <!-- Client Access -->
+          <section id="client-access" className="py-20 px-6 bg-slate-900">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-14">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Client Portal Access</h2>
+                <p className="text-slate-400 text-lg">
+                  After booking and payment, clients receive secure credentials to access their project dashboard
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-8 text-center">
+                  <${FileText} className="w-12 h-12 text-cyan-400 mx-auto mb-4"/>
+                  <h3 className="text-xl font-semibold mb-3">TrueView Portal</h3>
+                  <p className="text-slate-400 mb-6">Learn how clients receive dashboard access after booking and payment with EDIS</p>
+                  <a href="./portal.html" className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg transition-all">
+                    <${FileText} className="w-4 h-4"/>
+                    View Portal Info
+                  </a>
+                </div>
+
+                <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-8 text-center">
+                  <${LogIn} className="w-12 h-12 text-blue-400 mx-auto mb-4"/>
+                  <h3 className="text-xl font-semibold mb-3">Client Login</h3>
+                  <p className="text-slate-400 mb-6">Use credentials received after project booking to access your dashboard</p>
+                  <a href="./signin.html" className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-all">
+                    <${LogIn} className="w-4 h-4"/>
+                    Go to Login
+                  </a>
+                </div>
+              </div>
+
+              <!-- Active Clients count removed for client-facing simplicity -->
             </div>
           </section>
 
@@ -335,15 +505,17 @@
               </div>
 
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="./portal-client.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
+                <a href="./signin.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-slate-900 hover:bg-slate-100">
                   <${LogIn} className="w-5 h-5"/> Sign in to Client Portal
                 </a>
-                <a href="./docs.html#client-portal" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
+                <a href="./portal.html" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white">
                   Learn more <${ExternalLink} className="w-4 h-4"/>
                 </a>
               </div>
             </div>
           </section>
+
+          
 
           <!-- Industries (kept) -->
           <section id="industries" className="py-20 px-6">
@@ -385,15 +557,12 @@
             <div className="max-w-4xl mx-auto text-center">
               <div className="bg-gradient-to-br from-cyan-600 to-blue-600 rounded-2xl p-12 shadow-2xl">
                 <h2 className="text-4xl font-bold mb-4">Ready to Get Started?</h2>
-                <p className="text-xl mb-8 text-cyan-50">Partner with EDIS for comprehensive imaging solutions that meet your project needs from every angle.</p>
+                <p className="text-xl mb-8 text-cyan-50">Partner with EYE AM STUDIOS for comprehensive imaging solutions that meet your project needs from every angle.</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e"
                      target="_blank" rel="noopener noreferrer"
                      className="bg-white text-cyan-600 hover:bg-slate-100 focus:ring-4 focus:ring-white/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
-                    Schedule Consultation
-                  </a>
-                  <a href="#portfolio" className="bg-cyan-800 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-700/50 px-8 py-4 rounded-lg text-lg font-semibold transition-all border border-cyan-700">
-                    Download Capabilities Deck
+                    Request Quote via HoneyBook
                   </a>
                 </div>
               </div>
@@ -406,8 +575,12 @@
               <div className="grid md:grid-cols-5 gap-8 mb-8">
                 <div className="md:col-span-2">
                   <div className="flex items-center space-x-2 mb-4">
-                    <${Camera} className="w-6 h-6 text-cyan-400"/>
-                    <span className="font-bold text-lg">EDIS</span>
+                    ${hasLogo
+                      ? html`<img src=${LOGO_SRC} alt="EYE AM STUDIOS logo" className="h-6 w-auto object-contain max-w-[140px] block"/>`
+                      : CameraIcon({ className: "w-6 h-6 text-cyan-400" })}
+                    ${hasLogo
+                      ? html`<span className="sr-only">EYE AM STUDIOS</span>`
+                      : html`<span className="font-bold text-lg">EYE AM STUDIOS</span>`}
                   </div>
                   <p className="text-slate-400 text-sm">Enhanced Digital Imaging Solutions</p>
                 </div>
@@ -416,15 +589,16 @@
                   <div className="space-y-2 text-sm text-slate-400">
                     <a href="#services" className="hover:text-white">Aerial Imaging</a>
                     <a href="#services" className="hover:text-white">Ground Imaging</a>
-                    <a href="#dashboards" className="hover:text-white">Dashboards</a>
+                    <a href="#system" className="hover:text-white">Portal System</a>
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-3">Portals</h4>
+                  <h4 className="font-semibold mb-3">Portals & Tools</h4>
                   <div className="space-y-2 text-sm text-slate-400">
-                    <a href="./portal-client.html" className="hover:text-white">Client Portal</a>
-                    <a href="./portal-operator.html" className="hover:text-white">Operator Portal</a>
-                    <a href="./admin.html" className="hover:text-white">Admin Console</a>
+                    <a href="./portal.html" className="hover:text-white">TrueView Portal Info</a>
+                    <a href="./signin.html" className="hover:text-white">Client Login</a>
+                    <a href="./dashboard.html" className="hover:text-white">Client Dashboard</a>
+                    <a href="./admin-dashboard.html" className="hover:text-white">Admin Console</a>
                   </div>
                 </div>
                 <div>
@@ -437,7 +611,7 @@
                 </div>
               </div>
               <div className="border-t border-slate-800 pt-8 text-center text-slate-400 text-sm">
-                © 2025 EDIS - Enhanced Digital Imaging Solutions. All rights reserved.
+                © 2025 EYE AM STUDIOS - Enhanced Digital Imaging Solutions. All rights reserved.
               </div>
             </div>
           </footer>

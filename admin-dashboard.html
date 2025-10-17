@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAS | Admin Dashboard - Portal Management</title>
+    <title>EDIS | Admin Dashboard - Portal Management</title>
     <meta name="description" content="Administrative dashboard for managing client portals, projects, and deliverables.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,6 +85,22 @@
             display: flex;
             align-items: center;
             gap: 20px;
+        }
+
+        /* Quick Navigation Styles */
+        .quick-nav-item {
+            transition: all 0.3s ease;
+            padding: 5px 8px;
+            border-radius: 6px;
+        }
+
+        .quick-nav-item:hover {
+            background: rgba(0, 191, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .quick-nav-item:active {
+            transform: translateY(0);
         }
 
         .view-switcher {
@@ -556,8 +572,23 @@
         <!-- Admin Header -->
         <header class="admin-header">
             <div>
-                <span class="admin-logo">EAS | Admin Portal</span>
+                <span class="admin-logo">EDIS | Admin Portal</span>
                 <span class="admin-badge">Administrator</span>
+                
+                <!-- Quick Navigation -->
+                <div style="margin-left: 30px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--gray-medium);">
+                    <span class="quick-nav-item" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" onclick="showManagement()">
+                        <span style="color: var(--electric-cyan);">⚙️</span> Management
+                    </span>
+                    <span>•</span>
+                    <span class="quick-nav-item" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" onclick="showClientAccess()">
+                        <span style="color: var(--electric-cyan);">🔐</span> Client Access
+                    </span>
+                    <span>•</span>
+                    <span class="quick-nav-item" style="display: flex; align-items: center; gap: 5px; cursor: pointer;" onclick="showAdmin()">
+                        <span style="color: var(--electric-cyan);">👑</span> Admin
+                    </span>
+                </div>
             </div>
             <div class="admin-controls">
                 <div class="view-switcher">
@@ -721,6 +752,10 @@
                         <a href="#" class="admin-action-btn" onclick="generateReport()">
                             <div class="admin-action-icon">📊</div>
                             <div class="admin-action-text">Generate Report</div>
+                        </a>
+                        <a href="#" class="admin-action-btn" onclick="managePackages()">
+                            <div class="admin-action-icon">🎛️</div>
+                            <div class="admin-action-text">Manage Packages & Add-ons</div>
                         </a>
                         <a href="#" class="admin-action-btn" onclick="manageHoneyBook()">
                             <div class="admin-action-icon">🍯</div>
@@ -968,10 +1003,10 @@
                                     border-radius: 8px;
                                 ">
                                     <option value="">Select Package...</option>
-                                    <option value="orthomosaic-2500">EAS | Orthomosaic Mapping - $2,500</option>
-                                    <option value="dsm-dtm-3500">EAS | DSM/DTM Models - $3,500</option>
-                                    <option value="inspection-3850">EAS | Aerial Inspections - $3,850</option>
-                                    <option value="progress-1800">EAS | Progress Monitoring - $1,800</option>
+                                    <option value="orthomosaic-2500">EDIS | Orthomosaic Mapping - $2,500</option>
+                                    <option value="dsm-dtm-3500">EDIS | DSM/DTM Models - $3,500</option>
+                                    <option value="inspection-3850">EDIS | Aerial Inspections - $3,850</option>
+                                    <option value="progress-1800">EDIS | Progress Monitoring - $1,800</option>
                                 </select>
                             </div>
                         </div>
@@ -1549,6 +1584,168 @@
             }, 2000);
         }
 
+        // =====================
+        // Package & Add-ons (Admin)
+        // =====================
+        function managePackages() {
+            showNotification('Opening package & add-ons manager...', 'info');
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000;
+                display: flex; align-items: center; justify-content: center; padding: 20px;
+            `;
+            modal.innerHTML = `
+                <div style="background: linear-gradient(135deg, var(--midnight-blue), var(--jet-black)); border:2px solid var(--electric-cyan); border-radius:20px; padding:28px; width: min(900px, 96vw); max-height: 90vh; overflow:auto; position:relative;">
+                    <button onclick="this.closest('div').parentNode.remove()" style="position:absolute; top:12px; right:16px; background:none; border:none; color:var(--white); font-size:1.5rem; cursor:pointer;">×</button>
+                    <h2 style="color: var(--electric-cyan); margin-bottom: 16px;">🎛️ Package & Add-ons Manager</h2>
+                    <p style="color: var(--gray-medium); margin-bottom: 16px;">Select a base package and add cross-category add-ons. Save to preview in client view or copy JSON for clients/config.json.</p>
+
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display:block; color: var(--white); font-weight:600; margin-bottom:6px;">Client ID</label>
+                            <input id="admClientId" value="demo-mosaic" style="width:100%; padding:10px; border-radius:8px; border:1px solid rgba(0,191,255,0.3); background: rgba(255,255,255,0.08); color: var(--white);"/>
+                        </div>
+                        <div>
+                            <label style="display:block; color: var(--white); font-weight:600; margin-bottom:6px;">Package Type</label>
+                            <select id="admPkgType" class="admin-select" style="width:100%; padding:10px; border-radius:8px;">
+                                <option value="aerial">Aerial</option>
+                                <option value="ground">Ground</option>
+                                <option value="both">Aerial + Ground</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; color: var(--white); font-weight:600; margin-bottom:6px;">Base Package</label>
+                            <select id="admBasePkg" class="admin-select" style="width:100%; padding:10px; border-radius:8px;"></select>
+                        </div>
+                        <div>
+                            <label style="display:block; color: var(--white); font-weight:600; margin-bottom:6px;">Selected Deliverable</label>
+                            <select id="admDeliverable" class="admin-select" style="width:100%; padding:10px; border-radius:8px;"></select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px;">
+                        <h3 style="color: var(--white); margin: 14px 0 8px;">Cross-Category Add-ons</h3>
+                        <div id="admAddons" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px;"></div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; flex-wrap: wrap; margin-top: 18px;">
+                        <button id="admPreview" class="admin-btn admin-btn-primary">👁️ Preview in Client View</button>
+                        <button id="admCopyJson" class="admin-btn admin-btn-secondary">📋 Copy JSON for clients/config.json</button>
+                        <button id="admClose" class="admin-btn admin-btn-danger">✖ Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            const aerialPkgs = [
+                { value: 'orthomosaic', label: 'Orthomosaic Mapping' },
+                { value: 'inspections', label: 'Aerial Inspections' },
+                { value: 'dsmdtm', label: 'DSM/DTM Models' },
+                { value: 'progress', label: 'Progress Monitoring' },
+            ];
+            const groundPkgs = [
+                { value: 'ground_docs', label: 'Ground Documentation' },
+                { value: 'portraits', label: 'Industrial Portraits' },
+                { value: 'tech_docs', label: 'Technical/Safety Documentation' },
+            ];
+            const aerialDeliverables = [
+                { value: 'map', label: 'Orthomosaic Map' },
+                { value: '3d', label: '3D Model / Point Cloud' },
+                { value: 'hd', label: 'HD Aerial Images' },
+                { value: 'report', label: 'Branded PDF Report' },
+            ];
+            const groundDeliverables = [
+                { value: 'report', label: 'Branded PDF Report' },
+                { value: 'ground-photos', label: 'Ground Reference Photos' },
+                { value: '360', label: '360° Walkthrough' },
+            ];
+
+            const $ = sel => modal.querySelector(sel);
+            const pkgTypeSel = $('#admPkgType');
+            const basePkgSel = $('#admBasePkg');
+            const delivSel = $('#admDeliverable');
+            const addonsWrap = $('#admAddons');
+
+            function fillBasePackages(type) {
+                basePkgSel.innerHTML = '';
+                const list = type === 'ground' ? groundPkgs : type === 'both' ? [...aerialPkgs, ...groundPkgs] : aerialPkgs;
+                list.forEach(opt => {
+                    const o = document.createElement('option'); o.value = opt.value; o.textContent = opt.label; basePkgSel.appendChild(o);
+                });
+                // default selection
+                basePkgSel.value = (type === 'ground' ? groundPkgs[0].value : aerialPkgs[0].value);
+            }
+            function fillDeliverables(type) {
+                delivSel.innerHTML = '';
+                const list = type === 'ground' ? groundDeliverables : type === 'both' ? [...aerialDeliverables, ...groundDeliverables] : aerialDeliverables;
+                list.forEach(opt => {
+                    const o = document.createElement('option'); o.value = opt.value; o.textContent = opt.label; delivSel.appendChild(o);
+                });
+            }
+            function fillAddons(type) {
+                addonsWrap.innerHTML = '';
+                // Cross-category: if aerial -> ground add-ons, if ground -> aerial add-ons, if both -> both sets
+                const cross = type === 'ground' ? aerialDeliverables : type === 'aerial' ? groundDeliverables : [...aerialDeliverables, ...groundDeliverables];
+                cross.forEach(opt => {
+                    const cat = aerialDeliverables.find(a => a.value === opt.value) ? 'aerial' : 'ground';
+                    const id = `adm-addon-${cat}-${opt.value}`;
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); padding:8px 10px; border-radius:8px;';
+                    const input = document.createElement('input'); input.type = 'checkbox'; input.id = id; input.dataset.category = cat; input.value = opt.value;
+                    const span = document.createElement('span'); span.textContent = `${opt.label} (${cat === 'aerial' ? 'Aerial' : 'Ground'})`;
+                    label.appendChild(input); label.appendChild(span); addonsWrap.appendChild(label);
+                });
+            }
+
+            // Initialize
+            fillBasePackages(pkgTypeSel.value);
+            fillDeliverables(pkgTypeSel.value);
+            fillAddons(pkgTypeSel.value);
+            pkgTypeSel.addEventListener('change', () => {
+                fillBasePackages(pkgTypeSel.value);
+                fillDeliverables(pkgTypeSel.value);
+                fillAddons(pkgTypeSel.value);
+            });
+
+            // Actions
+            $('#admClose').addEventListener('click', () => modal.remove());
+            $('#admPreview').addEventListener('click', () => {
+                const clientId = $('#admClientId').value.trim() || 'demo-mosaic';
+                const pkgType = pkgTypeSel.value;
+                const basePkg = basePkgSel.value;
+                const deliverable = delivSel.value;
+                const addons = Array.from(addonsWrap.querySelectorAll('input[type="checkbox"]:checked')).map(cb => `${cb.dataset.category}:${cb.value}`);
+
+                try {
+                    localStorage.setItem('clientId', clientId);
+                    localStorage.setItem('currentProject', 'mosaic');
+                    localStorage.setItem('selectedPackageType', pkgType);
+                    localStorage.setItem('selectedPackage', basePkg);
+                    localStorage.setItem('selectedDeliverable', deliverable);
+                    localStorage.setItem('selectedAddons', JSON.stringify(addons));
+                } catch {}
+                window.open('dashboard.html', '_blank');
+                showNotification('Pushed selection to client view (local preview).', 'success');
+            });
+            $('#admCopyJson').addEventListener('click', async () => {
+                const clientId = $('#admClientId').value.trim() || 'demo-mosaic';
+                const pkgType = pkgTypeSel.value;
+                const basePkg = basePkgSel.value;
+                const deliverable = delivSel.value;
+                const addons = Array.from(addonsWrap.querySelectorAll('input[type="checkbox"]:checked')).map(cb => `${cb.dataset.category}:${cb.value}`);
+                const patch = {
+                    id: clientId,
+                    selectedPackage: basePkg,
+                    selectedPackageType: pkgType,
+                    selectedDeliverable: deliverable,
+                    selectedAddons: addons
+                };
+                const text = JSON.stringify(patch, null, 2);
+                try { await navigator.clipboard.writeText(text); showNotification('JSON copied to clipboard.', 'success'); }
+                catch { prompt('Copy JSON to paste into clients/config.json:', text); }
+            });
+        }
+
         function systemBackup() {
             showNotification('Initiating system backup...', 'info');
             setTimeout(() => {
@@ -1560,6 +1757,94 @@
         function showOverview() {
             setActiveNav(event.target);
             showNotification('Showing overview dashboard', 'info');
+        }
+
+        // Quick navigation functions
+        function showManagement() {
+            showNotification('Loading Management tools...', 'info');
+            const content = document.getElementById('admin-content');
+            content.innerHTML = `
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">⚙️ Management</h1>
+                    <p class="admin-page-subtitle">System management and configuration tools</p>
+                </div>
+                
+                <div class="admin-quick-actions fade-in stagger-1">
+                    <h3>Management Tools</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div class="admin-metric-card">
+                            <h4>System Configuration</h4>
+                            <p>Portal settings, integrations, and system preferences</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>User Management</h4>
+                            <p>Admin accounts, permissions, and role assignments</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>Project Templates</h4>
+                            <p>Default configurations and workflow templates</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showClientAccess() {
+            showNotification('Loading Client Access controls...', 'info');
+            const content = document.getElementById('admin-content');
+            content.innerHTML = `
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">🔐 Client Access</h1>
+                    <p class="admin-page-subtitle">Manage client permissions and portal access</p>
+                </div>
+                
+                <div class="admin-quick-actions fade-in stagger-1">
+                    <h3>Client Access Controls</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div class="admin-metric-card">
+                            <h4>Active Clients</h4>
+                            <p>Manage client login credentials and access levels</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>Portal Permissions</h4>
+                            <p>Configure what clients can view and download</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>Access Logs</h4>
+                            <p>Monitor client login activity and usage patterns</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAdmin() {
+            showNotification('Loading Admin functions...', 'info');
+            const content = document.getElementById('admin-content');
+            content.innerHTML = `
+                <div class="admin-page-header fade-in">
+                    <h1 class="admin-page-title">👑 Admin</h1>
+                    <p class="admin-page-subtitle">Advanced administrative functions and system control</p>
+                </div>
+                
+                <div class="admin-quick-actions fade-in stagger-1">
+                    <h3>Administrative Functions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div class="admin-metric-card">
+                            <h4>System Logs</h4>
+                            <p>View system activity, errors, and performance logs</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>Database Management</h4>
+                            <p>Backup, restore, and maintenance operations</p>
+                        </div>
+                        <div class="admin-metric-card">
+                            <h4>Security Settings</h4>
+                            <p>Authentication, encryption, and security policies</p>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function showAnalytics() {
@@ -1664,7 +1949,7 @@
 
             // Show welcome notification
             setTimeout(() => {
-                showNotification('Welcome to EAS Admin Portal! Switch to Client View to see the client perspective.', 'success');
+                showNotification('Welcome to EDIS Admin Portal! Switch to Client View to see the client perspective.', 'success');
             }, 1000);
         });
     </script>

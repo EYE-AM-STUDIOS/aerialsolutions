@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAS | TrueView Portal - Client Dashboard</title>
+    <title>EDIS | TrueView Portal - Client Dashboard</title>
     <meta name="description" content="Access your aerial imaging deliverables - interactive maps, 3D models, reports, and project data from EYE AM STUDIOS.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -359,6 +359,38 @@
         .btn-download:hover {
             background: var(--success-green);
             color: var(--white);
+        }
+
+        /* Package type chips and selection badges */
+        .pkg-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .chip {
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+        }
+        .chip-aerial {
+            color: var(--electric-cyan);
+            border-color: rgba(0,191,255,0.8);
+            background: rgba(0,191,255,0.14);
+            box-shadow: 0 0 0 1px rgba(0,191,255,0.15) inset;
+        }
+        .chip-ground {
+            color: #60A5FA; /* blue-400 */
+            border-color: rgba(96,165,250,0.85);
+            background: rgba(59,130,246,0.14);
+            box-shadow: 0 0 0 1px rgba(96,165,250,0.15) inset;
+        }
+        .chip-selected {
+            color: #E5E7EB;
+            border-color: rgba(229,231,235,0.6);
+            background: rgba(255,255,255,0.08);
         }
 
         /* HD Images Gallery */
@@ -832,7 +864,7 @@
     <div class="dashboard-container">
         <!-- Header -->
         <header class="dashboard-header">
-            <div class="portal-logo">EAS | TrueView Portal</div>
+            <div class="portal-logo">EDIS | TrueView Portal</div>
             <div class="header-controls">
                 <div class="user-info">
                     <div class="user-avatar">KB</div>
@@ -861,12 +893,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" onclick="showReports()">
                                 <span class="nav-icon">📊</span>
                                 Reports
                             </a>
                         </li>
-                    </nav>
+                    </ul>
                 </div>
 
                 <div class="nav-section">
@@ -1033,6 +1065,52 @@
 
                 <!-- Recent Projects Grid -->
                 <div class="dashboard-grid">
+                    <!-- Temporary Active Project (Demo) -->
+                    <div class="dashboard-card fade-in stagger-1" data-project-id="temp-active" data-package="orthomosaic">
+                        <div class="card-header">
+                            <h3 class="card-title">Demo: Temporary Active Project</h3>
+                            <span class="card-icon">🧪</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Demo Location</span>
+                                <span class="project-status status-ready">Active</span>
+                            </div>
+
+                            <!-- Package Information -->
+                            <div class="package-info">
+                                <h4 class="package-title">📦 EDIS | Orthomosaic Mapping (Demo)</h4>
+                                <div class="deliverables-section">
+                                    <h5>🛩️ Aerial Deliverables</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Orthomosaic preview (GeoTIFF + web viewer)</li>
+                                        <li>✓ Sample HD aerial images (JPEG)</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Demo PDF report (branded)</li>
+                                        <li>✓ Ground reference photos (sample)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="card-description">
+                                Temporary project inserted for layout testing. Remove after verifying spacing and active project behavior.
+                            </p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 11, 2025</span>
+                                <span>Altitude: 200ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')">🗺️ Interactive Map</a>
+                            <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
+                        </div>
+                    </div>
+
                     <!-- Project 1: ID=mosaic, package=orthomosaic -->
                     <div class="dashboard-card fade-in stagger-3" data-project-id="mosaic" data-package="orthomosaic">
                         <div class="card-header">
@@ -1082,14 +1160,20 @@
                             
                             <!-- Package Information -->
                             <div class="package-info">
-                                <h4 class="package-title">📦 EAS | Orthomosaic Mapping - $2,500</h4>
+                                <h4 class="package-title">📦 EDIS | Orthomosaic Mapping - $2,500</h4>
                                 <div class="deliverables-section">
-                                    <h5>✅ Included Deliverables:</h5>
+                                    <h5>🛩️ Aerial Deliverables</h5>
                                     <ul class="deliverables-list">
                                         <li>✓ Geo-referenced orthomosaic map (GeoTIFF + PDF)</li>
                                         <li>✓ 18 geotagged aerial photos (RAW + JPEG)</li>
-                                        <li>✓ Branded PDF report with flight details</li>
                                         <li>✓ Online viewer link (Pix4D)</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Branded PDF report with flight details</li>
+                                        <li>✓ Ground reference photos (on-site context)</li>
                                     </ul>
                                 </div>
                                 <div class="addons-section">
@@ -1142,12 +1226,17 @@
                             
                             <!-- Package Information -->
                             <div class="package-info">
-                                <h4 class="package-title">📦 EAS | Aerial Inspections - $3,850</h4>
+                                <h4 class="package-title">📦 EDIS | Aerial Inspections - $3,850</h4>
                                 <div class="deliverables-section">
-                                    <h5>✅ Included Deliverables:</h5>
+                                    <h5>🛩️ Aerial Deliverables</h5>
                                     <ul class="deliverables-list">
                                         <li>✓ High-resolution inspection photos (RAW + JPEG)</li>
                                         <li>✓ 4K inspection video (2-min overview)</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables</h5>
+                                    <ul class="deliverables-list">
                                         <li>✓ Branded inspection report with annotations</li>
                                         <li>✓ 360° virtual walkthroughs</li>
                                     </ul>
@@ -1237,14 +1326,20 @@
                             
                             <!-- Package Information -->
                             <div class="package-info">
-                                <h4 class="package-title">📦 EAS | DSM/DTM Models - $3,500</h4>
+                                <h4 class="package-title">📦 EDIS | DSM/DTM Models - $3,500</h4>
                                 <div class="deliverables-section">
-                                    <h5>🔄 Processing Deliverables:</h5>
+                                    <h5>�️ Aerial Deliverables (Processing)</h5>
                                     <ul class="deliverables-list processing">
                                         <li>⏳ DSM & DTM files (GeoTIFF + contour outputs)</li>
                                         <li>⏳ Elevation data & terrain analysis</li>
-                                        <li>⏳ Branded PDF with visual overlays</li>
                                         <li>⏳ RTK/GCP accuracy upgrade (included)</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables (Processing)</h5>
+                                    <ul class="deliverables-list processing">
+                                        <li>⏳ Branded PDF with visual overlays</li>
+                                        <li>⏳ Site survey/reference photos</li>
                                     </ul>
                                 </div>
                                 <div class="addons-section">
@@ -1293,11 +1388,16 @@
                             
                             <!-- Package Information -->
                             <div class="package-info">
-                                <h4 class="package-title">📦 EAS | Progress Monitoring - $1,800</h4>
+                                <h4 class="package-title">📦 EDIS | Progress Monitoring - $1,800</h4>
                                 <div class="deliverables-section">
-                                    <h5>✅ Included Deliverables:</h5>
+                                    <h5>🛩️ Aerial Deliverables</h5>
                                     <ul class="deliverables-list">
                                         <li>✓ High-resolution orthomosaic photo set</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables</h5>
+                                    <ul class="deliverables-list">
                                         <li>✓ Progress photo comparison (before vs. current)</li>
                                         <li>✓ Branded PDF progress report</li>
                                         <li>✓ Monthly subscription (3-month package)</li>
@@ -1400,6 +1500,34 @@
             }, 1500);
         }
 
+        function showReports() {
+            const content = document.getElementById('dashboard-content');
+            content.innerHTML = `
+                <div class="page-header fade-in">
+                    <h1 class="page-title">Reports</h1>
+                    <p class="page-subtitle">Your latest reports and exports</p>
+                </div>
+
+                <div class="dashboard-card fade-in">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Reports</h3>
+                        <span class="card-icon">📄</span>
+                    </div>
+                    <div class="card-content">
+                        <ul class="deliverables-list">
+                            <li>📄 Demo Report • Temporary Active Project • Oct 11, 2025</li>
+                            <li>📄 Mosaic Construction Site • Sep 22, 2025</li>
+                            <li>📄 Industrial Tank Inspection • Oct 1, 2025</li>
+                        </ul>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="btn btn-secondary" onclick="downloadAllReports()">📥 Download All Reports</a>
+                    </div>
+                </div>
+            `;
+            setActiveNav(event.target);
+        }
+
         function viewInspectionReport(projectId) {
             showNotification(`Opening inspection report for ${projectId} project...`, 'info');
             setTimeout(() => {
@@ -1455,15 +1583,45 @@
                     </div>
                 </div>
 
-                <div class="dashboard-card fade-in stagger-2">
-                    <div class="card-header">
-                        <h3 class="card-title">Project List View</h3>
-                        <span class="card-icon">📋</span>
-                    </div>
-                    <div class="card-content">
-                        <p class="card-description">
-                            Complete project management interface would be displayed here with sorting, filtering, and detailed project information.
-                        </p>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card fade-in" data-project-id="temp-active" data-package="orthomosaic">
+                        <div class="card-header">
+                            <h3 class="card-title">Demo: Temporary Active Project</h3>
+                            <span class="card-icon">🧪</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-meta">
+                                <span>Demo Location</span>
+                                <span class="project-status status-ready">Active</span>
+                            </div>
+                            <div class="package-info">
+                                <h4 class="package-title">📦 EDIS | Orthomosaic Mapping (Demo)</h4>
+                                <div class="deliverables-section">
+                                    <h5>🛩️ Aerial Deliverables</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Orthomosaic preview (GeoTIFF + web viewer)</li>
+                                        <li>✓ Sample HD aerial images (JPEG)</li>
+                                    </ul>
+                                </div>
+                                <div class="deliverables-section">
+                                    <h5>📸 Ground-Based Deliverables</h5>
+                                    <ul class="deliverables-list">
+                                        <li>✓ Demo PDF report (branded)</li>
+                                        <li>✓ Ground reference photos (sample)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="card-description">Temporary project for layout testing within My Projects.</p>
+                            <div class="card-meta">
+                                <span>Captured: Oct 11, 2025</span>
+                                <span>Altitude: 200ft AGL</span>
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')">🗺️ Interactive Map</a>
+                            <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
+                            <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1664,8 +1822,11 @@
 
             // Show welcome notification
             setTimeout(() => {
-                showNotification('Welcome to your EAS TrueView Portal!', 'success');
+                showNotification('Welcome to your EDIS TrueView Portal!', 'success');
             }, 1000);
+
+            // Add package selection controls under Quick Actions
+            initPackageControls();
 
             // Focus from config or localStorage
             async function applyFocusFromState(state) {
@@ -1679,7 +1840,15 @@
                     const isSelected = card.dataset.projectId === currentProject;
                     if (isSelected) {
                         card.classList.add('highlight');
-                        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+                        // Only scroll if card is outside the viewport, and align to start to avoid large empty space
+                        setTimeout(() => {
+                            const rect = card.getBoundingClientRect();
+                            const vh = window.innerHeight || document.documentElement.clientHeight;
+                            const isInView = rect.top >= 0 && rect.bottom <= vh;
+                            if (!isInView) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }, 300);
                         const pkgInfo = card.querySelector('.package-info');
                         if (pkgInfo) {
                             pkgInfo.classList.add('selected');
@@ -1703,11 +1872,49 @@
                 const headerTitle = document.querySelector('.page-title');
                 const headerSubtitle = document.querySelector('.page-subtitle');
                 if (headerTitle) headerTitle.textContent = 'Welcome to Your Project Portal';
+                // Compute package type and selected deliverable
+                const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring', ground_docs: 'Ground Documentation', portraits: 'Industrial Portraits', tech_docs: 'Technical/Safety Documentation' };
+                const pkgCategory = { orthomosaic: 'aerial', inspections: 'aerial', dsmdtm: 'aerial', progress: 'aerial', ground_docs: 'ground', portraits: 'ground', tech_docs: 'ground' };
+                const packageType = (state && state.selectedPackageType) || localStorage.getItem('selectedPackageType') || (selectedPackage && pkgCategory[selectedPackage]) || 'aerial';
+                const aerialOpts = [
+                    { value: 'map', label: 'Orthomosaic Map' },
+                    { value: '3d', label: '3D Model / Point Cloud' },
+                    { value: 'hd', label: 'HD Aerial Images' },
+                    { value: 'report', label: 'Branded PDF Report' }
+                ];
+                const groundOpts = [
+                    { value: 'report', label: 'Branded PDF Report' },
+                    { value: 'ground-photos', label: 'Ground Reference Photos' },
+                    { value: '360', label: '360° Walkthrough' }
+                ];
+                const bothOpts = [...aerialOpts, ...groundOpts];
+                const storedDel = (state && state.selectedDeliverable) || localStorage.getItem('selectedDeliverable');
+                const addonsStr = (state && state.selectedAddons) || localStorage.getItem('selectedAddons');
+                let selectedAddons = [];
+                try { selectedAddons = typeof addonsStr === 'string' ? JSON.parse(addonsStr) : (addonsStr || []); } catch {}
+                const defaultDel = (packageType === 'ground' ? groundOpts[0] : aerialOpts[0]).value;
+                const selectedDeliverable = storedDel || defaultDel;
                 if (headerSubtitle && selectedPackage) {
-                    const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring' };
                     const pkgLabel = pkgNames[selectedPackage] || 'Your Selected Package';
-                    headerSubtitle.textContent = `Your selected package: ${pkgLabel}`;
+                    const typeLabel = packageType === 'both' ? 'Aerial + Ground' : (packageType === 'ground' ? 'Ground' : 'Aerial');
+                    const list = packageType === 'both' ? bothOpts : (packageType === 'ground' ? groundOpts : aerialOpts);
+                    const delLabel = (list.find(d => d.value === selectedDeliverable) || {}).label || '—';
+                    const addonLabelsMap = {
+                        'aerial:map': 'Orthomosaic Map',
+                        'aerial:3d': '3D Model / Point Cloud',
+                        'aerial:hd': 'HD Aerial Images',
+                        'aerial:report': 'Branded PDF Report',
+                        'ground:report': 'Branded PDF Report',
+                        'ground:ground-photos': 'Ground Photos',
+                        'ground:360': '360° Walkthrough'
+                    };
+                    const addonLabels = (selectedAddons || []).map(a => addonLabelsMap[a] || a);
+                    const addonText = addonLabels.length ? ` • Add-ons: ${addonLabels.join(', ')}` : '';
+                    headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}${addonText}`;
                 }
+
+                // Show chips for current selection on the highlighted card
+                updatePackageChips({ packageType, selectedDeliverable, selectedAddons });
 
                 const qa = document.querySelector('.quick-actions .action-buttons');
                 if (qa) {
@@ -1719,6 +1926,9 @@
                         e.preventDefault();
                         try { localStorage.removeItem('currentProject'); } catch{}
                         try { localStorage.removeItem('selectedPackage'); } catch{}
+                        try { localStorage.removeItem('selectedPackageType'); } catch{}
+                        try { localStorage.removeItem('selectedDeliverable'); } catch{}
+                        try { localStorage.removeItem('selectedAddons'); } catch{}
                         try { localStorage.removeItem('focusMode'); } catch{}
                         document.querySelectorAll('.dashboard-card').forEach(c => {
                             c.classList.remove('dimmed', 'highlight');
@@ -1773,27 +1983,92 @@
                                 try {
                                     if (found.currentProject) localStorage.setItem('currentProject', found.currentProject);
                                     if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
+                                    if (found.selectedPackageType) localStorage.setItem('selectedPackageType', found.selectedPackageType);
+                                    if (found.selectedDeliverable) localStorage.setItem('selectedDeliverable', found.selectedDeliverable);
+                                    if (found.selectedAddons) localStorage.setItem('selectedAddons', JSON.stringify(found.selectedAddons));
                                     if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
                                 } catch {}
                                 await applyFocusFromState(found);
+                                // Start a lightweight refresh check to pull config updates periodically
+                                startConfigRefreshWatcher(clientId);
                                 return;
                             }
                         }
                     }
+                    // If no current project is set, temporarily focus the demo project for layout verification
+                    const existing = localStorage.getItem('currentProject');
+                    const fallbackProject = existing || 'temp-active';
                     await applyFocusFromState({
-                        currentProject: localStorage.getItem('currentProject'),
-                        selectedPackage: localStorage.getItem('selectedPackage'),
-                        focusMode: localStorage.getItem('focusMode')
+                        currentProject: fallbackProject,
+                        selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
+                        selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
+                        selectedAddons: localStorage.getItem('selectedAddons') || null,
+                        focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
+                    // Start refresh watcher if we at least have a clientId stored
+                    const cid = localStorage.getItem('clientId');
+                    if (cid) startConfigRefreshWatcher(cid);
                 } catch (e) {
+                    const existing = localStorage.getItem('currentProject');
+                    const fallbackProject = existing || 'temp-active';
                     await applyFocusFromState({
-                        currentProject: localStorage.getItem('currentProject'),
-                        selectedPackage: localStorage.getItem('selectedPackage'),
-                        focusMode: localStorage.getItem('focusMode')
+                        currentProject: fallbackProject,
+                        selectedPackage: localStorage.getItem('selectedPackage') || (fallbackProject === 'temp-active' ? 'orthomosaic' : null),
+                        selectedPackageType: localStorage.getItem('selectedPackageType') || 'aerial',
+                        selectedDeliverable: localStorage.getItem('selectedDeliverable') || null,
+                        selectedAddons: localStorage.getItem('selectedAddons') || null,
+                        focusMode: localStorage.getItem('focusMode') || 'dim'
                     });
+                    const cid = localStorage.getItem('clientId');
+                    if (cid) startConfigRefreshWatcher(cid);
                 }
             })();
         });
+
+        // Lightweight polling refresh to sync server-backed changes from clients/config.json
+        let __cfgWatcherTimer = null;
+        function startConfigRefreshWatcher(clientId) {
+            if (!clientId) return;
+            if (__cfgWatcherTimer) return; // avoid duplicates
+            // Poll every 30s; on change, merge into localStorage and refresh UI
+            let lastSnapshot = null;
+            const poll = async () => {
+                try {
+                    const res = await fetch('clients/config.json', { cache: 'no-store' });
+                    if (!res.ok) return;
+                    const cfg = await res.json();
+                    const found = (cfg.clients || []).find(c => c.id === clientId);
+                    if (!found) return;
+                    const snapshot = JSON.stringify({
+                        currentProject: found.currentProject,
+                        selectedPackage: found.selectedPackage,
+                        selectedPackageType: found.selectedPackageType,
+                        selectedDeliverable: found.selectedDeliverable,
+                        selectedAddons: found.selectedAddons,
+                        focusMode: found.focusMode
+                    });
+                    if (lastSnapshot === null) {
+                        lastSnapshot = snapshot;
+                        return;
+                    }
+                    if (snapshot !== lastSnapshot) {
+                        lastSnapshot = snapshot;
+                        try {
+                            if (found.currentProject) localStorage.setItem('currentProject', found.currentProject);
+                            if (found.selectedPackage) localStorage.setItem('selectedPackage', found.selectedPackage);
+                            if (found.selectedPackageType) localStorage.setItem('selectedPackageType', found.selectedPackageType);
+                            if (found.selectedDeliverable) localStorage.setItem('selectedDeliverable', found.selectedDeliverable);
+                            if (found.selectedAddons) localStorage.setItem('selectedAddons', JSON.stringify(found.selectedAddons));
+                            if (found.focusMode) localStorage.setItem('focusMode', found.focusMode);
+                        } catch {}
+                        await applyFocusFromState(found);
+                        showNotification('Client configuration updated', 'info');
+                    }
+                } catch {}
+            };
+            __cfgWatcherTimer = setInterval(poll, 30000);
+        }
 
         // Handle mobile menu (future enhancement)
         function toggleMobileMenu() {
@@ -1820,6 +2095,233 @@
                 showNotification('Contact form opened - our team will reach out within 24 hours!', 'success');
                 // This would typically open a contact form or redirect to upgrade page
             }, 1500);
+        }
+
+        // =====================
+        // Package selection controls and chips
+        // =====================
+        function initPackageControls() {
+            const qaContainer = document.querySelector('.quick-actions');
+            if (!qaContainer) return;
+            if (document.getElementById('pkgControls')) return; // prevent duplicates
+
+            const wrapper = document.createElement('div');
+            wrapper.id = 'pkgControls';
+            wrapper.className = 'dashboard-card fade-in';
+            wrapper.style.marginTop = '16px';
+            wrapper.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">Package & Deliverables</h3>
+                    <span class="card-icon">📦</span>
+                </div>
+                <div class="card-content" style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end;">
+                    <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Package Type</label>
+                        <select id="pkgType" style="width:100%; background:#0B1220; color:white; border:1px solid #1F2A44; border-radius:8px; padding:10px;">
+                            <option value="aerial">Aerial</option>
+                            <option value="ground">Ground</option>
+                            <option value="both">Aerial + Ground</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Selected Deliverable</label>
+                        <select id="pkgDeliverable" style="width:100%; background:#0B1220; color:white; border:1px solid #1F2A44; border-radius:8px; padding:10px;"></select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.85rem; color:var(--gray-light); margin-bottom:6px;">Add-ons (Cross-Category)</label>
+                        <div id="pkgAddons" style="display:grid; grid-template-columns: 1fr; gap:6px; align-items:center;"></div>
+                    </div>
+                    <div>
+                        <button id="pkgSave" class="btn btn-primary">Save Selection</button>
+                    </div>
+                </div>`;
+
+            qaContainer.parentNode.insertBefore(wrapper, qaContainer.nextSibling);
+
+            const aerialOpts = [
+                { value: 'map', label: 'Orthomosaic Map' },
+                { value: '3d', label: '3D Model / Point Cloud' },
+                { value: 'hd', label: 'HD Aerial Images' },
+                { value: 'report', label: 'Branded PDF Report' }
+            ];
+            const groundOpts = [
+                { value: 'report', label: 'Branded PDF Report' },
+                { value: 'ground-photos', label: 'Ground Reference Photos' },
+                { value: '360', label: '360° Walkthrough' }
+            ];
+
+            const pkgTypeSel = wrapper.querySelector('#pkgType');
+            const delSel = wrapper.querySelector('#pkgDeliverable');
+            const addonsBox = wrapper.querySelector('#pkgAddons');
+
+            function populateDeliverables(type) {
+                const list = type === 'both' ? [...aerialOpts, ...groundOpts] : (type === 'ground' ? groundOpts : aerialOpts);
+                delSel.innerHTML = '';
+                list.forEach(opt => {
+                    const o = document.createElement('option');
+                    o.value = opt.value; o.textContent = opt.label; delSel.appendChild(o);
+                });
+            }
+
+            function populateAddons(type) {
+                addonsBox.innerHTML = '';
+                const cross = type === 'ground' ? aerialOpts : type === 'aerial' ? groundOpts : [...aerialOpts, ...groundOpts];
+                // Remove the currently selected deliverable from options to avoid duplicate semantics
+                const currentDel = delSel.value;
+                const filtered = cross.filter(opt => opt.value !== currentDel);
+                filtered.forEach(opt => {
+                    const id = `addon-${opt.value}`;
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display:flex; align-items:center; gap:8px; font-size:0.85rem; color:var(--white)';
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.value = opt.value;
+                    input.dataset.category = aerialOpts.find(a=>a.value===opt.value) ? 'aerial' : 'ground';
+                    input.id = id;
+                    label.appendChild(input);
+                    const span = document.createElement('span');
+                    span.textContent = `${opt.label} (${input.dataset.category === 'aerial' ? 'Aerial' : 'Ground'})`;
+                    label.appendChild(span);
+                    addonsBox.appendChild(label);
+                });
+                // Restore selections from storage
+                try {
+                    const saved = JSON.parse(localStorage.getItem('selectedAddons') || '[]');
+                    addonsBox.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        const code = `${cb.dataset.category}:${cb.value}`;
+                        cb.checked = saved.includes(code);
+                    });
+                } catch {}
+            }
+
+            // Initialize from storage
+            const stType = localStorage.getItem('selectedPackageType') || 'aerial';
+            pkgTypeSel.value = stType;
+            populateDeliverables(stType);
+            const stDel = localStorage.getItem('selectedDeliverable');
+            if (stDel) delSel.value = stDel;
+            populateAddons(stType);
+
+            pkgTypeSel.addEventListener('change', () => {
+                populateDeliverables(pkgTypeSel.value);
+                populateAddons(pkgTypeSel.value);
+            });
+            delSel.addEventListener('change', () => {
+                populateAddons(pkgTypeSel.value);
+            });
+
+            wrapper.querySelector('#pkgSave').addEventListener('click', (e) => {
+                e.preventDefault();
+                try {
+                    localStorage.setItem('selectedPackageType', pkgTypeSel.value);
+                    localStorage.setItem('selectedDeliverable', delSel.value);
+                    const chosen = [];
+                    addonsBox.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        if (cb.checked) chosen.push(`${cb.dataset.category}:${cb.value}`);
+                    });
+                    localStorage.setItem('selectedAddons', JSON.stringify(chosen));
+                } catch {}
+                updateHeaderForSelection();
+                let selectedAddons = [];
+                try { selectedAddons = JSON.parse(localStorage.getItem('selectedAddons') || '[]'); } catch {}
+                updatePackageChips({ packageType: pkgTypeSel.value, selectedDeliverable: delSel.value, selectedAddons });
+                showNotification('Package selection saved', 'success');
+            });
+        }
+
+        function updateHeaderForSelection() {
+            const headerSubtitle = document.querySelector('.page-subtitle');
+            const selectedPackage = localStorage.getItem('selectedPackage');
+            const pkgNames = { orthomosaic: 'Orthomosaic Mapping', inspections: 'Aerial Inspections', dsmdtm: 'DSM/DTM Models', progress: 'Progress Monitoring', ground_docs: 'Ground Documentation', portraits: 'Industrial Portraits', tech_docs: 'Technical/Safety Documentation' };
+            const pkgLabel = selectedPackage ? (pkgNames[selectedPackage] || selectedPackage) : '—';
+            const type = localStorage.getItem('selectedPackageType') || 'aerial';
+            const typeLabel = type === 'both' ? 'Aerial + Ground' : (type === 'ground' ? 'Ground' : 'Aerial');
+            const aerialOpts = [
+                { value: 'map', label: 'Orthomosaic Map' },
+                { value: '3d', label: '3D Model / Point Cloud' },
+                { value: 'hd', label: 'HD Aerial Images' },
+                { value: 'report', label: 'Branded PDF Report' }
+            ];
+            const groundOpts = [
+                { value: 'report', label: 'Branded PDF Report' },
+                { value: 'ground-photos', label: 'Ground Reference Photos' },
+                { value: '360', label: '360° Walkthrough' }
+            ];
+            const both = [...aerialOpts, ...groundOpts];
+            const sd = localStorage.getItem('selectedDeliverable');
+            let addons = [];
+            try { addons = JSON.parse(localStorage.getItem('selectedAddons') || '[]'); } catch {}
+            const addonLabelsMap = {
+                'aerial:map': 'Orthomosaic Map',
+                'aerial:3d': '3D Model / Point Cloud',
+                'aerial:hd': 'HD Aerial Images',
+                'aerial:report': 'Branded PDF Report',
+                'ground:report': 'Branded PDF Report',
+                'ground:ground-photos': 'Ground Photos',
+                'ground:360': '360° Walkthrough'
+            };
+            const addonText = addons.length ? ` • Add-ons: ${addons.map(a => addonLabelsMap[a] || a).join(', ')}` : '';
+            const list = type === 'both' ? both : (type === 'ground' ? groundOpts : aerialOpts);
+            const delLabel = (list.find(d => d.value === sd) || {}).label || '—';
+            if (headerSubtitle) headerSubtitle.textContent = `Package: ${pkgLabel} • Type: ${typeLabel} • Selected deliverable: ${delLabel}${addonText}`;
+        }
+
+        function updatePackageChips({ packageType, selectedDeliverable, selectedAddons = [] }) {
+            // Find highlighted or current project card
+            const currentId = localStorage.getItem('currentProject');
+            let card = document.querySelector('.dashboard-card.highlight');
+            if (!card && currentId) card = document.querySelector(`.dashboard-card[data-project-id="${currentId}"]`);
+            if (!card) return;
+
+            // Remove existing chips
+            const old = card.querySelector('.pkg-chips');
+            if (old && old.parentNode) old.parentNode.removeChild(old);
+
+            const chips = document.createElement('div');
+            chips.className = 'pkg-chips';
+            const makeChip = (cls, text) => {
+                const span = document.createElement('span');
+                span.className = `chip ${cls}`;
+                span.textContent = text;
+                return span;
+            };
+            if (packageType === 'both') {
+                chips.appendChild(makeChip('chip-aerial', 'Aerial'));
+                chips.appendChild(makeChip('chip-ground', 'Ground'));
+            } else if (packageType === 'ground') {
+                chips.appendChild(makeChip('chip-ground', 'Ground'));
+            } else {
+                chips.appendChild(makeChip('chip-aerial', 'Aerial'));
+            }
+            // Selected deliverable label mapping
+            const labels = {
+                map: 'Selected: Orthomosaic Map',
+                '3d': 'Selected: 3D Model / Point Cloud',
+                hd: 'Selected: HD Aerial Images',
+                report: 'Selected: Branded PDF Report',
+                'ground-photos': 'Selected: Ground Reference Photos',
+                '360': 'Selected: 360° Walkthrough'
+            };
+            chips.appendChild(makeChip('chip-selected', labels[selectedDeliverable] || 'Selected deliverable'));
+
+            // Add-on chips
+            const addonLabels = {
+                'aerial:map': { text: 'Add-on: Orthomosaic Map', cls: 'chip-aerial' },
+                'aerial:3d': { text: 'Add-on: 3D Model', cls: 'chip-aerial' },
+                'aerial:hd': { text: 'Add-on: HD Aerial Images', cls: 'chip-aerial' },
+                'aerial:report': { text: 'Add-on: PDF Report', cls: 'chip-aerial' },
+                'ground:report': { text: 'Add-on: PDF Report', cls: 'chip-ground' },
+                'ground:ground-photos': { text: 'Add-on: Ground Photos', cls: 'chip-ground' },
+                'ground:360': { text: 'Add-on: 360° Walkthrough', cls: 'chip-ground' }
+            };
+            (selectedAddons || []).forEach(code => {
+                const meta = addonLabels[code];
+                if (meta) chips.appendChild(makeChip(meta.cls, meta.text));
+            });
+
+            // Attach under the card header
+            const header = card.querySelector('.card-header');
+            if (header && header.parentNode) header.parentNode.insertBefore(chips, header.nextSibling);
         }
     </script>
 </body>

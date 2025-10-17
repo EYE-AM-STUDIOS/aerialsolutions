@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EAS | TrueView Portal - Client Login</title>
-    <meta name="description" content="Secure client access to aerial imaging deliverables - interactive maps, 3D models, reports, and project data from EYE AM STUDIOS.">
+    <title>EDIS | TrueView Portal - Interactive Deliverables</title>
+    <meta name="description" content="Learn about the EDIS Online Interactive portal - after booking and payment, clients receive secure access to their project deliverables including maps, 3D models, reports, and imagery from EYE AM STUDIOS.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -483,57 +483,56 @@
     <div class="portal-container">
         <!-- Portal Header -->
         <div class="portal-header fade-in">
-            <div class="portal-logo">EAS | TrueView Portal</div>
-            <div class="portal-tagline">Your Projects. Your Data. One Interactive Portal.</div>
-            <div class="portal-subtitle">Secure access to your aerial imaging deliverables</div>
+            <div class="portal-logo">EDIS | TrueView Portal</div>
+            <div class="portal-tagline">Online Interactive Deliverables</div>
+            <div class="portal-subtitle">Your complete project documentation in one secure portal</div>
         </div>
 
-        <!-- Login Card -->
+        <!-- Portal Information Card -->
         <div class="login-card fade-in stagger-1">
-            <h2 class="login-title">Client Login</h2>
+            <h2 class="login-title">How TrueView Portal Works</h2>
             
-            <!-- Message Container -->
-            <div id="message" class="message"></div>
-
-            <!-- Login Form -->
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="email">Email Address / Company ID</label>
-                    <input type="email" id="email" name="email" placeholder="your.email@company.com" required>
-                    <div class="input-icon">📧</div>
+            <!-- Process Steps -->
+            <div style="margin-bottom: 30px;">
+                <div style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: rgba(0, 191, 255, 0.1); border-radius: 8px; border-left: 4px solid var(--electric-cyan);">
+                    <span style="color: var(--electric-cyan); font-size: 1.5rem;">1️⃣</span>
+                    <div>
+                        <h4 style="color: var(--electric-cyan); margin-bottom: 5px;">Book Your Project</h4>
+                        <p style="font-size: 0.9rem; color: var(--white);">Complete your project booking and payment with EDIS through our secure booking system.</p>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                    <div class="input-icon">🔒</div>
+                <div style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: rgba(0, 191, 255, 0.1); border-radius: 8px; border-left: 4px solid var(--electric-cyan);">
+                    <span style="color: var(--electric-cyan); font-size: 1.5rem;">2️⃣</span>
+                    <div>
+                        <h4 style="color: var(--electric-cyan); margin-bottom: 5px;">Receive Access Credentials</h4>
+                        <p style="font-size: 0.9rem; color: var(--white);">After payment confirmation, you'll receive your unique login credentials via email.</p>
+                    </div>
                 </div>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Remember me for 30 days</label>
+                <div style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: rgba(0, 191, 255, 0.1); border-radius: 8px; border-left: 4px solid var(--electric-cyan);">
+                    <span style="color: var(--electric-cyan); font-size: 1.5rem;">3️⃣</span>
+                    <div>
+                        <h4 style="color: var(--electric-cyan); margin-bottom: 5px;">Access Your Dashboard</h4>
+                        <p style="font-size: 0.9rem; color: var(--white);">Use your credentials to login and access all your project deliverables and interactive content.</p>
+                    </div>
                 </div>
+            </div>
 
-                <button type="submit" class="login-btn" id="loginBtn">
-                    Secure Login
-                </button>
-            </form>
-
-            <!-- Alternative Login -->
-            <div class="alt-login">
-                <div class="divider">
-                    <span>or</span>
-                </div>
+            <!-- CTA Buttons -->
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e" 
+                   target="_blank" rel="noopener noreferrer"
+                   style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: var(--electric-cyan); color: var(--jet-black); text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; text-align: center;">
+                    📅 Book Your Project
+                </a>
                 
-                <button class="company-login-btn" id="companyLoginBtn">
-                    🏢 Enterprise SSO Login
-                </button>
+                <a href="dashboard.html" 
+                   style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: rgba(255, 255, 255, 0.1); color: var(--white); text-decoration: none; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 500; transition: all 0.3s ease; text-align: center;">
+                    🔐 Already Have Access? Login Here
+                </a>
             </div>
-
-            <!-- Forgot Password -->
-            <div class="forgot-password">
-                <a href="#" id="forgotPasswordLink">Forgot your password?</a>
-            </div>
+        </div>
 
             <!-- Demo Features -->
             <div class="demo-features fade-in stagger-2">
@@ -551,21 +550,19 @@
 
             <!-- Demo Credentials -->
             <div class="demo-features fade-in stagger-3" style="background: rgba(0, 191, 255, 0.15); border-color: var(--electric-cyan);">
-                <h4>Demo Access Credentials</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                <h4>Experience the Portal</h4>
+                <div style="margin-top: 15px; text-align: center;">
                     <div>
-                        <h5 style="color: var(--electric-cyan); margin-bottom: 8px; font-size: 0.9rem;">Client View:</h5>
+                        <h5 style="color: var(--electric-cyan); margin-bottom: 8px; font-size: 0.9rem;">Demo Access Available:</h5>
                         <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Email:</strong> demo@test.com</p>
                         <p style="font-size: 0.85rem;"><strong>Password:</strong> demo123</p>
                     </div>
-                    <div>
-                        <h5 style="color: var(--electric-cyan); margin-bottom: 8px; font-size: 0.9rem;">Admin View:</h5>
-                        <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Email:</strong> admin@eyeamstudios.com</p>
-                        <p style="font-size: 0.85rem;"><strong>Password:</strong> admin123</p>
-                    </div>
                 </div>
                 <p style="font-size: 0.8rem; color: var(--gray-medium); margin-top: 15px; text-align: center;">
-                    Use these credentials to explore the portal functionality
+                    Try the demo to see what your portal will look like after booking
+                </p>
+                <p style="font-size: 0.8rem; color: var(--gray-medium); margin-top: 10px; text-align: center;">
+                    <strong>Need to book a project?</strong> <a href="https://www.honeybook.com/widget/eyeamstudios_146045/cf_id/669ac08030fb0400193f107e" target="_blank" style="color: var(--electric-cyan); text-decoration: none;">Start Here →</a>
                 </p>
             </div>
         </div>
@@ -687,7 +684,7 @@
                 <div style="background: linear-gradient(135deg, #000000, #0D1B2A); min-height: 100vh; color: white; padding: 40px 20px; font-family: 'Inter', sans-serif;">
                     <div style="max-width: 1200px; margin: 0 auto;">
                         <div style="text-align: center; margin-bottom: 40px;">
-                            <h1 style="color: #00BFFF; font-size: 2.5rem; margin-bottom: 10px;">EAS | TrueView Portal Dashboard</h1>
+                            <h1 style="color: #00BFFF; font-size: 2.5rem; margin-bottom: 10px;">EDIS | TrueView Portal Dashboard</h1>
                             <p style="font-size: 1.2rem; opacity: 0.9;">Welcome to your interactive aerial imaging hub</p>
                         </div>
                         
@@ -718,7 +715,7 @@
                             
                             <div style="text-align: center;">
                                 <p style="font-size: 1.1rem; margin-bottom: 20px; opacity: 0.9;">
-                                    The EAS | TrueView Portal is currently in development. Your interactive deliverables will be available here upon project completion.
+                                    The EDIS | TrueView Portal is currently in development. Your interactive deliverables will be available here upon project completion.
                                 </p>
                                 <p style="font-size: 1rem; color: #00BFFF; margin-bottom: 30px;">
                                     Contact EYE AM STUDIOS for immediate access to your project data.
@@ -759,7 +756,7 @@
         });
 
         // Enhanced security messaging
-        console.log('🔒 EAS | TrueView Portal - Secure Client Access');
+    console.log('🔒 EDIS | Admin Portal - Portal Administration');
         console.log('This portal provides encrypted access to your aerial imaging deliverables.');
         console.log('Contact EYE AM STUDIOS for account setup and technical support.');
     </script>

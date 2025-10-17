@@ -1,10 +1,11 @@
 {
-  "name": "eas-aerial-imaging-solutions",
+  "name": "edis",
   "version": "1.0.0",
-  "description": "EAS | Aerial Imaging Solutions - Professional drone services with client portal system",
+  "description": "EDIS | Enhanced Digital Imaging Solutions - Aerial + Ground imaging with client portal",
   "main": "index.html",
   "scripts": {
     "dev": "python -m http.server 8000 || php -S localhost:8000 || live-server",
+    "dev:cloudinary": "echo 'Starting EDIS with Cloudinary integration...' && python -m http.server 8000 || php -S localhost:8000 || live-server",
     "build": "echo 'Static site - no build needed'",
     "deploy": "vercel --prod",
     "preview": "vercel",
@@ -12,12 +13,17 @@
     "new:client:demo": "node scripts/new-client.js --id demo-mosaic --name 'Demo Mosaic Client' --email demo@test.com",
     "activate:client": "node scripts/activate-client.js",
     "activate:demo": "node scripts/activate-client.js --id demo-mosaic --deposit true --status active",
+<<<<<<< HEAD
     "cloudinary:upload": "node scripts/cloudinary-upload.js upload",
     "cloudinary:upload-all": "node scripts/cloudinary-upload.js upload-all", 
     "cloudinary:list": "node scripts/cloudinary-upload.js list",
     "cloudinary:delete": "node scripts/cloudinary-upload.js delete",
     "cloudinary:usage": "node scripts/cloudinary-monitor.js",
     "cloudinary:usage:brief": "node scripts/cloudinary-monitor.js brief"
+=======
+    "cloudinary:setup": "echo 'Setting up Cloudinary presets...' && node scripts/cloudinary-setup.js",
+    "cloudinary:sync": "echo 'Syncing with Cloudinary...' && node scripts/cloudinary-sync.js"
+>>>>>>> 207c6df71a29863d0fa8728212b6dfe66361f7a6
   },
   "keywords": [
     "aerial-imaging",
@@ -31,7 +37,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/EYE-AM-STUDIOS/aerialsolutions.git"
+    "url": "https://github.com/EYE-AM-STUDIOS/edis.git"
   },
   "dependencies": {
     "cloudinary": "^1.41.0"
