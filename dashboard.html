@@ -1545,8 +1545,29 @@
             return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
         }
 
-        function getProjectImages(projectId) {
-            // Demo placeholder images; replace with real project file URLs later
+        async function getProjectImages(projectId) {
+            // Load real images from client folder structure
+            const basePath = `./clients/${projectId}/images/processed/`;
+            
+            try {
+                // Try to load index.json for this project
+                const response = await fetch(`./clients/${projectId}/images/index.json`);
+                const config = await response.json();
+                
+                if (config.items && config.items.length > 0) {
+                    return config.items.map(item => ({
+                        name: item.name,
+                        src: basePath + item.filename,
+                        thumb: basePath + item.thumb,
+                        alt: item.alt || item.name,
+                        caption: item.caption || item.name
+                    }));
+                }
+            } catch (error) {
+                console.log(`No index.json found for ${projectId}, falling back to defaults`);
+            }
+            
+            // Fallback to placeholder images or default structure
             const common = [
                 { name: 'Overview', src: svgPlaceholder(1600, 1067, 'Overview (4K)'), thumb: svgPlaceholder(400, 267, 'Overview'), alt: 'Site overview' },
                 { name: 'Nadir 01', src: svgPlaceholder(1600, 1067, 'Nadir 01 (4K)'), thumb: svgPlaceholder(400, 267, 'Nadir 01'), alt: 'Nadir image 01' },
@@ -1572,9 +1593,9 @@
             return sets[projectId] || common;
         }
 
-        function openHdGallery(projectId = 'all') {
+        async function openHdGallery(projectId = 'all') {
             hdState.project = projectId;
-            hdState.images = getProjectImages(projectId);
+            hdState.images = await getProjectImages(projectId);
             hdState.index = 0;
 
             const overlay = document.getElementById('hdGalleryOverlay');
