@@ -1617,6 +1617,107 @@
         .btn-premium:active {
             transform: translateY(0);
         }
+
+        /* Enhanced Standard Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--duration-normal) var(--ease-out-cubic);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.2), 
+                transparent);
+            transition: left 0.6s ease;
+            z-index: 0;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--jet-black);
+            border: 2px solid transparent;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-neon);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--brilliant-white);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--electric-cyan);
+            color: var(--electric-cyan);
+        }
+
+        .btn-download {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--violet-500);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-download:hover {
+            background: var(--violet-500);
+            color: var(--brilliant-white);
+            border-color: var(--violet-500);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -2957,40 +3058,140 @@
         }
 
         // Notification system
-        function showNotification(message, type = 'info') {
+        function showNotification(message, type = 'info', duration = 4000) {
             const notification = document.createElement('div');
+            
+            // Icon mapping
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            // Color mapping with gradients
+            const styles = {
+                success: {
+                    bg: 'linear-gradient(135deg, rgba(34, 197, 94, 0.95), rgba(22, 163, 74, 0.95))',
+                    border: 'rgba(34, 197, 94, 0.8)',
+                    shadow: 'rgba(34, 197, 94, 0.4)'
+                },
+                error: {
+                    bg: 'linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95))',
+                    border: 'rgba(239, 68, 68, 0.8)',
+                    shadow: 'rgba(239, 68, 68, 0.4)'
+                },
+                warning: {
+                    bg: 'linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95))',
+                    border: 'rgba(245, 158, 11, 0.8)',
+                    shadow: 'rgba(245, 158, 11, 0.4)'
+                },
+                info: {
+                    bg: 'linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95))',
+                    border: 'rgba(59, 130, 246, 0.8)',
+                    shadow: 'rgba(59, 130, 246, 0.4)'
+                }
+            };
+            
+            const currentStyle = styles[type] || styles.info;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.2);
+                        font-weight: bold;
+                        font-size: 14px;
+                    ">${icons[type] || icons.info}</div>
+                    <div style="flex: 1; font-weight: 500;">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: none;
+                        border: none;
+                        color: rgba(255, 255, 255, 0.7);
+                        font-size: 18px;
+                        cursor: pointer;
+                        padding: 0;
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 50%;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='none'">×</button>
+                </div>
+            `;
+            
             notification.style.cssText = `
                 position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 
-                             type === 'error' ? 'rgba(220, 53, 69, 0.9)' : 
-                             'rgba(0, 191, 255, 0.9)'};
+                top: 24px;
+                right: 24px;
+                background: ${currentStyle.bg};
                 color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                backdrop-filter: blur(10px);
-                border: 1px solid ${type === 'success' ? '#28A745' : 
-                                  type === 'error' ? '#DC3545' : 
-                                  '#00BFFF'};
-                z-index: 1000;
-                font-size: 0.9rem;
-                max-width: 300px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-                animation: slideIn 0.3s ease;
+                padding: 16px 20px;
+                border-radius: 12px;
+                backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid ${currentStyle.border};
+                z-index: 10000;
+                font-size: 14px;
+                font-family: var(--font-family-primary);
+                max-width: 400px;
+                min-width: 280px;
+                box-shadow: 
+                    0 20px 40px ${currentStyle.shadow},
+                    0 8px 16px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                transform-origin: right center;
+                cursor: pointer;
             `;
-            notification.textContent = message;
+            
+            // Stack notifications
+            const existingNotifications = document.querySelectorAll('[data-notification]');
+            existingNotifications.forEach((notif, index) => {
+                notif.style.transform = `translateY(${(index + 1) * 80}px)`;
+            });
+            notification.setAttribute('data-notification', 'true');
             
             document.body.appendChild(notification);
             
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
+            // Auto remove
+            const autoRemove = setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                            // Restack remaining notifications
+                            const remaining = document.querySelectorAll('[data-notification]');
+                            remaining.forEach((notif, index) => {
+                                notif.style.transform = `translateY(${index * 80}px)`;
+                            });
+                        }
+                    }, 300);
+                }
+            }, duration);
+            
+            // Click to dismiss
+            notification.addEventListener('click', () => {
+                clearTimeout(autoRemove);
+                notification.style.animation = 'slideOutRight 0.3s ease';
                 setTimeout(() => {
                     if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
+                        notification.remove();
+                        // Restack remaining notifications
+                        const remaining = document.querySelectorAll('[data-notification]');
+                        remaining.forEach((notif, index) => {
+                            notif.style.transform = `translateY(${index * 80}px)`;
+                        });
                     }
                 }, 300);
-            }, 3000);
+            });
         }
 
         // Add animation keyframes
