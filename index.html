@@ -253,11 +253,12 @@
   <section class="hero">
     <!-- Your Construction Worker Background Image -->
     <img 
-      src="https://res.cloudinary.com/eastudios-dam/image/upload/v1760817193/Website/hero/easimage_f75g89.jpg" 
+      src="https://res.cloudinary.com/eastudios-dam/image/upload/v1760817193/Website/hero/easimage_f75g89.jpg?cache=v2" 
       alt="EDIS Construction Worker Background"
       class="construction-worker-bg"
       onload="console.log('✅ CONSTRUCTION WORKER IMAGE LOADED SUCCESSFULLY!', this.naturalWidth + 'x' + this.naturalHeight);"
-      onerror="console.log('❌ Construction worker image failed to load');"
+      onerror="console.log('❌ Construction worker image failed to load:', this.src);"
+      style="position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; z-index: 1 !important;"
     />
     
     <!-- Hero Overlay -->
