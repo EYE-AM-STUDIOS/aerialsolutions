@@ -1813,9 +1813,10 @@
                     <h3>Tools</h3>
                     <ul class="nav-menu">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link" onclick="viewInteractiveMap('demo-pix4d'); setActiveNav(this);">
                                 <span class="nav-icon">🗺️</span>
                                 Interactive Maps
+                                <span style="font-size: 0.7rem; color: var(--electric-cyan); margin-left: 5px;">(Pix4D)</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -2025,7 +2026,7 @@
                             </div>
 
                             <p class="card-description">
-                                Temporary project inserted for layout testing. Remove after verifying spacing and active project behavior.
+                                <strong style="color: var(--electric-cyan);">Live Demo Project:</strong> Click "Interactive Map" below to experience Pix4D Cloud's professional orthomosaic viewer with measurement tools, annotations, and high-resolution imagery - exactly how your project deliverables will be accessed.
                             </p>
                             <div class="card-meta">
                                 <span>Captured: Oct 11, 2025</span>
@@ -2033,7 +2034,7 @@
                             </div>
                         </div>
                         <div class="card-actions">
-                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')">🗺️ Interactive Map</a>
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')" style="background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)); font-weight: 600; animation: pulse 2s infinite;">🗺️ Interactive Map (Live Pix4D Demo)</a>
                             <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
                             <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
                         </div>
@@ -2117,7 +2118,7 @@
                             </div>
                             
                             <p class="card-description">
-                                Complete orthomosaic mapping and 3D modeling for construction site documentation and planning phase analysis.
+                                Complete orthomosaic mapping and 3D modeling for construction site documentation and planning phase analysis. <strong style="color: var(--electric-cyan);">Interactive maps powered by Pix4D Cloud</strong> for professional visualization and measurement tools.
                             </p>
                             <div class="card-meta">
                                 <span>Captured: Sep 22, 2025</span>
@@ -2125,8 +2126,8 @@
                             </div>
                         </div>
                         <div class="card-actions">
-                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('mosaic')">
-                                🗺️ Interactive Map
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('mosaic')" style="background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)); font-weight: 600;">
+                                🗺️ Interactive Map (Pix4D Demo)
                             </a>
                             <a href="#" class="btn btn-secondary" onclick="view3DModel('mosaic')">
                                 🧭 3D Model
@@ -2597,11 +2598,15 @@
 
         // Project interactions
         function viewInteractiveMap(projectId) {
-            showNotification(`Opening interactive map for ${projectId} project...`, 'info');
-            // In a real implementation, this would open the interactive map viewer
+            showNotification(`Opening Pix4D Cloud interactive map for ${projectId} project...`, 'info');
+            
+            // Open Pix4D Cloud demo in new window
+            const pix4dDemoUrl = 'https://cloud.pix4d.com/site/192043/dataset/1360861/map?shareToken=b58109b2-0190-4c77-8926-1d7aaca6f37b';
+            
             setTimeout(() => {
-                showNotification('Interactive map viewer would open here', 'success');
-            }, 1500);
+                window.open(pix4dDemoUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+                showNotification('✅ Pix4D Cloud interactive map opened in new window', 'success');
+            }, 800);
         }
 
         function view3DModel(projectId) {
