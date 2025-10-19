@@ -2034,7 +2034,7 @@
                             </div>
                         </div>
                         <div class="card-actions">
-                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')" style="background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)); font-weight: 600; animation: pulse 2s infinite;">🗺️ Interactive Map (Live Pix4D Demo)</a>
+                            <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('temp-active')" style="background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)); font-weight: 600; animation: pulse 2s infinite;">🗺️ Open Interactive Map (Embedded Pix4D)</a>
                             <a href="#" class="btn btn-secondary" onclick="openHdGallery('temp-active')">📷 HD Images</a>
                             <a href="#" class="btn btn-download" onclick="downloadProject('temp-active')">📥 Download Demo Files</a>
                         </div>
@@ -2127,7 +2127,7 @@
                         </div>
                         <div class="card-actions">
                             <a href="#" class="btn btn-primary" onclick="viewInteractiveMap('mosaic')" style="background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)); font-weight: 600;">
-                                🗺️ Interactive Map (Pix4D Demo)
+                                🗺️ Interactive Map (Embedded Pix4D)
                             </a>
                             <a href="#" class="btn btn-secondary" onclick="view3DModel('mosaic')">
                                 🧭 3D Model
@@ -2598,16 +2598,52 @@
 
         // Project interactions
         function viewInteractiveMap(projectId) {
-            showNotification(`Opening Pix4D Cloud interactive map for ${projectId} project...`, 'info');
+            showNotification(`Loading Pix4D Cloud interactive map for ${projectId} project...`, 'info');
             
-            // Open Pix4D Cloud demo in new window
+            // Pix4D Cloud demo URL
             const pix4dDemoUrl = 'https://cloud.pix4d.com/site/192043/dataset/1360861/map?shareToken=b58109b2-0190-4c77-8926-1d7aaca6f37b';
             
             setTimeout(() => {
-                window.open(pix4dDemoUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-                showNotification('✅ Pix4D Cloud interactive map opened in new window', 'success');
-            }, 800);
+                // Load iframe and show modal
+                const iframe = document.getElementById('pix4dIframe');
+                const modal = document.getElementById('pix4dMapModal');
+                
+                iframe.src = pix4dDemoUrl;
+                modal.style.display = 'flex';
+                
+                // Add escape key listener
+                document.addEventListener('keydown', handleEscKey);
+                
+                showNotification('✅ Pix4D Cloud map loaded - Use measurement tools and explore!', 'success');
+            }, 600);
         }
+
+        function closePix4dMap() {
+            const modal = document.getElementById('pix4dMapModal');
+            const iframe = document.getElementById('pix4dIframe');
+            
+            modal.style.display = 'none';
+            iframe.src = ''; // Clear iframe to stop loading
+            
+            // Remove escape key listener
+            document.removeEventListener('keydown', handleEscKey);
+            
+            showNotification('Interactive map closed', 'info');
+        }
+
+        function handleEscKey(event) {
+            if (event.key === 'Escape') {
+                closePix4dMap();
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('pix4dMapModal');
+            if (event.target === modal) {
+                closePix4dMap();
+            }
+        });
 
         function view3DModel(projectId) {
             showNotification(`Loading 3D model for ${projectId} project...`, 'info');
@@ -3772,5 +3808,103 @@
             document.head.appendChild(animationStyle);
         }
     </script>
+
+    <!-- Embedded Pix4D Cloud Map Modal -->
+    <div id="pix4dMapModal" class="pix4d-modal" style="display: none;">
+        <div class="pix4d-modal-content">
+            <div class="pix4d-modal-header">
+                <h3>🗺️ Interactive Orthomosaic Map - Pix4D Cloud</h3>
+                <button onclick="closePix4dMap()" class="close-btn">&times;</button>
+            </div>
+            <div class="pix4d-iframe-container">
+                <iframe 
+                    id="pix4dIframe" 
+                    src="" 
+                    frameborder="0" 
+                    allowfullscreen
+                    style="width: 100%; height: 100%; border: none;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .pix4d-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .pix4d-modal-content {
+            width: 95%;
+            height: 90%;
+            background: var(--deep-space);
+            border-radius: 12px;
+            border: 2px solid var(--electric-cyan);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 191, 255, 0.3);
+        }
+
+        .pix4d-modal-header {
+            background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue));
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pix4d-modal-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .pix4d-iframe-container {
+            flex: 1;
+            position: relative;
+            background: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .pix4d-modal-content {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
+
 </body>
 </html>
